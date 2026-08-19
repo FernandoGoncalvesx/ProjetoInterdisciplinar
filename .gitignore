@@ -1,0 +1,9 @@
+# Arquivos Python
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db

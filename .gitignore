@@ -1,5 +1,5 @@
-# Arquivos Python
 venv/
+.venv/
 env/
 __pycache__/
 *.pyc
@@ -7,3 +7,6 @@ __pycache__/
 # Sistema Operacional
 .DS_Store
 Thumbs.db
+
+uploads/*
+!uploads/.gitkeep

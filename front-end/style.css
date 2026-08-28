@@ -1,0 +1,71 @@
+/* Fundo da página com degradê azul */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+}
+
+/* Container do upload no canto inferior direito */
+.upload-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    text-align: center;
+    width: 260px;
+}
+
+h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 16px;
+}
+
+/* Oculta o input padrão de arquivo que é feio */
+input[type="file"] {
+    display: none;
+}
+
+/* Estiliza o botão de upload customizado */
+.botao-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #0072ff;
+    color: white;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.botao-upload:hover {
+    background-color: #005bb5;
+}
+
+/* Área onde os nomes dos arquivos vão aparecer */
+#lista-arquivos {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #555;
+    max-height: 100px;
+    overflow-y: auto;
+    text-align: left;
+}
+
+#lista-arquivos ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#lista-arquivos li {
+    padding: 4px 0;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Fotos</title>
+    <!-- Vincula o arquivo de estilos CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="upload-container">
+        <h3>Subir Arquivos</h3>
+        
+        <label for="upload-foto" class="botao-upload">
+            Escolher Fotos
+        </label>
+        <input id="upload-foto" type="file" accept="image/*" multiple />
+        
+        <div id="lista-arquivos">
+            Nenhuma foto selecionada.
+        </div>
+        
+        <!-- ADICIONE ESTE BOTÃO AQUI -->
+        <button id="btn-enviar" class="botao-upload" style="margin-top: 15px; width: 100%; display: none; background-color: #28a745;">
+            Enviar para o Servidor
+        </button>
+        
+    </div>
+
+    <!-- Vincula o arquivo de lógica JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

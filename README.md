@@ -19,13 +19,15 @@ ProjetoInterdisciplinar/
 │   │   ├── elenco.html
 │   │   ├── proximos-jogos.html
 │   │   └── historia.html
+│   ├── css/
+│   │   ├── style.css
+│   │   └── upload.css
+│   ├── js/
+│   │   ├── main.js
+│   │   └── upload.js
 │   └── assets/
-│       ├── css/
-│       │   └── style.css
-│       ├── js/
-│       │   └── main.js
-│       └── images/
-│           └── .gitkeep
+│       ├── favicon-vazio.svg
+│       └── .gitkeep
 ├── venv/
 ├── .gitignore
 ├── requirements.txt
@@ -73,12 +75,11 @@ View ← resposta  ← Controller ← dados
 - **`front_end/`**: contém a camada View, com páginas, estilos, scripts e imagens fixas.
 - **`front_end/index.html`**: é a página principal e o ponto de entrada da navegação para as quatro seções do portal.
 - **`front_end/Telas/`**: reúne as páginas de Notícias, Elenco, Próximos Jogos e História. Todas oferecem links para as demais seções e para a página principal.
-- **`front_end/assets/`**: centraliza os recursos compartilhados da interface.
-- **`front_end/assets/css/`**: guarda os estilos. O arquivo `style.css` define o visual comum, o layout e as adaptações para telas menores.
-- **`front_end/assets/js/`**: guarda os scripts da interface. Atualmente, `main.js` controla o menu em telas menores e atualiza o ano do rodapé.
-- **`front_end/assets/images/`**: guarda futuras imagens fixas do projeto, como logos, ícones e banners adicionados durante o desenvolvimento.
+- **`front_end/css/`**: guarda os estilos. O arquivo `style.css` define o visual comum, o layout e as adaptações para telas menores.
+- **`front_end/js/`**: guarda os scripts da interface. Atualmente, `main.js` controla o menu em telas menores e atualiza o ano do rodapé.
+- **`front_end/assets/`**: guarda futuras imagens fixas do projeto, como logos, ícones e banners adicionados durante o desenvolvimento.
 
-**Diferença entre `images` e `uploads`:** `images` contém recursos da interface mantidos com o código; `uploads` recebe arquivos enviados durante o uso do sistema.
+**Diferença entre `assets` e `uploads`:** `assets` contém recursos da interface mantidos com o código; `uploads` recebe arquivos enviados durante o uso do sistema.
 
 ### Arquivos e diretórios da raiz
 
@@ -145,11 +146,11 @@ A interface foi ajustada para facilitar a orientação e a realização das tare
 - Upload integrado ao conteúdo, com seleção de arquivos visível, indicação de envio, confirmação e mensagens de erro sem alertas bloqueantes.
 - Em caso de erro no envio, a seleção permanece disponível para uma nova tentativa.
 
-O espaço máximo do menu pode ser alterado em `--espaco-menu`, no início de `front_end/assets/css/style.css`. Os ajustes seguem princípios de IHC, mas ainda precisam de avaliação com usuários; não representam uma certificação de acessibilidade.
+O espaço máximo do menu pode ser alterado em `--espaco-menu`, no início de `front_end/css/style.css`. Os ajustes seguem princípios de IHC, mas ainda precisam de avaliação com usuários; não representam uma certificação de acessibilidade.
 
 ## Convenções para continuar o desenvolvimento
 
-- Mantenha o estilo comum em `front_end/assets/css/style.css` e os comportamentos compartilhados em `front_end/assets/js/main.js`.
-- Na página principal, use caminhos como `assets/images/logo.png`; nas páginas de `Telas`, use `../assets/images/logo.png`.
+- Mantenha o estilo comum em `front_end/css/style.css` e os comportamentos compartilhados em `front_end/js/main.js`.
+- Na página principal, use caminhos como `assets/logo.png`; nas páginas de `Telas`, use `../assets/logo.png`.
 - Coloque novos dados e regras de negócio em `models` e os responsáveis por receber requisições em `controllers`, conforme a separação MVC for implementada.
 - Mantenha arquivos enviados por usuários em `back_end/uploads`, separados dos recursos fixos da interface.

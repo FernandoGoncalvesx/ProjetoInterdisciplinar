@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon-vazio.svg?v=1">
+    <meta name="description" content="Notícias, elenco, jogos e história da Seleção Feminina Brasileira.">
+    <title>Seleção Feminina Brasileira</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/upload.css">
+    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/upload.js" defer></script>
+</head>
+<body>
+    <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <header class="cabecalho">
+        <div class="container barra-navegacao">
+            <a class="marca" href="index.html" aria-label="Seleção Feminina Brasileira — início">Seleção Feminina Brasileira</a>
+            <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu-principal">
+                <span class="sr-only">Abrir menu</span><span></span><span></span><span></span>
+            </button>
+            <nav id="menu-principal" class="menu" aria-label="Navegação principal">
+                <a href="index.html" class="ativo" aria-current="page">Início</a>
+                <a href="Telas/noticias.html">Notícias</a>
+                <a href="Telas/elenco.html">Elenco</a>
+                <a href="Telas/proximos-jogos.html">Próximos jogos</a>
+                <a href="Telas/historia.html">História</a>
+            </nav>
+        </div>
+    </header>
+    <main id="conteudo">
+        <section class="hero">
+            <div class="container">
+                <p class="etiqueta">Seleção Feminina Brasileira</p>
+                <h1>Conheça a seleção.<br>Acompanhe cada capítulo.</h1>
+                <p class="hero-texto">Explore notícias, atletas, próximos jogos e a história da seleção feminina.</p>
+                <a class="botao" href="Telas/noticias.html">Explorar notícias</a>
+            </div>
+        </section>
+        <section class="secao container" aria-labelledby="explorar-titulo">
+            <div class="secao-cabecalho"><h2 id="explorar-titulo">Explore o portal</h2></div>
+            <div class="grade-cards">
+                <a class="card-link" href="Telas/noticias.html"><h3>Notícias</h3><p>Novidades e informações sobre a seleção.</p><span class="card-acao">Ver notícias →</span></a>
+                <a class="card-link" href="Telas/elenco.html"><h3>Elenco</h3><p>Conheça as atletas e suas posições.</p><span class="card-acao">Conhecer elenco →</span></a>
+                <a class="card-link" href="Telas/proximos-jogos.html"><h3>Próximos jogos</h3><p>Consulte a agenda de partidas.</p><span class="card-acao">Consultar jogos →</span></a>
+                <a class="card-link" href="Telas/historia.html"><h3>História</h3><p>Explore a trajetória da seleção.</p><span class="card-acao">Conhecer história →</span></a>
+            </div>
+        </section>
+        <section class="secao container" aria-labelledby="upload-titulo">
+            <div class="card upload-container">
+                <h2 id="upload-titulo">Enviar fotos</h2>
+                <p class="upload-ajuda" id="upload-ajuda">Selecione uma ou mais imagens e confirme o envio. As fotos serão armazenadas; não serão publicadas automaticamente no portal.</p>
+                <form id="form-upload">
+                    <label for="upload-foto">Escolher fotos</label>
+                    <input id="upload-foto" name="fotos" type="file" accept="image/*" multiple aria-describedby="upload-ajuda">
+                    <div id="lista-arquivos">Nenhuma foto selecionada.</div>
+                    <button id="btn-enviar" class="botao-upload" type="submit" hidden>Enviar fotos</button>
+                    <p id="upload-status" class="upload-status" role="status" aria-live="polite" aria-atomic="true"></p>
+                </form>
+                <noscript><p>Ative o JavaScript para enviar fotos. A navegação do portal continua disponível.</p></noscript>
+            </div>
+        </section>
+    </main>
+    <footer class="rodape"><div class="container rodape-conteudo"><p><strong>Seleção Feminina Brasileira</strong></p><p>© <span data-ano></span> — Projeto Interdisciplinar</p></div></footer>
+</body>
+</html>

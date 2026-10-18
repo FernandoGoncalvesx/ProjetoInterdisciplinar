@@ -8,5 +8,5 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-uploads/*
-!uploads/.gitkeep
+/back_end/uploads/*
+!/back_end/uploads/.gitkeep

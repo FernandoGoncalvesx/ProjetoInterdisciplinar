@@ -1,12 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notícias</title>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/script-noticia.js" defer></script>
 </head>
+
 <body>
-    
+    <header>
+        <img class="logo" src="../assets/images/logo.png" alt="Logo">
+        <h1 style="color: rgb(233, 233, 236); text-align: center; margin-top: 20px;">
+            Notícias
+        </h1>
+    </header>
+    <div class="container center">
+        <div class="row gx-2">
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Notícia 1</h5>
+                        <p class="card-text">Resumo Notícia</p>
+                        <button type="button" class="btn btn-primary" onclick="opennoticia(this)">Abrir notícia</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Notícia 1</h5>
+                        <p class="card-text">Resumo Notícia</p>
+                        <button type="button" class="btn btn-primary" onclick="opennoticia(this)">Abrir notícia</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Notícia 1</h5>
+                        <p class="card-text">Resumo Notícia</p>
+                        <button type="button" class="btn btn-primary" onclick="opennoticia(this)">Abrir notícia</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <dialog id="detalhes-noticia" class="news-dialog" aria-labelledby="detalhes-titulo">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                    <h2 id="detalhes-titulo" class="card-title h5"></h2>
+                    <button type="button" class="btn-close" aria-label="Fechar"
+                        onclick="document.getElementById('detalhes-noticia').close()"></button>
+                </div>
+                <p id="detalhes-resumo" class="card-text"></p>
+            </div>
+        </div>
+    </dialog>
 </body>
+
 </html>

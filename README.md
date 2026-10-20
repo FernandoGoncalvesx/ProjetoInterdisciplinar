@@ -153,3 +153,10 @@ O espaço máximo do menu pode ser alterado em `--espaco-menu`, no início de `f
 - Na página principal, use caminhos como `assets/images/logo.png`; nas páginas de `Telas`, use `../assets/images/logo.png`.
 - Coloque novos dados e regras de negócio em `models` e os responsáveis por receber requisições em `controllers`, conforme a separação MVC for implementada.
 - Mantenha arquivos enviados por usuários em `back_end/uploads`, separados dos recursos fixos da interface.
+
+## 📌 Próximos Passos
+
+- [ ] Implementar o banco de dados para persistência das informações.
+- [ ] Mover as rotas de `Servidor.py` para a pasta `controllers/`.
+- [ ] Criar os modelos em `models/` para notícias, elenco e partidas.
+- [ ] Integrar a View com a API para exibição dinâmica dos dados.

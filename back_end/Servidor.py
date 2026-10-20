@@ -1,13 +1,13 @@
 import os
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from werkzeug.utils import secure_filename # <--- NOVO: Importa a ferramenta de segurança do Flask
+from werkzeug.utils import secure_filename
 
 PASTA_ATUAL = os.path.dirname(os.path.abspath(__file__))
 PASTA_PROJETO = os.path.dirname(PASTA_ATUAL)
 
-PASTA_FRONTEND = os.path.join(PASTA_PROJETO, 'front-end')
-PASTA_UPLOADS = os.path.join(PASTA_PROJETO, 'uploads')
+PASTA_FRONTEND = os.path.join(PASTA_PROJETO, 'front_end')
+PASTA_UPLOADS = os.path.join(PASTA_ATUAL, 'uploads')
 
 os.makedirs(PASTA_UPLOADS, exist_ok=True)
 

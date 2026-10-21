@@ -1,200 +1,337 @@
 # Projeto Interdisciplinar — Futebol Feminino
 
-Portal para reunir notícias, informações do elenco, próximos jogos e a história de uma equipe de futebol feminino. O projeto separa a interface do servidor e está organizado para evoluir conforme a arquitetura MVC (Model–View–Controller).
+Portal da Seleção Feminina Brasileira com páginas de notícias, elenco, próximos jogos e história. Desenvolvido com HTML, CSS, JavaScript e Python/Flask, com estrutura inicial para MySQL.
 
-## Estrutura atual
+## Funcionalidades e tecnologias
+
+O sistema possui cinco páginas HTML, menu responsivo com suporte a teclado, identificação da página atual, logo no cabeçalho e formulário para enviar várias imagens. Notícias, elenco, jogos e história ainda apresentam conteúdo estático ou espaços aguardando dados. Cadastro, login, sessões e foto de perfil vinculada ao usuário ainda não foram implementados.
+
+| Tecnologia | Uso |
+| --- | --- |
+| HTML, CSS e JavaScript | Conteúdo, aparência e interações das páginas. |
+| Python e Flask | Entrega das páginas e recebimento de uploads. |
+| Flask-CORS e Werkzeug | CORS e normalização dos nomes dos arquivos enviados. |
+| MySQL Connector/Python e python-dotenv | Conexão com o MySQL e leitura da configuração local. |
+| MySQL | Estrutura inicial de usuários, ainda não integrada às rotas. |
+| Waitress | Execução do Flask sem o servidor de depuração. |
+| Apache do XAMPP | Proxy reverso para encaminhar acessos ao Waitress. |
+| Cloudflare Tunnel | Link HTTPS temporário para demonstração externa. |
+
+As páginas são entregues como arquivos estáticos; não há framework JavaScript, compilação de frontend ou uso de templates Jinja nas rotas atuais.
+
+## Estrutura atual do projeto
+
+```text
 ProjetoInterdisciplinar/
 ├── back_end/
 │   ├── Servidor.py
 │   ├── controllers/
-│   │   └── __init__.py
 │   ├── models/
-│   │   ├── __init__.py
 │   │   └── banco.py
 │   └── uploads/
 │       └── .gitkeep
 ├── front_end/
 │   ├── index.html
 │   ├── Telas/
-│   │   ├── noticias.html
 │   │   ├── elenco.html
-│   │   ├── proximos-jogos.html
-│   │   └── historia.html
+│   │   ├── historia.html
+│   │   ├── noticias.html
+│   │   └── proximos_jogos.html
 │   ├── css/
-│   │   ├── style.css
-│   │   └── upload.css
+│   │   ├── index.css
+│   │   ├── elenco.css
+│   │   ├── historia.css
+│   │   ├── noticias.css
+│   │   └── proximos_jogos.css
 │   ├── js/
-│   │   ├── main.js
-│   │   └── upload.js
+│   │   ├── index.js
+│   │   ├── elenco.js
+│   │   ├── historia.js
+│   │   ├── noticias.js
+│   │   └── proximos_jogos.js
 │   └── assets/
-│       ├── favicon-vazio.svg
-│       └── .gitkeep
+│       ├── logo.webp
+│       ├── favicon.ico
+│       └── favicon.png
 ├── database/
 │   └── schema.sql
-├── venv/
+├── venv/                   # Ambiente local, ignorado pelo Git
+├── .env                    # Configuração local, ignorada pelo Git
 ├── .env.example
 ├── .gitignore
+├── INICIAR_SERVIDOR.md
 ├── requirements.txt
 └── README.md
-
-
-## Arquitetura MVC
-
-MVC distribui as responsabilidades em três camadas:
-
-|    Camada  |                                            Responsabilidade                                       |      Local no projeto   |
-| ---------- | ------------------------------------------------------------------------------------------------- | ----------------------- |
-|    Model   | Representar os dados, aplicar regras de negócio e, quando implementado, acessar o banco de dados. | `back_end/models/`      |
-|    View    | Exibir informações e oferecer a interface com que o usuário interage.                             | `front_end/`            |
-| Controller | Receber requisições, coordenar operações dos modelos e devolver respostas para a interface.       | `back_end/controllers/` |
-
-### Estado atual da implementação
-
-As Views estão implementadas como páginas HTML estáticas, com CSS e JavaScript compartilhados. As quatro seções apresentam espaços aguardando conteúdo. Há uma função de conexão com o MySQL em `back_end/models/banco.py`, configurada por um arquivo `.env` local. As rotas ainda não utilizam o banco; cadastro, login e busca dinâmica de notícias, atletas ou partidas ainda não estão implementados.
-
-A pasta `models` contém a função de conexão com o MySQL; a pasta `controllers` ainda contém somente a identificação do pacote Python. Atualmente, a inicialização do Flask, as rotas e a lógica de upload continuam em `Servidor.py`. Portanto, a separação completa das responsabilidades do MVC será feita nas próximas etapas.
-
-### Fluxo previsto para uma funcionalidade
-
-Ao carregar notícias dinamicamente, a View fará uma requisição ao servidor. O Controller receberá o pedido e consultará o Model; o Model buscará os dados e os devolverá ao Controller, que responderá à View. A interface então exibirá as notícias.
-
-```text
-View → requisição → Controller → Model
-View ← resposta  ← Controller ← dados
 ```
 
-## Função dos diretórios e arquivos
+A árvore omite os arquivos internos do ambiente virtual, os caches gerados pelo Python e os uploads dos usuários.
 
-### Back-end
+| Caminho | Responsabilidade |
+| --- | --- |
+| `front_end/index.html` | Página inicial com navegação e upload. |
+| `front_end/Telas/` | Páginas internas do portal. |
+| `front_end/css/` e `front_end/js/` | Um CSS e um JavaScript por HTML, com o mesmo nome da página. |
+| `front_end/assets/` | Logo WebP e favicons. |
+| `back_end/Servidor.py` | Aplicação Flask, entrega das páginas e API de upload. |
+| `back_end/models/banco.py` | Conexão e verificação do MySQL. |
+| `back_end/controllers/` | Pasta reservada para os controladores. |
+| `back_end/uploads/` | Arquivos enviados pelo site, ignorados pelo Git. |
+| `database/schema.sql` | Estrutura inicial do banco, sem registros. |
+| `.env.example` | Modelo de configuração local do MySQL. |
+| `requirements.txt` | Dependências Python. |
+| [INICIAR_SERVIDOR.md](INICIAR_SERVIDOR.md) | Comandos para iniciar Apache, Waitress e túnel. |
 
-- **`back_end/`**: reúne o código executado pelo servidor e o armazenamento dos arquivos enviados. Abriga as camadas Model e Controller.
-- **`back_end/Servidor.py`**: inicia a aplicação Flask, disponibiliza as páginas e os recursos do front-end e recebe uploads pela API.
-- **`back_end/controllers/`**: receberá os controladores das funcionalidades, como notícias, elenco e jogos. Esses controladores deverão tratar as requisições e coordenar as operações dos modelos.
-- **`back_end/models/`**: receberá os modelos dos dados e as regras de negócio. Por exemplo, poderá definir os dados necessários para cadastrar uma notícia ou uma atleta.
-- **`back_end/uploads/`**: armazena os arquivos recebidos pela API. É uma pasta de armazenamento, não uma camada adicional do MVC. Seu conteúdo é ignorado pelo Git, exceto o `.gitkeep`; atualmente não existe uma rota pública para visualizar os arquivos salvos.
-- **`__init__.py`**: identifica `models` e `controllers` como pacotes Python, permitindo organizar os módulos que serão importados pelo servidor.
+Cada página carrega somente seu CSS e JavaScript. A base comum é repetida nos cinco arquivos; alterações gerais devem ser aplicadas a todos. `index.js` também controla o upload. Não há arquivos globais nem subpastas `pages/`.
 
-### Front-end
+A separação MVC ainda está em andamento:
 
-- **`front_end/`**: contém a camada View, com páginas, estilos, scripts e imagens fixas.
-- **`front_end/index.html`**: é a página principal e o ponto de entrada da navegação para as quatro seções do portal.
-- **`front_end/Telas/`**: reúne as páginas de Notícias, Elenco, Próximos Jogos e História. Todas oferecem links para as demais seções e para a página principal.
-- **`front_end/css/`**: guarda os estilos. O arquivo `style.css` define o visual comum, o layout e as adaptações para telas menores.
-- **`front_end/js/`**: guarda os scripts da interface. Atualmente, `main.js` controla o menu em telas menores e atualiza o ano do rodapé.
-- **`front_end/assets/`**: guarda futuras imagens fixas do projeto, como logos, ícones e banners adicionados durante o desenvolvimento.
+| Camada | Situação atual |
+| --- | --- |
+| View | HTML, CSS e JavaScript em `front_end/`. |
+| Model | `models/banco.py` abre a conexão e verifica o banco; os modelos de negócio ainda não existem. |
+| Controller | `controllers/` está reservada; as rotas e o upload permanecem em `Servidor.py`. |
 
-**Diferença entre `assets` e `uploads`:** `assets` contém recursos da interface mantidos com o código; `uploads` recebe arquivos enviados durante o uso do sistema.
+O upload atual segue `formulário → POST /api/upload → Flask → pasta uploads`. O fluxo com banco de dados ainda será implementado. A pasta vazia `controllers/` não é mantida automaticamente ao clonar o repositório.
 
-### Arquivos e diretórios da raiz
+## Requisitos
 
-- **`venv/`**: ambiente virtual local que separa as dependências Python deste projeto das de outros projetos. Não deve ser enviado ao Git.
-- **`requirements.txt`**: lista as dependências Python e suas versões para instalação com o pip.
-- **`.gitignore`**: determina quais arquivos o Git deve ignorar, incluindo o ambiente virtual, caches Python e os arquivos enviados para `uploads`.
-- **`README.md`**: documenta o objetivo, a estrutura, a arquitetura e a execução do projeto.
+- Python com pip e suporte a ambientes virtuais.
+- Windows e PowerShell para os comandos deste documento.
+- Apache pelo XAMPP e portas locais 8081 e 8082 disponíveis, para o modo com proxy.
+- `cloudflared` e internet, somente para acesso externo.
+- MySQL Server, somente para preparar ou testar o banco. O Workbench é opcional.
 
-## Ferramentas utilizadas
+Os caminhos de exemplo correspondem ao computador de desenvolvimento. Quem clonar o projeto deve ajustar a pasta do projeto e os caminhos do XAMPP e do MySQL. O ambiente virtual, as configurações do Apache e os dados locais não vêm prontos do Git.
 
-| Ferramenta   |                                      Uso no projeto                                            |
-| ------------ | ---------------------------------------------------------------------------------------------- |
-| HTML         | Estrutura e conteúdo das páginas.                                                              |
-| CSS          | Estilo compartilhado e layout responsivo.                                                      |
-| JavaScript   | Interações no navegador, como o menu e o ano do rodapé.                                        |
-| Python       | Linguagem utilizada no servidor.                                                               |
-| Flask        | Framework do servidor: rotas HTTP, entrega de arquivos e respostas JSON.                       |
-| Flask-CORS   | Configuração de CORS para permitir requisições entre origens diferentes.                       |
-| Werkzeug     | Utilitários utilizados pelo Flask; `secure_filename` normaliza os nomes dos arquivos enviados. |
-| pip e venv   | Instalação e isolamento das dependências Python.                                               |
-| Git e GitHub | Controle de versões e hospedagem do repositório.                                               |
+## Preparar o ambiente
 
-O `requirements.txt` também inclui dependências de apoio do Flask: Blinker, Click, ItsDangerous, Jinja2 e MarkupSafe. Embora Jinja2 esteja instalado, as páginas atuais são entregues como HTML estático, sem renderização de templates pelo servidor.
+No PowerShell, dentro da pasta do projeto:
 
-## Executar localmente
+```powershell
+cd "C:\Users\gcfer\Desktop\ProjetoInterdisciplinar"
+```
 
-Com Python instalado, abra um terminal na raiz do projeto. Se ainda não houver ambiente virtual, crie-o:
+Crie o ambiente e instale as dependências:
 
 ```powershell
 python -m venv venv
+.\venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Instale as dependências e inicie o servidor:
+Crie o ambiente virtual somente se ele não existir. O Waitress está incluído em `requirements.txt`. Não é necessário ativar o ambiente para usar esses comandos. Apache, MySQL Server e `cloudflared` são programas instalados separadamente, não pacotes Python desse arquivo.
+
+Para acesso externo, instale o Apache pelo XAMPP e o cliente do túnel:
 
 ```powershell
-.\venv\Scripts\python.exe -m pip install -r requirements.txt
+winget install --id Cloudflare.cloudflared --exact
+```
+
+Abra um novo PowerShell após instalar o `cloudflared`.
+
+```powershell
+cloudflared --version
+```
+
+Para desenvolvimento apenas no computador, sem Apache ou túnel, execute:
+
+```powershell
 .\venv\Scripts\python.exe back_end\Servidor.py
 ```
 
-Acesse [http://localhost:5000](http://localhost:5000). O servidor atual inicia com modo de depuração habilitado para desenvolvimento local.
+Acesse [http://127.0.0.1:5000](http://127.0.0.1:5000). Esse modo usa depuração e não deve ser o destino do túnel público. Para o fluxo abaixo, use Waitress em vez desse comando. Abrir o HTML diretamente não inicia a API; prefira acessar o projeto por HTTP.
 
-Também é possível abrir `front_end/index.html` diretamente no navegador para visualizar as telas estáticas. As funcionalidades da API exigem que o servidor esteja em execução.
+## Ligar o servidor
 
-## Preparar o banco MySQL
+```text
+Visitante → túnel HTTPS → Apache:8082 → Waitress:8081 → Flask
+```
 
-O arquivo `database/schema.sql` cria somente o banco `projeto_interdisciplinar` e a tabela `usuarios`, incluindo a referência da foto de perfil. Não contém registros, senhas de conexão nem comandos para copiar outros bancos. As imagens ficam em `back_end/uploads`; a coluna `foto_perfil` guarda o caminho de cada arquivo.
+1. Inicie o **Apache** no XAMPP. A configuração inicial está abaixo.
+2. Na raiz do projeto, execute e mantenha o terminal aberto:
 
-No PowerShell, conecte ao MySQL (ajuste o caminho se sua instalação for diferente):
+   ```powershell
+   .\venv\Scripts\waitress-serve.exe --host=127.0.0.1 --port=8081 back_end.Servidor:app
+   ```
+
+3. Confira o site em [http://127.0.0.1:8082](http://127.0.0.1:8082).
+4. Em outro PowerShell, inicie o túnel:
+
+   ```powershell
+   cloudflared tunnel --protocol http2 --url http://127.0.0.1:8082
+   ```
+
+Compartilhe o link `.trycloudflare.com` exibido no terminal. O endereço é temporário e muda quando o túnel é recriado. Esse modo é destinado a testes, sem garantia de disponibilidade; não utiliza FreeDNS nem exige encaminhamento de portas no roteador.
+
+A porta **8081** acessa diretamente o Waitress; a **8082** passa pelo Apache. Ambas aceitam conexões apenas do próprio computador. Visitantes externos usam o link do túnel.
+
+Mantenha o computador ligado, sem suspensão, e os três componentes ativos. Para encerrar, use **Ctrl + C** nos terminais do túnel e do Waitress. Pare o Apache pelo XAMPP somente se nenhum outro projeto estiver usando-o. Os comandos também estão em [INICIAR_SERVIDOR.md](INICIAR_SERVIDOR.md).
+
+Não inicie outra instância na mesma porta. Alterações em HTML, CSS e JavaScript aparecem após atualizar o navegador; use **Ctrl + F5** se houver cache. Ao alterar Python, pare e reinicie o Waitress, pois esse modo não recarrega o código automaticamente.
+
+## Configurar o Apache uma vez
+
+A configuração fica fora do Git. Em instalações XAMPP, faça uma cópia de segurança de `C:\xampp\apache\conf\extra\httpd-vhosts.conf` e adicione este bloco uma única vez:
+
+```apache
+Listen 127.0.0.1:8082
+
+<VirtualHost 127.0.0.1:8082>
+    ServerName localhost
+    ProxyRequests Off
+    ProxyPass "/" "http://127.0.0.1:8081/"
+    ProxyPassReverse "/" "http://127.0.0.1:8081/"
+
+    <LocationMatch "(?i)^/(phpmyadmin|dashboard|xampp|server-status|server-info)(/|$)">
+        Require all denied
+    </LocationMatch>
+</VirtualHost>
+```
+
+No `httpd.conf`, mantenha habilitados `proxy_module`, `proxy_http_module` e `Include conf/extra/httpd-vhosts.conf`, sem duplicar linhas. A porta 8080 já é usada por outro sistema no computador de desenvolvimento; preserve essa configuração.
+
+Valide antes de iniciar ou reiniciar o Apache:
+
+```powershell
+& "C:\xampp\apache\bin\httpd.exe" -t
+```
+
+O resultado esperado é `Syntax OK`. Se houver erro de listeners duplicados, confira as declarações `Listen`. Se a porta 8082 retornar 503, verifique se o Waitress está ativo na 8081. Ajuste os caminhos caso o XAMPP esteja instalado em outro local.
+
+## Páginas e organização do frontend
+
+| HTML | CSS | JavaScript |
+| --- | --- | --- |
+| `index.html` | `css/index.css` | `js/index.js` |
+| `Telas/elenco.html` | `css/elenco.css` | `js/elenco.js` |
+| `Telas/historia.html` | `css/historia.css` | `js/historia.js` |
+| `Telas/noticias.html` | `css/noticias.css` | `js/noticias.js` |
+| `Telas/proximos_jogos.html` | `css/proximos_jogos.css` | `js/proximos_jogos.js` |
+
+Os caminhos da tabela são relativos a `front_end/`. Nos HTMLs de `Telas/`, use `../css/`, `../js/` e `../assets/`. A logo exibida no cabeçalho é `assets/logo.webp`; os ícones da aba são `favicon.ico` e `favicon.png`.
+
+O menu recolhe em telas de até 1100px. A variável `--espaco-menu`, em cada CSS, controla o espaçamento máximo dos links. Os scripts de cada página controlam o menu e o ano do rodapé; `index.js` também controla seleção, envio e mensagens do upload.
+
+**Pendência encontrada:** os arquivos de próximos jogos usam `_`, mas ainda há links HTML apontando para `proximos-jogos.html` e referências a `proximos-jogos.css` e `proximos-jogos.js`, com hífen. Isso pode causar 404 e deixar essa página sem estilos ou scripts. É necessário alinhar todas as referências aos nomes reais da tabela acima. Esta documentação não modifica essas referências no código.
+
+## API e armazenamento de arquivos
+
+| Método | Caminho | Comportamento |
+| --- | --- | --- |
+| GET | `/` | Entrega `front_end/index.html`. |
+| GET | `/<caminho>` | Entrega arquivos existentes dentro de `front_end/`; retorna 404 quando ausentes. |
+| POST | `/api/upload` | Recebe arquivos pelo campo `fotos` e salva em `back_end/uploads/`. |
+
+O Flask também registra a rota estática `/front_end/<caminho>`. Os HTMLs usam os caminhos relativos atendidos pelas rotas principais.
+
+O envio usa `multipart/form-data`, com o mesmo campo `fotos` repetido para vários arquivos. A resposta de sucesso tem status 200 e o formato:
+
+```json
+{
+  "mensagem": "Fotos enviadas com sucesso!",
+  "arquivos": ["foto.webp"]
+}
+```
+
+Sem o campo `fotos`, a API responde 400 com `{"mensagem": "Nenhuma foto enviada."}`. Seleções com nomes vazios são ignoradas; a API ainda pode retornar sucesso com a lista `arquivos` vazia. Erros de gravação não possuem tratamento específico.
+
+O navegador filtra tipos declarados como imagem, apresenta os nomes e preserva a seleção quando o envio falha. No servidor, `secure_filename` normaliza o nome, e o arquivo é gravado no disco. Isso não valida o conteúdo da imagem nem garante um nome único. A pasta é criada automaticamente se não existir.
+
+Atualmente, os arquivos não são gravados no MySQL, não são vinculados a usuários e não possuem rota para visualização. Os arquivos só ficam no computador que recebeu o upload; o túnel não os armazena.
+
+## Banco de dados
+
+O banco `projeto_interdisciplinar` possui a estrutura de `usuarios`: `id`, `nome`, `email`, `senha_hash`, `foto_perfil` e `criado_em`. A coluna `foto_perfil` foi prevista para um caminho de arquivo; a imagem ainda não é armazenada no MySQL.
+
+| Campo | Tipo | Finalidade |
+| --- | --- | --- |
+| `id` | `INT UNSIGNED` | Chave primária com incremento automático. |
+| `nome` | `VARCHAR(100)` | Nome obrigatório. |
+| `email` | `VARCHAR(254)` | E-mail obrigatório e único. |
+| `senha_hash` | `VARCHAR(255)` | Campo destinado à senha protegida; não deve receber a senha original. |
+| `foto_perfil` | `VARCHAR(500)` | Caminho opcional da foto; o upload ainda não preenche esse campo. |
+| `criado_em` | `TIMESTAMP` | Data e hora preenchidas automaticamente. |
+
+Conecte ao MySQL pelo PowerShell, ajustando o caminho da instalação se necessário:
 
 ```powershell
 & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
 ```
 
-Depois de informar a senha, execute **dentro do MySQL**, onde aparece `mysql>`:
+Dentro do MySQL, execute o arquivo SQL e confira a tabela. Ajuste o caminho para a sua cópia do projeto:
 
 ```sql
 SOURCE C:/Users/gcfer/Desktop/ProjetoInterdisciplinar/database/schema.sql;
-SHOW TABLES;
 DESCRIBE usuarios;
 ```
 
-Quem clonar o projeto deve ajustar o caminho de `SOURCE` para a própria pasta. `SOURCE` lê e executa os comandos do arquivo SQL. `SHOW TABLES` lista as tabelas e `DESCRIBE` mostra suas colunas.
+O script cria estruturas ausentes, mas não atualiza tabelas existentes. Para mudanças futuras, registre também as alterações em scripts SQL de migração.
 
-O script usa `IF NOT EXISTS`: não apaga dados e não recria tabelas existentes. Isso também significa que ele **não adiciona colunas em uma tabela já criada**. Se `usuarios` já existir, confira `DESCRIBE usuarios;`. Somente se a coluna `foto_perfil` estiver ausente, execute:
+Se uma tabela antiga não tiver `foto_perfil`, confirme com `DESCRIBE usuarios;` e, somente nessa situação, execute:
 
 ```sql
 ALTER TABLE usuarios ADD COLUMN foto_perfil VARCHAR(500) NULL;
 ```
 
-Para configurar o Python, copie `.env.example` para `.env` na raiz do projeto, caso ainda não tenha esse arquivo, e preencha a senha localmente. Instale as dependências conforme a seção de execução e teste no PowerShell, a partir da raiz do projeto:
+Copie `.env.example` para `.env`, caso ainda não exista, e preencha os dados de conexão localmente:
+
+| Variável | Finalidade | Padrão do projeto |
+| --- | --- | --- |
+| `DB_HOST` | Endereço do MySQL | `127.0.0.1` |
+| `DB_PORT` | Porta do MySQL | `3306` |
+| `DB_USER` | Usuário de conexão | `root` no exemplo local |
+| `DB_PASSWORD` | Senha desse usuário | Preencher localmente; não versionar. |
+| `DB_NAME` | Nome do banco | `projeto_interdisciplinar` |
+
+Não sobrescreva um `.env` já configurado. Para testar a conexão, com o MySQL em execução:
 
 ```powershell
 .\venv\Scripts\python.exe -m back_end.models.banco
 ```
 
-O teste consulta o nome do banco e as colunas de `usuarios`, sem alterar dados. A conexão preparada ainda não implementa as rotas de cadastro ou login.
+As rotas atuais ainda não consultam o banco; o MySQL não é necessário para abrir as páginas ou receber os uploads existentes.
 
-### Banco de dados e Git
+O teste mostra o nome do banco e as colunas, sem alterar os dados. `root` é a conta usada no exemplo local, não um funcionário cadastrado. Para uma implantação definitiva, use uma conta própria da aplicação com as permissões necessárias.
 
-Versione `database/schema.sql`, o código Python, as dependências e `.env.example`. O arquivo `.env` com a senha e as fotos enviadas são ignorados pelo Git. O Git não copia automaticamente os bancos locais nem seus registros.
+## Verificação e diagnóstico
 
-Quando a estrutura mudar, mantenha `schema.sql` atualizado para instalações novas e adicione um arquivo numerado em `database/migrations/` com os comandos de alteração para bancos existentes. Por exemplo, uma alteração futura poderia ficar em `001_adicionar_cargo.sql`. Registre no arquivo o que ele modifica e execute cada migração uma única vez, na ordem. Evite incluir senhas ou dados pessoais nesses scripts.
+Depois de preparar o ambiente:
 
-## Rotas atuais
+1. Abra a página inicial e as quatro páginas internas, conferindo estilos, logo e navegação. Considere a pendência de nomes em próximos jogos descrita acima.
+2. Em tela estreita, abra o menu, navegue por teclado e confira o fechamento com Escape.
+3. Envie uma imagem de teste e confira o arquivo em `back_end/uploads/`. A mensagem de sucesso ainda não representa um cadastro no banco.
+4. Abra o link do túnel em um celular com Wi-Fi desligado para confirmar o acesso externo.
+5. Execute a verificação do banco separadamente, se for utilizá-lo.
 
-| Método e caminho   |                                                 Função                                           |
-| ------------------ | ------------------------------------------------------------------------------------------------ |
-| `GET /`            | Entrega a página principal `index.html`.                                                         |
-| `GET /<caminho>`   | Entrega os arquivos existentes em `front_end`, incluindo telas, CSS, JavaScript e imagens fixas. |
-| `POST /api/upload` | Recebe arquivos no campo `fotos` de um formulário multipart e os salva em `back_end/uploads`.    |
+Não há suíte de testes automatizados versionada neste repositório. Esses passos são verificações manuais.
 
-A página inicial possui um formulário ligado à API de upload. As fotos são armazenadas em `back_end/uploads`, sem publicação automática.
+| Problema | Onde conferir |
+| --- | --- |
+| Porta 8081 não abre | Waitress ativo, dependências instaladas e terminal na raiz do projeto. |
+| 8081 abre e 8082 não | Apache ativo e configuração validada com `httpd.exe -t`. |
+| Apache retorna 503 | Waitress disponível em `127.0.0.1:8081`. |
+| Porta em uso ou listeners duplicados | Instâncias já ativas e declarações `Listen` nos arquivos incluídos. |
+| Link público indisponível | Túnel ativo, novo link correto, internet e acesso local pela 8082. |
+| `cloudflared` não reconhecido | Reabrir o PowerShell após a instalação e conferir `cloudflared --version`. |
+| Próximos jogos sem estilo ou com 404 | Referências com hífen versus arquivos com sublinhado. |
+| Acesso negado ao MySQL | `DB_USER` e `DB_PASSWORD` no `.env`. |
+| Banco ou tabela inexistente | `DB_NAME` e execução de `database/schema.sql`. |
 
-## Interface e IHC
+## Git, manutenção e cópias de segurança
 
-A interface foi ajustada para facilitar a orientação e a realização das tarefas:
+Versione código, assets, documentação, `requirements.txt`, `.env.example` e scripts SQL. Não inclua `.env`, ambiente virtual, caches, senhas ou dados pessoais. Os uploads são ignorados, exceto o `.gitkeep` que preserva a pasta.
 
-- Nome da seleção, navegação e rodapé consistentes nas cinco páginas.
-- Página atual indicada por texto destacado e `aria-current`.
-- Fundo azul preservado, com superfícies escuras e cartões claros para facilitar a leitura.
-- Espaçamento do menu adaptável: até 92px nas telas largas e menu recolhível em telas de até 1100px.
-- Links e botões com áreas de interação de pelo menos 44px, foco visível e atalho para pular ao conteúdo.
-- Menu acessível pelo teclado, fechamento com Escape e navegação disponível mesmo sem JavaScript.
-- Upload integrado ao conteúdo, com seleção de arquivos visível, indicação de envio, confirmação e mensagens de erro sem alertas bloqueantes.
-- Em caso de erro no envio, a seleção permanece disponível para uma nova tentativa.
+Clonar o repositório não copia os registros do MySQL, uploads ou configurações do Apache. Faça backup do banco e da pasta `back_end/uploads/` separadamente. O `.env` deve ser guardado de forma privada.
 
-O espaço máximo do menu pode ser alterado em `--espaco-menu`, no início de `front_end/css/style.css`. Os ajustes seguem princípios de IHC, mas ainda precisam de avaliação com usuários; não representam uma certificação de acessibilidade.
+Ao criar uma página, use o mesmo nome no HTML, CSS e JavaScript e atualize os links. Mantenha a grafia consistente, inclusive maiúsculas, hífens e sublinhados. Ajustes de estilo ou navegação comuns devem ser repetidos nos cinco arquivos, conforme a organização atual.
 
-## Convenções para continuar o desenvolvimento
+## Estado atual e cuidados
 
-- Mantenha o estilo comum em `front_end/css/style.css` e os comportamentos compartilhados em `front_end/js/main.js`.
-- Na página principal, use caminhos como `assets/logo.png`; nas páginas de `Telas`, use `../assets/logo.png`.
-- Coloque novos dados e regras de negócio em `models` e os responsáveis por receber requisições em `controllers`, conforme a separação MVC for implementada.
-- Mantenha arquivos enviados por usuários em `back_end/uploads`, separados dos recursos fixos da interface.
+- Páginas, menu responsivo e upload estão implementados. As seções ainda aguardam conteúdo dinâmico.
+- Cadastro, login, sessões e vínculo da foto de perfil ao usuário ainda não estão implementados.
+- `POST /api/upload` recebe o campo `fotos` e salva os arquivos em `back_end/uploads/`, sem registro no banco nem rota de exibição.
+- Antes do uso público contínuo, o upload precisa de autenticação, validação do conteúdo no servidor, limite de tamanho e nomes únicos para evitar sobrescrita.
+- `.env`, `venv/` e uploads não devem ir para o Git. O repositório contém a estrutura SQL, não os registros reais do MySQL.
+
+As próximas etapas são corrigir as referências de próximos jogos, integrar cadastro e autenticação ao banco, implementar a foto de perfil e distribuir as regras entre modelos e controladores. O armazenamento de imagens dentro do MySQL foi discutido, mas não está implementado.
+
+Referências de infraestrutura: [Waitress com Flask](https://flask.palletsprojects.com/en/stable/deploying/waitress/), [proxy reverso do Apache](https://httpd.apache.org/docs/2.4/howto/reverse_proxy.html) e [Cloudflare Quick Tunnels](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/).

@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="assets/favicon-vazio.svg?v=1">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico?v=2">
+    <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon.png?v=2">
     <meta name="description" content="Notícias, elenco, jogos e história da Seleção Feminina Brasileira.">
     <title>Seleção Feminina Brasileira</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/upload.css">
-    <script src="js/main.js" defer></script>
-    <script src="js/upload.js" defer></script>
+    <link rel="stylesheet" href="css/index.css">
+    <!-- defer executa o script depois que os elementos da página foram interpretados. -->
+    <script src="js/index.js" defer></script>
 </head>
 <body>
     <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <!-- Cabeçalho repetido nas cinco páginas; mantenha links e identidade consistentes. -->
     <header class="cabecalho">
         <div class="container barra-navegacao">
-            <a class="marca" href="index.html" aria-label="Seleção Feminina Brasileira — início">Seleção Feminina Brasileira</a>
+            <a class="marca" href="index.html" aria-label="Seleção Feminina Brasileira — início">
+                <img class="marca-logo" src="assets/logo.webp" alt="" width="44" height="48">
+                <span>Seleção Feminina Brasileira</span>
+            </a>
             <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu-principal">
                 <span class="sr-only">Abrir menu</span><span></span><span></span><span></span>
             </button>
@@ -49,11 +53,13 @@
         <section class="secao container" aria-labelledby="upload-titulo">
             <div class="card upload-container">
                 <h2 id="upload-titulo">Enviar fotos</h2>
+                <!-- O JavaScript envia o campo fotos em multipart; esta função ainda não usa o banco. -->
                 <form id="form-upload">
                     <label for="upload-foto">Escolher fotos</label>
                     <input id="upload-foto" name="fotos" type="file" accept="image/*" multiple aria-describedby="upload-ajuda">
                     <div id="lista-arquivos">Nenhuma foto selecionada.</div>
                     <button id="btn-enviar" class="botao-upload" type="submit" hidden>Enviar fotos</button>
+                    <!-- A região de status anuncia o resultado sem mover o foco do usuário. -->
                     <p id="upload-status" class="upload-status" role="status" aria-live="polite" aria-atomic="true"></p>
                 </form>
                 <noscript><p>Ative o JavaScript para enviar fotos. A navegação do portal continua disponível.</p></noscript>

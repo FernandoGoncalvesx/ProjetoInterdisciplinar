@@ -9,7 +9,8 @@ ProjetoInterdisciplinar/
 │   ├── controllers/
 │   │   └── __init__.py
 │   ├── models/
-│   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   └── banco.py
 │   └── uploads/
 │       └── .gitkeep
 ├── front_end/
@@ -28,7 +29,10 @@ ProjetoInterdisciplinar/
 │   └── assets/
 │       ├── favicon-vazio.svg
 │       └── .gitkeep
+├── database/
+│   └── schema.sql
 ├── venv/
+├── .env.example
 ├── .gitignore
 ├── requirements.txt
 └── README.md
@@ -46,9 +50,9 @@ MVC distribui as responsabilidades em três camadas:
 
 ### Estado atual da implementação
 
-As Views estão implementadas como páginas HTML estáticas, com CSS e JavaScript compartilhados. As quatro seções apresentam espaços aguardando conteúdo. Ainda não há banco de dados nem busca dinâmica de notícias, atletas ou partidas.
+As Views estão implementadas como páginas HTML estáticas, com CSS e JavaScript compartilhados. As quatro seções apresentam espaços aguardando conteúdo. Há uma função de conexão com o MySQL em `back_end/models/banco.py`, configurada por um arquivo `.env` local. As rotas ainda não utilizam o banco; cadastro, login e busca dinâmica de notícias, atletas ou partidas ainda não estão implementados.
 
-As pastas `models` e `controllers` estão preparadas para receber essas funcionalidades, mas contêm somente a identificação dos pacotes Python. Atualmente, a inicialização do Flask, as rotas e a lógica de upload continuam em `Servidor.py`. Portanto, a separação completa das responsabilidades do MVC será feita nas próximas etapas.
+A pasta `models` contém a função de conexão com o MySQL; a pasta `controllers` ainda contém somente a identificação do pacote Python. Atualmente, a inicialização do Flask, as rotas e a lógica de upload continuam em `Servidor.py`. Portanto, a separação completa das responsabilidades do MVC será feita nas próximas etapas.
 
 ### Fluxo previsto para uma funcionalidade
 
@@ -122,6 +126,46 @@ Instale as dependências e inicie o servidor:
 Acesse [http://localhost:5000](http://localhost:5000). O servidor atual inicia com modo de depuração habilitado para desenvolvimento local.
 
 Também é possível abrir `front_end/index.html` diretamente no navegador para visualizar as telas estáticas. As funcionalidades da API exigem que o servidor esteja em execução.
+
+## Preparar o banco MySQL
+
+O arquivo `database/schema.sql` cria somente o banco `projeto_interdisciplinar` e a tabela `usuarios`, incluindo a referência da foto de perfil. Não contém registros, senhas de conexão nem comandos para copiar outros bancos. As imagens ficam em `back_end/uploads`; a coluna `foto_perfil` guarda o caminho de cada arquivo.
+
+No PowerShell, conecte ao MySQL (ajuste o caminho se sua instalação for diferente):
+
+```powershell
+& "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
+```
+
+Depois de informar a senha, execute **dentro do MySQL**, onde aparece `mysql>`:
+
+```sql
+SOURCE C:/Users/gcfer/Desktop/ProjetoInterdisciplinar/database/schema.sql;
+SHOW TABLES;
+DESCRIBE usuarios;
+```
+
+Quem clonar o projeto deve ajustar o caminho de `SOURCE` para a própria pasta. `SOURCE` lê e executa os comandos do arquivo SQL. `SHOW TABLES` lista as tabelas e `DESCRIBE` mostra suas colunas.
+
+O script usa `IF NOT EXISTS`: não apaga dados e não recria tabelas existentes. Isso também significa que ele **não adiciona colunas em uma tabela já criada**. Se `usuarios` já existir, confira `DESCRIBE usuarios;`. Somente se a coluna `foto_perfil` estiver ausente, execute:
+
+```sql
+ALTER TABLE usuarios ADD COLUMN foto_perfil VARCHAR(500) NULL;
+```
+
+Para configurar o Python, copie `.env.example` para `.env` na raiz do projeto, caso ainda não tenha esse arquivo, e preencha a senha localmente. Instale as dependências conforme a seção de execução e teste no PowerShell, a partir da raiz do projeto:
+
+```powershell
+.\venv\Scripts\python.exe -m back_end.models.banco
+```
+
+O teste consulta o nome do banco e as colunas de `usuarios`, sem alterar dados. A conexão preparada ainda não implementa as rotas de cadastro ou login.
+
+### Banco de dados e Git
+
+Versione `database/schema.sql`, o código Python, as dependências e `.env.example`. O arquivo `.env` com a senha e as fotos enviadas são ignorados pelo Git. O Git não copia automaticamente os bancos locais nem seus registros.
+
+Quando a estrutura mudar, mantenha `schema.sql` atualizado para instalações novas e adicione um arquivo numerado em `database/migrations/` com os comandos de alteração para bancos existentes. Por exemplo, uma alteração futura poderia ficar em `001_adicionar_cargo.sql`. Registre no arquivo o que ele modifica e execute cada migração uma única vez, na ordem. Evite incluir senhas ou dados pessoais nesses scripts.
 
 ## Rotas atuais
 

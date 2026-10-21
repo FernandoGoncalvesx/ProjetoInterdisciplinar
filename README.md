@@ -54,6 +54,7 @@ ProjetoInterdisciplinar/
 │       ├── favicon.ico
 │       └── favicon.png
 ├── database/
+│   ├── README.md
 │   └── schema.sql
 ├── venv/                   # Ambiente local, ignorado pelo Git
 ├── .env                    # Configuração local, ignorada pelo Git
@@ -240,6 +241,8 @@ Atualmente, os arquivos não são gravados no MySQL, não são vinculados a usu�
 
 ## Banco de dados
 
+A estrutura completa e as instruções de criação estão em [database/README.md](database/README.md). Execute somente `database/schema.sql` para criar o banco e as sete tabelas: `usuarios`, `jogadoras`, `noticias`, `proximos_jogos` e as três tabelas de relacionamento. O mesmo script pode ser usado em uma instalação nova ou para criar tabelas ausentes em um banco existente.
+
 O banco `projeto_interdisciplinar` possui a estrutura de `usuarios`: `id`, `nome`, `email`, `senha_hash`, `foto_perfil` e `criado_em`. A coluna `foto_perfil` foi prevista para um caminho de arquivo; a imagem ainda não é armazenada no MySQL.
 
 | Campo | Tipo | Finalidade |
@@ -264,7 +267,7 @@ SOURCE C:/Users/gcfer/Desktop/ProjetoInterdisciplinar/database/schema.sql;
 DESCRIBE usuarios;
 ```
 
-O script cria estruturas ausentes, mas não atualiza tabelas existentes. Para mudanças futuras, registre também as alterações em scripts SQL de migração.
+O script cria estruturas ausentes e preserva os registros, mas não atualiza colunas de tabelas existentes. Alterações nessas colunas exigem comandos `ALTER TABLE`.
 
 Se uma tabela antiga não tiver `foto_perfil`, confirme com `DESCRIBE usuarios;` e, somente nessa situação, execute:
 

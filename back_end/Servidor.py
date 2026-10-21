@@ -13,6 +13,8 @@ PASTA_UPLOADS = os.path.join(PASTA_ATUAL, 'uploads')
 # Uploads ficam fora do frontend para não serem publicados como arquivos estáticos.
 os.makedirs(PASTA_UPLOADS, exist_ok=True)
 
+# static_folder também registra /front_end/<arquivo>. Os HTMLs usam as rotas abaixo;
+# essa rota adicional do Flask não é referenciada pela navegação atual.
 app = Flask(__name__, static_folder=PASTA_FRONTEND)
 # A política atual permite outras origens; deve ser restringida na implantação definitiva.
 CORS(app)  
@@ -28,6 +30,7 @@ def arquivos_estaticos(path):
     return send_from_directory(PASTA_FRONTEND, path)
 
 # Recebe arquivos no disco; ainda não relaciona fotos a usuários nem consulta o MySQL.
+# A rota está disponível, mas index.html está sem action e styles.js bloqueia seu envio.
 @app.route('/api/upload', methods=['POST'])
 def upload_fotos():
     # O nome do campo deve coincidir com o FormData enviado pela página inicial.
@@ -56,7 +59,8 @@ def upload_fotos():
         'arquivos': arquivos_salvos
     }), 200
 
-# Apenas para desenvolvimento local. O Waitress importa app e não executa este bloco.
+# Apenas para desenvolvimento local. O Waitress importa app e não executa este bloco;
+# isso é um ponto de entrada alternativo, não código morto.
 if __name__ == '__main__':
     print("Servidor rodando! Acesse: http://localhost:5000")
     app.run(debug=True, port=5000)

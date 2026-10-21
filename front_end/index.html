@@ -6,10 +6,10 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico?v=2">
     <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon.png?v=2">
     <meta name="description" content="Notícias, elenco, jogos e história da Seleção Feminina Brasileira.">
-    <title>Seleção Feminina Brasileira</title>
-    <link rel="stylesheet" href="css/index.css">
+    <title> Seleção Feminina Brasileira</title>
+    <link rel="stylesheet" href="css/styles.css">
     <!-- defer executa o script depois que os elementos da página foram interpretados. -->
-    <script src="js/index.js" defer></script>
+    <script src="js/styles.js" defer></script>
 </head>
 <body>
     <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
@@ -27,12 +27,12 @@
                 <a href="index.html" class="ativo" aria-current="page">Início</a>
                 <a href="Telas/noticias.html">Notícias</a>
                 <a href="Telas/elenco.html">Elenco</a>
-                <a href="Telas/proximos-jogos.html">Próximos jogos</a>
+                <a href="Telas/proximos_jogos.html">Próximos jogos</a>
                 <a href="Telas/historia.html">História</a>
             </nav>
         </div>
     </header>
-    <main id="conteudo">
+    <main id="conteudo" tabindex="-1">
         <section class="hero">
             <div class="container">
                 <p class="etiqueta">Seleção Feminina Brasileira</p>
@@ -46,17 +46,20 @@
             <div class="grade-cards">
                 <a class="card-link" href="Telas/noticias.html"><h3>Notícias</h3><span class="card-acao">Ver notícias →</span></a>
                 <a class="card-link" href="Telas/elenco.html"><h3>Elenco</h3><span class="card-acao">Conhecer elenco →</span></a>
-                <a class="card-link" href="Telas/proximos-jogos.html"><h3>Próximos jogos</h3><span class="card-acao">Consultar jogos →</span></a>
+                <a class="card-link" href="Telas/proximos_jogos.html"><h3>Próximos jogos</h3><span class="card-acao">Consultar jogos →</span></a>
                 <a class="card-link" href="Telas/historia.html"><h3>História</h3><span class="card-acao">Conhecer história →</span></a>
             </div>
         </section>
         <section class="secao container" aria-labelledby="upload-titulo">
             <div class="card upload-container">
                 <h2 id="upload-titulo">Enviar fotos</h2>
-                <!-- O JavaScript envia o campo fotos em multipart; esta função ainda não usa o banco. -->
-                <form id="form-upload">
+                <!-- PENDÊNCIA: sem action, styles.js permite selecionar/remover fotos, mas bloqueia
+                     o envio. A rota POST /api/upload existe no Flask; ainda não está ligada aqui.
+                     Mesmo quando ligada, ela salva em disco e não registra fotos no banco. -->
+                <form id="form-upload" method="post" enctype="multipart/form-data">
                     <label for="upload-foto">Escolher fotos</label>
                     <input id="upload-foto" name="fotos" type="file" accept="image/*" multiple aria-describedby="upload-ajuda">
+                    <p id="upload-ajuda" class="upload-ajuda">Somente imagens, até 10 fotos de 5 MB cada.</p>
                     <div id="lista-arquivos">Nenhuma foto selecionada.</div>
                     <button id="btn-enviar" class="botao-upload" type="submit" hidden>Enviar fotos</button>
                     <!-- A região de status anuncia o resultado sem mover o foco do usuário. -->
@@ -66,6 +69,10 @@
             </div>
         </section>
     </main>
-    <footer class="rodape"><div class="container rodape-conteudo"><p><strong>Seleção Feminina Brasileira</strong></p><p>© <span data-ano></span> — Projeto Interdisciplinar</p></div></footer>
+    <footer class="rodape">
+        <div class="container rodape-conteudo">
+            <p><strong>Seleção Feminina Brasileira</strong></p>
+            <p><span data-ano>2026</span> — Projeto Interdisciplinar</p>
+        </div></footer>
 </body>
 </html>

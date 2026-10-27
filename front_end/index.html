@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico?v=2">
+    <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon.png?v=2">
+    <meta name="description" content="Notícias, elenco, jogos e história da Seleção Feminina Brasileira.">
+    <title> Seleção Feminina Brasileira</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- defer executa o script depois que os elementos da página foram interpretados. -->
+    <script src="js/styles.js" defer></script>
+</head>
+<body>
+    <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <!-- Cabeçalho repetido nas cinco páginas; mantenha links e identidade consistentes. -->
+    <header class="cabecalho">
+        <div class="container barra-navegacao">
+            <a class="marca" href="index.html" aria-label="Seleção Feminina Brasileira — início">
+                <img class="marca-logo" src="assets/logo.webp" alt="" width="44" height="48">
+                <span>Seleção Feminina Brasileira</span>
+            </a>
+            <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu-principal">
+                <span class="sr-only">Abrir menu</span><span></span><span></span><span></span>
+            </button>
+            <nav id="menu-principal" class="menu" aria-label="Navegação principal">
+                <a href="index.html" class="ativo" aria-current="page">Início</a>
+                <a href="Telas/noticias.html">Notícias</a>
+                <a href="Telas/elenco.html">Elenco</a>
+                <a href="Telas/proximos_jogos.html">Próximos jogos</a>
+                <a href="Telas/historia.html">História</a>
+            </nav>
+        </div>
+    </header>
+    <main id="conteudo" tabindex="-1">
+        <section class="hero">
+            <div class="container">
+                <p class="etiqueta">Seleção Feminina Brasileira</p>
+                <h1>Conheça a seleção.<br>Acompanhe cada capítulo da história.</h1>
+                <p class="hero-texto">Explore as notícias sobre as atletas, os próximos jogos e a história da seleção feminina.</p>
+                <a class="botao" href="Telas/noticias.html">Explorar notícias</a>
+            </div>
+        </section>
+        <section class="secao container" aria-labelledby="explorar-titulo">
+            <div class="secao-cabecalho"><h2 id="explorar-titulo">Portal do web site</h2></div>
+            <div class="grade-cards">
+                <a class="card-link" href="Telas/noticias.html"><h3>Notícias</h3><span class="card-acao">Ver notícias →</span></a>
+                <a class="card-link" href="Telas/elenco.html"><h3>Elenco</h3><span class="card-acao">Conhecer elenco →</span></a>
+                <a class="card-link" href="Telas/proximos_jogos.html"><h3>Próximos jogos</h3><span class="card-acao">Consultar jogos →</span></a>
+                <a class="card-link" href="Telas/historia.html"><h3>História</h3><span class="card-acao">Conhecer história →</span></a>
+            </div>
+        </section>
+        <section class="secao container" aria-labelledby="upload-titulo">
+            <div class="card upload-container">
+                <h2 id="upload-titulo">Enviar fotos</h2>
+                <!-- PENDÊNCIA: sem action, styles.js permite selecionar/remover fotos, mas bloqueia
+                     o envio. A rota POST /api/upload existe no Flask; ainda não está ligada aqui.
+                     Mesmo quando ligada, ela salva em disco e não registra fotos no banco. -->
+                <form id="form-upload" method="post" enctype="multipart/form-data">
+                    <label for="upload-foto">Escolher fotos</label>
+                    <input id="upload-foto" name="fotos" type="file" accept="image/*" multiple aria-describedby="upload-ajuda">
+                    <p id="upload-ajuda" class="upload-ajuda">Somente imagens, até 10 fotos de 5 MB cada.</p>
+                    <div id="lista-arquivos">Nenhuma foto selecionada.</div>
+                    <button id="btn-enviar" class="botao-upload" type="submit" hidden>Enviar fotos</button>
+                    <!-- A região de status anuncia o resultado sem mover o foco do usuário. -->
+                    <p id="upload-status" class="upload-status" role="status" aria-live="polite" aria-atomic="true"></p>
+                </form>
+                <noscript><p>Ative o JavaScript para enviar fotos. A navegação do portal continua disponível.</p></noscript>
+            </div>
+        </section>
+    </main>
+    <footer class="rodape">
+        <div class="container rodape-conteudo">
+            <p><strong>Seleção Feminina Brasileira</strong></p>
+            <p><span data-ano>2026</span> — Projeto Interdisciplinar</p>
+        </div></footer>
+</body>
+</html>

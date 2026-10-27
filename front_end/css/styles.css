@@ -1,0 +1,639 @@
+/* CSS único: base das cinco páginas, componentes da home e personalização das notícias. */
+:root {
+    --verde: #00793a;
+    --verde-escuro: #003b1e;
+    --azul-cbf: #002776;
+    --amarelo: #ffdf70;
+    --texto: #10291a;
+    --texto-suave: #3f5a4b;
+    --fundo: linear-gradient(145deg, #fffef6 0%, #fffbe0 48%, #fff5c2 100%);
+    --fundo-destaque: linear-gradient(115deg, #003b1e 0%, #00602d 58%, #00793a 100%);
+    /* Faixa dos títulos de seção: verde escuro à esquerda (texto branco) e amarelo à direita (texto escuro). */
+    --fundo-secao: linear-gradient(115deg, #003b1e 0%, #00602d 35%, #00793a 55%, #fff1a8 75%, #fff9d6 100%);
+    --superficie: #fffffb;
+    /* Espaço máximo entre os links nas telas largas. */
+    --espaco-menu: 92px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Compensa o cabeçalho fixo ao navegar para uma âncora, como o atalho de conteúdo. */
+html {
+    scroll-padding-top: 110px;
+}
+
+/* O layout em coluna mantém o rodapé no fim da tela mesmo em páginas curtas. */
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    color: var(--texto);
+    background-color: #fffbe0;
+    background-image: var(--fundo);
+    line-height: 1.6;
+}
+
+main {
+    flex: 1;
+}
+
+/* O foco programático do atalho "Pular para o conteúdo" não precisa de contorno. */
+main:focus {
+    outline: none;
+}
+
+a {
+    color: inherit;
+}
+
+button, input {
+    font: inherit;
+}
+
+h1, h2, h3, p {
+    margin-top: 0;
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+}
+
+h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.25;
+}
+
+h3 {
+    line-height: 1.3;
+}
+
+.container {
+    width: min(1120px, calc(100% - 40px));
+    margin-inline: auto;
+}
+
+.cabecalho {
+    background: var(--verde-escuro);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid #ffffff24;
+    box-shadow: 0 4px 18px #003b1e26;
+}
+
+.barra-navegacao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding-block: 18px;
+}
+
+.cabecalho .barra-navegacao {
+    width: calc(100% - 40px);
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.1rem;
+    max-width: 320px;
+    min-width: 0;
+    line-height: 1.3;
+}
+
+/* Preserva a proporção da logo e evita que ela seja comprimida pelo menu. */
+.marca-logo {
+    width: 44px;
+    height: 48px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.marca span {
+    min-width: 0;
+}
+
+.menu {
+    display: flex;
+    gap: clamp(16px, calc(16px + (100vw - 1100px) * 0.15), var(--espaco-menu));
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 12px;
+    text-decoration: none;
+    white-space: nowrap;
+    border-radius: 8px;
+    border-bottom: 3px solid transparent;
+}
+
+.menu a:hover {
+    background: #ffffff1f;
+}
+
+.menu a.ativo {
+    background: #ffffff1f;
+    border-bottom-color: var(--amarelo);
+    font-weight: bold;
+}
+
+.menu-botao {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    min-height: 48px;
+    background: transparent;
+    border: 1px solid #ffffff80;
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.menu-botao span:not(.sr-only) {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: white;
+    margin: 4px 0;
+}
+
+/* Oculta visualmente sem remover o texto da leitura por tecnologias assistivas. */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.pular-conteudo {
+    position: fixed;
+    top: -100px;
+    left: 16px;
+    padding: 12px 18px;
+    background: white;
+    color: var(--verde-escuro);
+    z-index: 20;
+    border-radius: 8px;
+}
+
+.pular-conteudo:focus {
+    top: 10px;
+}
+
+/* Anel duplo (azul + branco): visível sobre o fundo amarelo claro e sobre as áreas escuras. */
+:focus-visible {
+    outline: 3px solid var(--azul-cbf);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px #ffffff;
+}
+
+/* Nas áreas verde-escuras, o amarelo tem mais contraste que o azul. */
+.cabecalho :focus-visible,
+.rodape :focus-visible,
+.hero :focus-visible {
+    outline-color: var(--amarelo);
+    box-shadow: none;
+}
+
+.hero {
+    color: white;
+    background: var(--fundo-destaque);
+    padding: 64px 0;
+    border-bottom: 1px solid #ffffff30;
+}
+
+.hero h1 {
+    max-width: 800px;
+    margin-bottom: 20px;
+}
+
+.pagina-hero p:last-child {
+    max-width: 650px;
+    font-size: 1.1rem;
+    color: #e3f4e9;
+}
+
+.etiqueta {
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: bold;
+    font-size: .875rem;
+    color: var(--amarelo);
+}
+
+.secao {
+    padding-block: 48px;
+}
+
+.secao-cabecalho {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+    padding: 18px 24px;
+    border-radius: 12px;
+    background: var(--fundo-secao);
+    color: white;
+}
+
+.secao-cabecalho h2 {
+    margin-bottom: 0;
+}
+
+/* SEM USO ATUAL: nenhuma das cinco páginas tem um <p> diretamente em .secao-cabecalho.
+   Esta regra e sua variação no breakpoint de 1100px só atuarão se esse subtítulo for incluído.
+   O texto escuro foi previsto para a parte amarela da faixa. */
+.secao-cabecalho > p {
+    margin: 0;
+    color: var(--verde-escuro);
+    font-weight: bold;
+}
+
+.card {
+    background: var(--superficie);
+    border: 1px solid #ece3a8;
+    border-radius: 14px;
+    padding: 28px;
+    box-shadow: 0 8px 24px #003b1e12;
+}
+
+.card p {
+    color: var(--texto-suave);
+}
+
+.pagina-hero {
+    padding-block: 48px;
+}
+
+.pagina-hero p:last-child {
+    margin-bottom: 0;
+}
+
+.estado-vazio {
+    max-width: 760px;
+    padding: 32px;
+    border-left: 5px solid var(--azul-cbf);
+}
+
+.estado-vazio p:last-child {
+    margin-bottom: 0;
+}
+
+.retorno {
+    display: inline-flex;
+    margin-top: 24px;
+    min-height: 44px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: white;
+    align-items: center;
+    color: var(--verde-escuro);
+    font-weight: bold;
+    text-underline-offset: 4px;
+}
+
+.rodape {
+    background: var(--verde-escuro);
+    color: white;
+    margin-top: auto;
+}
+
+.rodape-conteudo {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-block: 24px;
+}
+
+.rodape p {
+    margin: 0;
+}
+
+/* Home: botão, cards do portal e envio de fotos. */
+.hero-texto {
+    max-width: 650px;
+    font-size: 1.1rem;
+    color: #e3f4e9;
+}
+
+.botao, .botao-upload {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 12px 24px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--amarelo);
+    color: var(--verde-escuro);
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Para .botao-upload, este fundo é sobrescrito pela regra específica logo abaixo;
+   o amarelo desta regra só tem efeito no botão .botao. */
+.botao:hover, .botao-upload:hover {
+    background: #ffe99a;
+}
+
+.botao-upload {
+    background: var(--verde);
+    color: white;
+}
+
+.botao-upload:hover {
+    background: var(--verde-escuro);
+}
+
+.grade-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.card-link {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 140px;
+    padding: 24px;
+    background: var(--superficie);
+    border: 1px solid #ece3a8;
+    border-left: 5px solid var(--verde);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px #003b1e12;
+    text-decoration: none;
+}
+
+.card-link:hover {
+    border-left-color: var(--azul-cbf);
+    transform: translateY(-2px);
+}
+
+.card-link h3 {
+    margin: 0;
+}
+
+.card-acao {
+    color: var(--azul-cbf);
+    font-weight: bold;
+}
+
+.upload-container {
+    max-width: 760px;
+}
+
+.upload-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.upload-container input[type="file"] {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 10px;
+    border: 2px dashed var(--verde);
+    border-radius: 8px;
+    background: white;
+}
+
+.upload-ajuda {
+    margin: 8px 0 0;
+    font-size: .9rem;
+}
+
+#lista-arquivos {
+    margin: 16px 0;
+    color: var(--texto-suave);
+}
+
+#lista-arquivos ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#lista-arquivos li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid #ece3a8;
+}
+
+/* Criado por styles.js ao selecionar fotos; não aparece no HTML inicial, mas está em uso. */
+.upload-remover {
+    min-height: 44px;
+    padding: 8px 14px;
+    border: 1px solid var(--azul-cbf);
+    border-radius: 8px;
+    background: white;
+    color: var(--azul-cbf);
+    cursor: pointer;
+}
+
+.upload-status {
+    min-height: 1.6em;
+    margin: 12px 0 0;
+    font-weight: bold;
+    color: var(--verde-escuro);
+}
+
+/* A classe erro é alternada pelo JavaScript; sua ausência no HTML não indica código morto. */
+.upload-status.erro {
+    color: #8a1c1c;
+}
+
+/* Em telas largas o título fica só sobre o trecho escuro da faixa, mantendo o contraste do texto branco. */
+@media (min-width: 1101px) {
+    .secao-cabecalho h2 {
+        max-width: 55%;
+    }
+}
+
+/* Mesmo limite usado pelo matchMedia do JavaScript para recolher o menu. */
+@media (max-width: 1100px) {
+    .barra-navegacao {
+        flex-wrap: wrap;
+    }
+    .menu-botao {
+        display: block;
+    }
+    .menu {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .menu.aberto {
+        display: flex;
+    }
+    .menu a {
+        min-height: 48px;
+    }
+    /* Com pouco espaço o texto ocupa a faixa toda: volta ao verde para manter o contraste. */
+    .secao-cabecalho {
+        background: var(--fundo-destaque);
+    }
+    /* SEM USO ATUAL: acompanha o subtítulo ainda ausente, descrito na regra principal. */
+    .secao-cabecalho > p {
+        color: white;
+        font-weight: normal;
+    }
+}
+
+/* Sem JavaScript, a navegação permanece acessível. */
+@media (max-width: 1100px) {
+    html:not(.js) .menu {
+        display: flex;
+    }
+    html:not(.js) .menu-botao {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .container, .cabecalho .barra-navegacao {
+        width: calc(100% - 32px);
+    }
+    .marca {
+        max-width: calc(100% - 72px);
+        font-size: 1rem;
+    }
+    .hero {
+        padding-block: 40px;
+    }
+    .secao-cabecalho, .rodape-conteudo {
+        flex-direction: column;
+        align-items: start;
+    }
+    .secao {
+        padding-block: 32px;
+    }
+    .card {
+        padding: 24px;
+    }
+}
+
+/* Mantém o atributo hidden prioritário sobre regras de display dos componentes. */
+[hidden] {
+    display: none !important;
+}
+/* O Bootstrap só é carregado em noticias.html. As três regras genéricas abaixo compensam
+   seus padrões, mas também alcançam as outras páginas porque este CSS é compartilhado. */
+.container {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+a:hover {
+    color: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+}
+
+.noticia-card {
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+}
+
+.noticia-card .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1;
+    padding: 24px;
+}
+
+.noticia-card .card-title {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.noticia-card .card-text {
+    margin: 0;
+    flex: 1;
+}
+
+.noticia-card .btn-primary {
+    min-height: 48px;
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--verde);
+    color: white;
+    font-weight: bold;
+}
+
+.noticia-card .btn-primary:hover {
+    background: var(--verde-escuro);
+    color: white;
+}
+
+.noticia-card .btn-primary:focus-visible {
+    box-shadow: 0 0 0 6px #ffffff;
+}
+
+.news-dialog {
+    color: var(--texto);
+    width: min(560px, calc(100% - 32px));
+    padding: 0;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+}
+
+.news-dialog::backdrop {
+    background: #003b1ecc;
+}
+
+.news-dialog .card {
+    gap: 12px;
+}
+
+.news-dialog h2 {
+    margin: 0;
+}
+
+.news-dialog .card-text {
+    margin: 0;
+}
+
+.news-dialog .btn-close {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+}

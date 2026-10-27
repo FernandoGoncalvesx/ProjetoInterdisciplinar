@@ -637,3 +637,10 @@ h1, h2, h3, h4, h5, h6 {
     height: 44px;
     padding: 0;
 }
+.input {
+    border: 1px solid #ece3a8;
+    border-radius: 4px;
+    margin-top: 25%;
+    margin-left: 50%;
+    margin-right: 50%;
+}

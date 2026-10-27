@@ -1,10 +1,10 @@
 # Projeto Interdisciplinar — Futebol Feminino
 
-Portal da Seleção Feminina Brasileira com páginas de notícias, elenco, próximos jogos e história. Desenvolvido com HTML, CSS, JavaScript e Python/Flask, com estrutura inicial para MySQL.
+Portal da Seleção Feminina Brasileira com páginas de notícias, elenco, próximos jogos, história e login. Desenvolvido com HTML, CSS, JavaScript e Python/Flask, com estrutura para MySQL.
 
 ## Funcionalidades e tecnologias
 
-O sistema possui cinco páginas HTML, menu responsivo com suporte a teclado, identificação da página atual, logo no cabeçalho e formulário para enviar várias imagens. Notícias, elenco, jogos e história ainda apresentam conteúdo estático ou espaços aguardando dados. Cadastro, login, sessões e foto de perfil vinculada ao usuário ainda não foram implementados.
+O sistema possui páginas HTML, menu responsivo com suporte a teclado, logo no cabeçalho e formulário para enviar várias imagens. O login consulta o MySQL pelo backend, compara a senha com o hash armazenado e redireciona à página inicial quando autentica; cadastro e proteção das demais páginas por sessão ainda não foram implementados. Notícias, elenco, jogos e história ainda apresentam conteúdo estático ou espaços aguardando dados.
 
 | Tecnologia | Uso |
 | --- | --- |
@@ -12,7 +12,7 @@ O sistema possui cinco páginas HTML, menu responsivo com suporte a teclado, ide
 | Python e Flask | Entrega das páginas e recebimento de uploads. |
 | Flask-CORS e Werkzeug | CORS e normalização dos nomes dos arquivos enviados. |
 | MySQL Connector/Python e python-dotenv | Conexão com o MySQL e leitura da configuração local. |
-| MySQL | Estrutura inicial de usuários, ainda não integrada às rotas. |
+| MySQL | Usuários e estrutura de dados do portal. |
 | Waitress | Execução do Flask sem o servidor de depuração. |
 | Apache do XAMPP | Proxy reverso para encaminhar acessos ao Waitress. |
 | Cloudflare Tunnel | Link HTTPS temporário para demonstração externa. |
@@ -82,7 +82,7 @@ A árvore omite os arquivos internos do ambiente virtual, os caches gerados pelo
 | `requirements.txt` | Dependências Python. |
 | [INICIAR_SERVIDOR.md](INICIAR_SERVIDOR.md) | Comandos para iniciar Apache, Waitress e túnel. |
 
-Cada página carrega somente seu CSS e JavaScript. A base comum é repetida nos cinco arquivos; alterações gerais devem ser aplicadas a todos. `index.js` também controla o upload. Não há arquivos globais nem subpastas `pages/`.
+Cada página carrega os arquivos compartilhados de CSS e JavaScript. A base comum é repetida nos seis HTMLs; alterações gerais devem ser aplicadas a todos. O JavaScript também controla login, notícias e upload.
 
 A separação MVC ainda está em andamento:
 
@@ -220,7 +220,10 @@ O menu recolhe em telas de até 1100px. A variável `--espaco-menu`, em cada CSS
 | --- | --- | --- |
 | GET | `/` | Entrega `front_end/index.html`. |
 | GET | `/<caminho>` | Entrega arquivos existentes dentro de `front_end/`; retorna 404 quando ausentes. |
+| POST | `/api/login` | Recebe `email` e `senha` em JSON, valida `senha_hash` no MySQL e inicia uma sessão. |
 | POST | `/api/upload` | Recebe arquivos pelo campo `fotos` e salva em `back_end/uploads/`. |
+
+O login deve ser enviado pelo formulário servido pelo Flask (por exemplo, `/Telas/login_page.html`); abrir o HTML diretamente como arquivo não permite acessar a API. Em caso de sucesso, a resposta contém `{"redirect": "/"}` e a sessão fica em um cookie assinado pelo Flask. Credenciais incorretas retornam 401 sem revelar se o email existe. A página inicial continua pública: a sessão ainda não é exigida nas outras rotas.
 
 O Flask também registra a rota estática `/front_end/<caminho>`. Os HTMLs usam os caminhos relativos atendidos pelas rotas principais.
 
@@ -284,6 +287,29 @@ Copie `.env.example` para `.env`, caso ainda não exista, e preencha os dados de
 | `DB_USER` | Usuário de conexão | `root` no exemplo local |
 | `DB_PASSWORD` | Senha desse usuário | Preencher localmente; não versionar. |
 | `DB_NAME` | Nome do banco | `projeto_interdisciplinar` |
+| `FLASK_SECRET_KEY` | Chave privada para assinar sessões | Gere uma chave exclusiva e mantenha-a privada. |
+| `SESSION_COOKIE_SECURE` | Restringe o cookie a HTTPS | Use `true` quando publicado somente por HTTPS. |
+
+Gere uma chave para `FLASK_SECRET_KEY` sem incluí-la no código:
+
+```powershell
+.\venv\Scripts\python.exe -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+O cadastro ainda não existe na aplicação. Para adicionar um usuário de teste, gere primeiro o hash sem salvar a senha original:
+
+```powershell
+.\venv\Scripts\python.exe -c "from getpass import getpass; from werkzeug.security import generate_password_hash; print(generate_password_hash(getpass('Senha: ')))"
+```
+
+Insira o hash impresso na coluna `senha_hash` (e não a senha) usando o MySQL:
+
+```sql
+INSERT INTO usuarios (nome, email, senha_hash)
+VALUES ('Nome de teste', 'teste@exemplo.com', 'COLE_O_HASH_GERADO_AQUI');
+```
+
+Depois, abra `/Telas/login_page.html` pelo servidor e entre com esse email e a senha digitada ao gerar o hash.
 
 Não sobrescreva um `.env` já configurado. Para testar a conexão, com o MySQL em execução:
 
@@ -291,7 +317,7 @@ Não sobrescreva um `.env` já configurado. Para testar a conexão, com o MySQL 
 .\venv\Scripts\python.exe -m back_end.models.banco
 ```
 
-As rotas atuais ainda não consultam o banco; o MySQL não é necessário para abrir as páginas ou receber os uploads existentes.
+O login depende do MySQL em execução, da tabela `usuarios` e das variáveis `.env`; o MySQL continua desnecessário para abrir as demais páginas ou receber uploads.
 
 O teste mostra o nome do banco e as colunas, sem alterar os dados. `root` é a conta usada no exemplo local, não um funcionário cadastrado. Para uma implantação definitiva, use uma conta própria da aplicação com as permissões necessárias.
 
@@ -325,12 +351,12 @@ Versione código, assets, documentação, `requirements.txt`, `.env.example` e s
 
 Clonar o repositório não copia os registros do MySQL, uploads ou configurações do Apache. Faça backup do banco e da pasta `back_end/uploads/` separadamente. O `.env` deve ser guardado de forma privada.
 
-Ao criar uma página, use o mesmo nome no HTML, CSS e JavaScript e atualize os links. Mantenha a grafia consistente, inclusive maiúsculas, hífens e sublinhados. Ajustes de estilo ou navegação comuns devem ser repetidos nos cinco arquivos, conforme a organização atual.
+Ao criar uma página, use o mesmo nome no HTML, CSS e JavaScript e atualize os links. Mantenha a grafia consistente, inclusive maiúsculas, hífens e sublinhados. Ajustes de estilo ou navegação comuns devem ser aplicados em todas as páginas, conforme a organização atual.
 
 ## Estado atual e cuidados
 
 - Páginas, menu responsivo e upload estão implementados. As seções ainda aguardam conteúdo dinâmico.
-- Cadastro, login, sessões e vínculo da foto de perfil ao usuário ainda não estão implementados.
+- Login e sessão de autenticação estão implementados; cadastro e proteção das páginas por sessão ainda não estão implementados.
 - `POST /api/upload` recebe o campo `fotos` e salva os arquivos em `back_end/uploads/`, sem registro no banco nem rota de exibição.
 - Antes do uso público contínuo, o upload precisa de autenticação, validação do conteúdo no servidor, limite de tamanho e nomes únicos para evitar sobrescrita.
 - `.env`, `venv/` e uploads não devem ir para o Git. O repositório contém a estrutura SQL, não os registros reais do MySQL.

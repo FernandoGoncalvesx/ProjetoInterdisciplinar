@@ -1,4 +1,4 @@
-// Arquivo único das cinco páginas: menu e rodapé são comuns; notícias e upload são condicionais.
+// Arquivo único das seis páginas: menu e rodapé são comuns; login, notícias e upload são condicionais.
 // A função imediata mantém estas variáveis fora do escopo global do navegador.
 (() => {
     // Sem esta classe, o CSS mantém o menu visível quando o JavaScript não está disponível.
@@ -30,6 +30,40 @@
     document.querySelectorAll('[data-ano]').forEach((element) => {
         element.textContent = new Date().getFullYear();
     });
+
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        const status = document.getElementById('login-status');
+        const button = loginForm.querySelector('button[type="submit"]');
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            button.disabled = true;
+            status.textContent = 'Verificando…';
+            status.classList.remove('erro');
+            try {
+                const resposta = await fetch(loginForm.action, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: loginForm.elements.email.value,
+                        senha: loginForm.elements.senha.value
+                    })
+                });
+                const dados = await resposta.json();
+                if (!resposta.ok) {
+                    status.textContent = dados.mensagem || 'Não foi possível entrar.';
+                    status.classList.add('erro');
+                    return;
+                }
+                window.location.assign(dados.redirect);
+            } catch (erro) {
+                status.textContent = 'Não foi possível conectar ao servidor. Tente novamente.';
+                status.classList.add('erro');
+            } finally {
+                button.disabled = false;
+            }
+        });
+    }
 
     // Notícias (somente em noticias.html): mostra título e resumo do card em um diálogo.
     const dialogoNoticia = document.getElementById('detalhes-noticia');

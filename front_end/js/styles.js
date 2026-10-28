@@ -31,6 +31,16 @@
         element.textContent = new Date().getFullYear();
     });
 
+    // Apresenta os cards do elenco em sequência, respeitando a preferência por movimento reduzido.
+    const cardsAtletas = document.querySelectorAll('.atleta-card');
+    const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (cardsAtletas.length && !movimentoReduzido) {
+        cardsAtletas.forEach((card, indice) => {
+            card.style.setProperty('--atraso-entrada', `${indice * 100}ms`);
+            card.classList.add('atleta-entrada');
+        });
+    }
+
     // Notícias (somente em noticias.html): mostra título e resumo do card em um diálogo.
     const dialogoNoticia = document.getElementById('detalhes-noticia');
     // Esta condição é necessária: as outras quatro páginas não possuem o diálogo.

@@ -30,7 +30,7 @@ def arquivos_estaticos(path):
     return send_from_directory(PASTA_FRONTEND, path)
 
 # Recebe arquivos no disco; ainda não relaciona fotos a usuários nem consulta o MySQL.
-# A rota está disponível, mas index.html está sem action e styles.js bloqueia seu envio.
+# A rota está disponível, mas index.html está sem action e script.js bloqueia seu envio.
 @app.route('/api/upload', methods=['POST'])
 def upload_fotos():
     # O nome do campo deve coincidir com o FormData enviado pela página inicial.

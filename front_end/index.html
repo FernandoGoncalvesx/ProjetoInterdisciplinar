@@ -9,7 +9,7 @@
     <title> Seleção Feminina Brasileira</title>
     <link rel="stylesheet" href="css/styles.css">
     <!-- defer executa o script depois que os elementos da página foram interpretados. -->
-    <script src="js/styles.js" defer></script>
+    <script src="js/script.js" defer></script>
 </head>
 <body>
     <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
@@ -53,7 +53,7 @@
         <section class="secao container" aria-labelledby="upload-titulo">
             <div class="card upload-container">
                 <h2 id="upload-titulo">Enviar fotos</h2>
-                <!-- PENDÊNCIA: sem action, styles.js permite selecionar/remover fotos, mas bloqueia
+                <!-- PENDÊNCIA: sem action, script.js permite selecionar/remover fotos, mas bloqueia
                      o envio. A rota POST /api/upload existe no Flask; ainda não está ligada aqui.
                      Mesmo quando ligada, ela salva em disco e não registra fotos no banco. -->
                 <form id="form-upload" method="post" enctype="multipart/form-data">

@@ -12,7 +12,7 @@
     <!-- O Bootstrap vem primeiro para o styles.css poder sobrescrever o que conflitar com o tema do site. -->
     <link rel="stylesheet" href="../css/styles.css">
     <!-- defer executa o script depois que os elementos da página foram interpretados. -->
-    <script src="../js/styles.js" defer></script>
+    <script src="../js/script.js" defer></script>
 </head>
 <body>
     <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
@@ -51,7 +51,7 @@
                  sem buscar uma notícia completa na API ou no banco de dados. -->
             <div class="row g-4">
                 <div class="col-12 col-md-6 col-lg-4">
-                    <article class="card noticia-card">
+                    <article id="noticia-1" class="card noticia-card">
                         <div class="card-body">
                             <h3 class="card-title">Notícia 1</h3>
                             <p class="card-text">Resumo Notícia</p>
@@ -60,7 +60,7 @@
                     </article>
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <article class="card noticia-card">
+                    <article id="noticia-2" class="card noticia-card">
                         <div class="card-body">
                             <h3 class="card-title">Notícia 2</h3>
                             <p class="card-text">Resumo Notícia</p>
@@ -69,7 +69,7 @@
                     </article>
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <article class="card noticia-card">
+                    <article id="noticia-3" class="card noticia-card">
                         <div class="card-body">
                             <h3 class="card-title">Notícia 3</h3>
                             <p class="card-text">Resumo Notícia</p>
@@ -86,7 +86,8 @@
                         <h2 id="detalhes-titulo"></h2>
                         <button type="button" class="btn-close" aria-label="Fechar"></button>
                     </div>
-                    <p id="detalhes-resumo" class="card-text"></p>
+                    <img id="img-noticia" class="card-img-top" src="" alt="Imagem da notícia" width="640" height="360">
+                    <p id="detalhes-texto" class="card-text"></p>
                 </div>
             </dialog>
         </section>

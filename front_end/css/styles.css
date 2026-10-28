@@ -538,7 +538,7 @@ h3 {
     border-bottom: 1px solid #ece3a8;
 }
 
-/* Criado por styles.js ao selecionar fotos; não aparece no HTML inicial, mas está em uso. */
+/* Criado por script.js ao selecionar fotos; não aparece no HTML inicial, mas está em uso. */
 .upload-remover {
     min-height: 44px;
     padding: 8px 14px;

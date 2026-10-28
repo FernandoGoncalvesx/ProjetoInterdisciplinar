@@ -41,16 +41,45 @@
         });
     }
 
-    // Notícias (somente em noticias.html): mostra título e resumo do card em um diálogo.
+    // Array com os detalhes de cada notícia;
+    const noticias = [
+        {
+            id: 1,
+            titulo: 'Novo recorde mundial de atletismo',
+            texto: 'A atleta brasileira bate o recorde mundial em saltos de longo alcance.',
+            imagem: '../assets/logo.webp'
+        },
+        {
+            id: 2,
+            titulo: 'Garfo é encontrado na cozinha',
+            texto: 'Um garfo comum de aço inoxidável foi encontrado na cozinha de uma casa do sul do Brasil. A polícia investiga o caso.',
+            imagem: '../assets/logo.webp'
+        },
+        {
+            id: 3,
+            titulo: 'Novo site sobre a seleção brasileira de futebol',
+            texto: 'Acaba de ser inaugurado um novo site sobre a seleção brasileira de futebol.',
+            imagem: '../assets/logo.webp'
+        }
+    ];
+    // Notícias (somente em noticias.html): mostra título e resumo do card em um diálogo. Eventualmente mostrará a notícia completa ao clicar, mas não há conteúdo real para isso no site de exemplo.
     const dialogoNoticia = document.getElementById('detalhes-noticia');
     // Esta condição é necessária: as outras quatro páginas não possuem o diálogo.
     if (dialogoNoticia) {
         document.querySelectorAll('.abrir-noticia').forEach((botao) => {
             botao.addEventListener('click', () => {
                 const card = botao.closest('.card');
-                document.getElementById('detalhes-titulo').textContent = card.querySelector('.card-title').textContent;
-                document.getElementById('detalhes-resumo').textContent = card.querySelector('.card-text').textContent;
-                dialogoNoticia.showModal();
+                let id = card.getAttribute('id');
+                id = id ? parseInt(id.replace('noticia-', ''), 10) : null;
+                if (id !== null) {
+                    const noticia = noticias.find(n => n.id === id);
+                    if (noticia !== null) {
+                        document.getElementById('detalhes-titulo').textContent = noticia.titulo;
+                        document.getElementById('detalhes-texto').textContent = noticia.texto;
+                        document.getElementById('img-noticia').src = noticia.imagem;
+                        dialogoNoticia.showModal();
+                    }
+                }
             });
         });
         dialogoNoticia.querySelector('.btn-close').addEventListener('click', () => dialogoNoticia.close());

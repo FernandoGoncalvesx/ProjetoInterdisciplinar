@@ -41,52 +41,133 @@
         });
     }
 
-    // Array com os detalhes de cada notícia;
-    const noticias = [
-        {
-            id: 1,
-            titulo: 'Novo recorde mundial de atletismo',
-            texto: 'A atleta brasileira bate o recorde mundial em saltos de longo alcance.',
-            imagem: '../assets/logo.webp'
-        },
-        {
-            id: 2,
-            titulo: 'Garfo é encontrado na cozinha',
-            texto: 'Um garfo comum de aço inoxidável foi encontrado na cozinha de uma casa do sul do Brasil. A polícia investiga o caso.',
-            imagem: '../assets/logo.webp'
-        },
-        {
-            id: 3,
-            titulo: 'Novo site sobre a seleção brasileira de futebol',
-            texto: 'Acaba de ser inaugurado um novo site sobre a seleção brasileira de futebol.',
-            imagem: '../assets/logo.webp'
-        }
-    ];
-    // Notícias (somente em noticias.html): mostra título e resumo do card em um diálogo. Eventualmente mostrará a notícia completa ao clicar, mas não há conteúdo real para isso no site de exemplo.
     const dialogoNoticia = document.getElementById('detalhes-noticia');
-    // Esta condição é necessária: as outras quatro páginas não possuem o diálogo.
-    if (dialogoNoticia) {
-        document.querySelectorAll('.abrir-noticia').forEach((botao) => {
-            botao.addEventListener('click', () => {
-                const card = botao.closest('.card');
-                let id = card.getAttribute('id');
-                id = id ? parseInt(id.replace('noticia-', ''), 10) : null;
-                if (id !== null) {
-                    const noticia = noticias.find(n => n.id === id);
-                    if (noticia !== null) {
-                        document.getElementById('detalhes-titulo').textContent = noticia.titulo;
-                        document.getElementById('detalhes-texto').textContent = noticia.texto;
-                        document.getElementById('img-noticia').src = noticia.imagem;
-                        dialogoNoticia.showModal();
-                    }
+    const listaNoticias = document.getElementById('lista-noticias');
+
+    if (dialogoNoticia && listaNoticias) {
+
+        let noticias = [];
+
+        // Busca todas as notícias na API Flask.
+        async function carregarNoticias() {
+            try {
+                const resposta = await fetch('/api/noticias');
+
+                if (!resposta.ok) {
+                    throw new Error('Erro ao acessar api de notícias: ' + resposta.status);
                 }
+
+                noticias = await resposta.json();
+
+                if (!resposta.ok) {
+                    throw new Error('Erro gerar JSON de notícias: ' + resposta.status);
+                }
+
+                if (noticias.length === 0) {
+                    return;
+                }
+
+                // Limpa o conteúdo inicial.
+                listaNoticias.replaceChildren();
+
+                // Cria um card para cada notícia recebida.
+                noticias.forEach((noticia) => {
+
+                    const coluna = document.createElement('div');
+                    coluna.className = 'col-12 col-md-6 col-lg-4';
+
+                    const card = document.createElement('article');
+                    card.className = 'card noticia-card';
+                    card.id = 'noticia-' + noticia.id;
+
+                    const corpo = document.createElement('div');
+                    corpo.className = 'card-body';
+
+                    const titulo = document.createElement('h3');
+                    titulo.className = 'card-title';
+                    titulo.textContent = noticia.titulo;
+
+                    const resumo = document.createElement('p');
+                    resumo.className = 'card-text';
+
+                    resumo.textContent =
+                        noticia.texto.length > 160
+                            ? noticia.texto.substring(0, 160) + '...'
+                            : noticia.texto;
+
+                    const botao = document.createElement('button');
+                    botao.type = 'button';
+                    botao.className = 'btn btn-primary abrir-noticia';
+                    botao.textContent = 'Abrir notícia';
+                    botao.setAttribute(
+                        'aria-label',
+                        'Abrir notícia'
+                    );
+
+                    // Guarda o identificador da notícia no botão.
+                    botao.dataset.id = noticia.id;
+
+                    corpo.append(titulo, resumo, botao);
+                    card.appendChild(corpo);
+                    coluna.appendChild(card);
+
+                    listaNoticias.appendChild(coluna);
+                });
+
+            } catch (erro) {
+                console.error('Erro ao carregar notícias:', erro);
+            }
+        }
+
+        // Abre o diálogo utilizando os dados da notícia selecionada.
+        listaNoticias.addEventListener('click', (event) => {
+
+            const botao = event.target.closest('.abrir-noticia');
+
+            if (!botao) return;
+
+            const id = Number(botao.dataset.id);
+
+            const noticia = noticias.find(
+                n => Number(n.id) === id
+            );
+
+            if (!noticia) return;
+
+            document.getElementById('detalhes-titulo').textContent =
+                noticia.titulo;
+
+            document.getElementById('detalhes-texto').textContent =
+                noticia.texto;
+
+            const imagem = document.getElementById('img-noticia');
+
+            if (noticia.imagem_url) {
+                imagem.src = noticia.imagem_url;
+                imagem.hidden = false;
+            } else {
+                imagem.removeAttribute('src');
+                imagem.hidden = true;
+            }
+
+            dialogoNoticia.showModal();
+        });
+
+        // Fecha o diálogo pelo botão.
+        dialogoNoticia.querySelector('.btn-close')
+            .addEventListener('click', () => {
+                dialogoNoticia.close();
             });
-        });
-        dialogoNoticia.querySelector('.btn-close').addEventListener('click', () => dialogoNoticia.close());
-        // O diálogo é só o card; um clique no próprio <dialog> acontece no fundo escurecido.
+
+        // Fecha ao clicar no fundo do diálogo.
         dialogoNoticia.addEventListener('click', (event) => {
-            if (event.target === dialogoNoticia) dialogoNoticia.close();
+            if (event.target === dialogoNoticia) {
+                dialogoNoticia.close();
+            }
         });
+
+        // Inicia a consulta ao banco.
+        carregarNoticias();
     }
 
     // Somente a home possui este formulário; nas demais páginas o bloco é ignorado.

@@ -47,39 +47,9 @@
             <div class="secao-cabecalho">
                 <h2 id="secao-titulo">Últimas notícias</h2>
             </div>
-            <!-- Conteúdo estático de exemplo: o diálogo reutiliza o título e o resumo destes cards,
-                 sem buscar uma notícia completa na API ou no banco de dados. -->
-            <div class="row g-4">
-                <div class="col-12 col-md-6 col-lg-4">
-                    <article id="noticia-1" class="card noticia-card">
-                        <div class="card-body">
-                            <h3 class="card-title">Notícia 1</h3>
-                            <p class="card-text">Resumo Notícia</p>
-                            <button type="button" class="btn btn-primary abrir-noticia" aria-label="Abrir notícia: Notícia 1">Abrir notícia</button>
-                        </div>
-                    </article>
-                </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <article id="noticia-2" class="card noticia-card">
-                        <div class="card-body">
-                            <h3 class="card-title">Notícia 2</h3>
-                            <p class="card-text">Resumo Notícia</p>
-                            <button type="button" class="btn btn-primary abrir-noticia" aria-label="Abrir notícia: Notícia 2">Abrir notícia</button>
-                        </div>
-                    </article>
-                </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <article id="noticia-3" class="card noticia-card">
-                        <div class="card-body">
-                            <h3 class="card-title">Notícia 3</h3>
-                            <p class="card-text">Resumo Notícia</p>
-                            <button type="button" class="btn btn-primary abrir-noticia" aria-label="Abrir notícia: Notícia 3">Abrir notícia</button>
-                        </div>
-                    </article>
-                </div>
+            <div class="row g-4" id="lista-noticias">
+                <h3>Sem notícias por enquanto, volte depois!</h3>
             </div>
-            <a class="retorno" href="../index.html">← Voltar ao início</a>
-            <!-- Esc, o botão Fechar ou um clique fora fecham o diálogo; o foco volta ao botão que o abriu. -->
             <dialog id="detalhes-noticia" class="news-dialog" aria-labelledby="detalhes-titulo">
                 <div class="card">
                     <div class="d-flex justify-content-between align-items-start gap-3">

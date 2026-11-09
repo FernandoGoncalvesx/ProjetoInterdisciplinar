@@ -2,6 +2,8 @@ import os
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from back_end.models.busca_noticias import buscar_noticias
+import mysql.connector
 
 # Caminhos baseados neste arquivo permitem iniciar a aplicação fora da pasta back_end.
 PASTA_ATUAL = os.path.dirname(os.path.abspath(__file__))
@@ -58,6 +60,25 @@ def upload_fotos():
         'mensagem': 'Fotos enviadas com sucesso!',
         'arquivos': arquivos_salvos
     }), 200
+
+# Retorna os dados da tabela de notícias do banco como JSON.
+@app.route('/api/noticias', methods=['GET'])
+def api_noticias():
+    try:
+        noticias = buscar_noticias()
+        return jsonify(noticias), 200
+
+    except mysql.connector.Error:
+        app.logger.exception("Erro ao consultar as notícias no MySQL")
+        return jsonify({
+            "erro": "Não foi possível consultar as notícias"
+        }), 500
+
+    except Exception:
+        app.logger.exception("Erro inesperado ao buscar notícias")
+        return jsonify({
+            "erro": "Ocorreu um erro interno"
+        }), 500
 
 # Apenas para desenvolvimento local. O Waitress importa app e não executa este bloco;
 # isso é um ponto de entrada alternativo, não código morto.

@@ -13,3 +13,6 @@ Thumbs.db
 
 /back_end/uploads/*
 !/back_end/uploads/.gitkeep
+
+/tests/*
+back_end/cache/

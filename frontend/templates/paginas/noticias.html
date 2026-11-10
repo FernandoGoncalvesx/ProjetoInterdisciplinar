@@ -1,0 +1,12 @@
+{# LAYOUT COMPARTILHADO #}
+{% extends "base.html" %}
+{% set descricao = "Notícias de futebol feminino da Agência Brasil." %}
+{# INÍCIO DO CONTEÚDO DA PÁGINA #}
+{% block conteudo %}
+<section class="secao container" aria-labelledby="secao-titulo">
+    <div class="secao-cabecalho"><h2 id="secao-titulo">Últimas notícias de futebol feminino</h2></div>
+    <p>Fonte: Agência Brasil · Clubes, seleções e categorias de base. Horários de Brasília.</p>
+    {% include "componentes/painel-noticias.html" %}
+</section>
+{% endblock %}
+{# FIM DO CONTEÚDO DA PÁGINA #}

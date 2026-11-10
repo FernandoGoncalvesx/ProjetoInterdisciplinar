@@ -1,0 +1,31 @@
+{# LAYOUT COMPARTILHADO #}
+{% extends "base.html" %}
+{% set descricao = "Conheça a trajetória e os momentos marcantes da equipe." %}
+
+{# INÍCIO DO CONTEÚDO DA PÁGINA #}
+{% block conteudo %}
+<section class="secao container" aria-labelledby="secao-titulo">
+    <div class="secao-cabecalho">
+        <h2 id="secao-titulo">Nossa trajetória</h2>
+    </div>
+    <div class="timeline-historia">
+        <div class="card">
+            <h3>O Início e a Resistência (1941 - 1979)</h3>
+            <p>A história do futebol feminino no Brasil começou com um longo período de desafios. Entre 1941 e 1979, a prática do futebol por mulheres foi proibida por um decreto-lei no país. Apesar da proibição, muitas atletas continuaram jogando de forma clandestina, demonstrando enorme amor e resistência pelo esporte.</p>
+        </div>
+        <div class="card">
+            <h3>A Primeira Seleção e o Pioneirismo (Anos 80 e 90)</h3>
+            <p>Com a revogação da lei restritiva, a modalidade começou a ser regulamentada no início da década de 80. A primeira Seleção Brasileira Feminina oficial foi formada em 1986. Nos anos 90, impulsionada por grandes jogadoras como Sissi e Pretinha, o Brasil conquistou um histórico 3º lugar na Copa do Mundo de 1999, chamando a atenção do país e do mundo.</p>
+        </div>
+        <div class="card">
+            <h3>A Era de Ouro e o Encanto ao Mundo (Anos 2000)</h3>
+            <p>Lideradas por ícones globais como Marta (eleita seis vezes a melhor do mundo), Cristiane e Formiga, a Seleção Brasileira viveu seu período mais mágico. A equipe foi Vice-Campeã da Copa do Mundo de 2007, na China, e conquistou consecutivas medalhas de prata nos Jogos Olímpicos de Atenas (2004) e Pequim (2008).</p>
+        </div>
+        <div class="card">
+            <h3>Títulos e a História Recente</h3>
+            <p>O Brasil é soberano no continente sul-americano, possuindo uma verdadeira hegemonia na Copa América, com títulos conquistados nas edições de 1991, 1995, 1998, 2003, 2010, 2014, 2018 e 2022. Recentemente, a equipe voltou ao pódio olímpico, garantindo a Medalha de Prata nos Jogos de Paris em 2024 e consolidando mais um capítulo brilhante de superação para as novas gerações.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{# FIM DO CONTEÚDO DA PÁGINA #}

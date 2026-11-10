@@ -1,0 +1,50 @@
+{# LAYOUT COMPARTILHADO #}
+{% extends "base.html" %}
+{% set descricao = "Confira a agenda, os placares e os resultados da equipe. Horários de Brasília." %}
+{% set situacoes = {'TBD': 'A confirmar', 'NS': 'Agendado', '1H': 'Primeiro tempo', 'HT': 'Intervalo', '2H': 'Segundo tempo', 'ET': 'Prorrogação', 'BT': 'Intervalo da prorrogação', 'P': 'Pênaltis', 'FT': 'Encerrado', 'AET': 'Encerrado após prorrogação', 'PEN': 'Encerrado nos pênaltis', 'SUSP': 'Suspenso', 'INT': 'Interrompido', 'PST': 'Adiado', 'CANC': 'Cancelado', 'ABD': 'Abandonado', 'AWD': 'Resultado administrativo', 'WO': 'W.O.', 'LIVE': 'Em andamento'} %}
+{% macro cartao_jogo(jogo) %}
+<article class="card">
+    <p>{{ jogo.data.strftime('%d/%m/%Y às %H:%M') }}</p>
+    <h3>{{ jogo.mandante or 'Brasil' }} × {{ jogo.visitante or jogo.time_oponente }}</h3>
+    {% if jogo.competicao %}<p>{{ jogo.competicao }}</p>{% endif %}
+    {% if jogo.placar_mandante is not none and jogo.placar_visitante is not none %}
+    <p><strong>Placar: {{ jogo.placar_mandante }} × {{ jogo.placar_visitante }}</strong></p>
+    {% endif %}
+    <p>{{ situacoes.get(jogo.situacao, jogo.situacao or 'Agendado') }}{% if jogo.minuto is not none %} · {{ jogo.minuto }} min{% endif %}</p>
+    {% if jogo.estadio %}<p>{{ jogo.estadio }}</p>{% endif %}
+    {% if jogo.atualizado_em %}<p><small>Atualizado em {{ jogo.atualizado_em.strftime('%d/%m às %H:%M') }}.</small></p>{% endif %}
+</article>
+{% endmacro %}
+
+{# INÍCIO DO CONTEÚDO DA PÁGINA #}
+{% block conteudo %}
+<section class="secao container" aria-labelledby="proximos-titulo">
+    <div class="secao-cabecalho"><h2 id="proximos-titulo">Próximos jogos e partidas em andamento</h2></div>
+    {% if banco_indisponivel %}
+    <div class="card estado-vazio"><h3>Agenda temporariamente indisponível</h3><p>Tente consultar novamente mais tarde.</p></div>
+    {% elif proximos %}
+    <p>Horários de Brasília. O placar pode ter atraso; confira a última atualização de cada partida.</p>
+    <div class="grade-cards">{% for jogo in proximos %}{{ cartao_jogo(jogo) }}{% endfor %}</div>
+    {% else %}
+    <div class="card estado-vazio">
+        <h3>Nenhum próximo jogo disponível</h3>
+        <p>A base atual ainda não contém partidas futuras. Os jogos importados de temporadas anteriores aparecem no histórico abaixo.</p>
+    </div>
+    {% endif %}
+</section>
+{% if historico %}
+<section class="secao container" aria-labelledby="historico-titulo">
+    <div class="secao-cabecalho"><h2 id="historico-titulo">Histórico e resultados</h2></div>
+    <p>Partidas já realizadas ou encerradas, da mais recente para a mais antiga. Os dados históricos não representam uma agenda atual.</p>
+    <div class="grade-cards">{% for jogo in historico[:6] %}{{ cartao_jogo(jogo) }}{% endfor %}</div>
+    {% if historico|length > 6 %}
+    <details class="historico-extra">
+        <summary><span class="texto-abrir">Ver mais {{ historico|length - 6 }} resultados</span><span class="texto-fechar">Mostrar menos resultados</span></summary>
+        <div class="grade-cards">{% for jogo in historico[6:] %}{{ cartao_jogo(jogo) }}{% endfor %}</div>
+    </details>
+    {% endif %}
+</section>
+{% endif %}
+
+{% endblock %}
+{# FIM DO CONTEÚDO DA PÁGINA #}

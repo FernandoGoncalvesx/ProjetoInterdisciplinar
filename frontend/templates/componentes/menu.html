@@ -1,0 +1,16 @@
+<header class="cabecalho">
+    <div class="container barra-navegacao">
+        <a class="marca" href="/index.html" aria-label="Seleção Feminina Brasileira — início">
+            <img class="marca-logo" src="/assets/logo.webp" alt="" width="44" height="48">
+            <span>Seleção Feminina Brasileira</span>
+        </a>
+        <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu-principal">
+            <span class="menu-rotulo">Menu</span><span aria-hidden="true">☰</span>
+        </button>
+        <nav id="menu-principal" class="menu" aria-label="Navegação principal">
+            {% for caminho, titulo in paginas.items() %}
+            <a href="/{{ caminho }}"{% if pagina == caminho %} class="ativo" aria-current="page"{% endif %}>{{ titulo }}</a>
+            {% endfor %}
+        </nav>
+    </div>
+</header>

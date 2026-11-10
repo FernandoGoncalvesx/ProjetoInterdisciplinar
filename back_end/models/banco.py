@@ -1,8 +1,4 @@
-"""Conexão com o MySQL e verificação manual, sem modificar os dados.
-
-O Servidor.py ainda não importa este módulo. Ele permanece em uso pelo diagnóstico
-manual (python -m back_end.models.banco), sem integrar as páginas ao banco.
-"""
+"""Conexão MySQL compartilhada pelo diagnóstico e pela integração de jogos."""
 
 import os
 from pathlib import Path
@@ -53,7 +49,7 @@ def verificar_banco():
             ausentes = esperadas - tabelas
             if ausentes:
                 print("Tabelas ausentes: " + ", ".join(sorted(ausentes)))
-                print("Consulte database/README.md para preparar a estrutura.")
+                raise ValueError("Execute database/schema.sql para criar as tabelas ausentes.")
             cursor.execute("SHOW COLUMNS FROM usuarios")
             colunas = [linha[0] for linha in cursor.fetchall()]
             print("Colunas de usuarios: " + ", ".join(colunas))

@@ -1,0 +1,44 @@
+{# LAYOUT COMPARTILHADO #}
+{% extends "base.html" %}
+{% set descricao = "Notícias, elenco, jogos e história da Seleção Feminina Brasileira." %}
+
+{# INÍCIO DO CONTEÚDO DA PÁGINA #}
+{% block conteudo %}
+<section class="hero hero-inicio">
+    <div class="container">
+        <p class="etiqueta">Seleção Feminina Brasileira</p>
+        <h1>Acompanhe a seleção feminina brasileira.</h1>
+        <p class="hero-texto">Notícias, atletas, jogos e a trajetória de quem representa o Brasil.</p>
+        <a class="botao" href="/Telas/noticias.html">Explorar notícias</a>
+    </div>
+</section>
+<div class="secao container resumo-inicial">
+<section aria-labelledby="noticias-inicio">
+    <div class="secao-cabecalho"><h2 id="noticias-inicio">Notícia em destaque</h2></div>
+    {% with compacto=true %}{% include "componentes/painel-noticias.html" %}{% endwith %}
+    <a class="link-secao" href="/Telas/noticias.html">Ver todas as notícias</a>
+</section>
+<section aria-labelledby="jogo-inicio">
+    <div class="secao-cabecalho"><h2 id="jogo-inicio">Próximo jogo</h2></div>
+    {% if banco_indisponivel %}<p>A agenda está temporariamente indisponível. Tente novamente mais tarde.</p>
+    {% elif proximos %}
+    {% set jogo = proximos[0] %}
+    <article class="card">
+        <h3>{{ jogo.mandante or 'Brasil' }} × {{ jogo.visitante or jogo.time_oponente }}</h3>
+        <p>{{ jogo.data.strftime('%d/%m/%Y às %H:%M') }} · Horário de Brasília</p>
+        {% if jogo.competicao %}<p>{{ jogo.competicao }}</p>{% endif %}
+        {% if jogo.estadio %}<p>{{ jogo.estadio }}</p>{% endif %}
+    </article>
+    {% else %}<p>Nenhum próximo jogo cadastrado na base atual.</p>{% endif %}
+    <a class="link-secao" href="/Telas/proximos_jogos.html">Consultar agenda e resultados</a>
+</section>
+</div>
+<section class="secao container convite-fotos">
+    <div>
+        <h2>Quer enviar fotos?</h2>
+        <p>Selecione e confira suas imagens em uma página própria.</p>
+    </div>
+    <a class="botao-upload" href="/Telas/fotos.html">Enviar fotos</a>
+</section>
+{% endblock %}
+{# FIM DO CONTEÚDO DA PÁGINA #}

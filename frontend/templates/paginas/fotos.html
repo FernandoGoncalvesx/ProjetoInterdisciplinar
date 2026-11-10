@@ -1,0 +1,24 @@
+{# LAYOUT COMPARTILHADO #}
+{% extends "base.html" %}
+{% set descricao = "Envie suas imagens em um só lugar. Até 10 fotos de 5 MB cada." %}
+
+{# INÍCIO DO CONTEÚDO DA PÁGINA #}
+{% block conteudo %}
+<section class="secao container secao-fotos" aria-labelledby="upload-titulo">
+    <div class="card upload-container">
+        <h2 id="upload-titulo">Escolha as fotos que deseja enviar</h2>
+        <p>Adicione fotos, confira as prévias e clique em enviar. Novas seleções são adicionadas à lista.</p>
+        <form id="form-upload" action="/api/upload" method="post" enctype="multipart/form-data">
+            <label for="upload-foto" class="botao-upload selecionar-fotos">Adicionar fotos</label>
+            <input class="sr-only" id="upload-foto" name="fotos" type="file" accept="image/png,image/jpeg,image/gif,image/webp" multiple aria-describedby="upload-ajuda">
+            <p id="upload-ajuda" class="upload-ajuda">PNG, JPEG, GIF ou WebP, até 10 fotos de 5 MB cada.</p>
+            <p id="contagem-fotos" role="status">Nenhuma foto selecionada. Adicione até 10 fotos.</p>
+            <div id="lista-arquivos"></div>
+            <button id="btn-enviar" class="botao-upload" type="submit" disabled>Enviar fotos</button>
+            <p id="upload-status" class="upload-status" role="status" aria-live="polite" aria-atomic="true"></p>
+        </form>
+        <noscript><p>Ative o JavaScript para enviar fotos. A navegação do portal continua disponível.</p></noscript>
+    </div>
+</section>
+{% endblock %}
+{# FIM DO CONTEÚDO DA PÁGINA #}

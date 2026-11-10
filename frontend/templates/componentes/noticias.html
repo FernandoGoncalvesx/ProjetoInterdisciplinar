@@ -1,0 +1,24 @@
+{% for noticia in noticias %}
+<article class="card noticia-card" id="{{ noticia.id }}" data-assuntos="{{ noticia.assuntos|join(' ') }}">
+    <div class="card-body">
+        <h3 class="card-title">{{ noticia.titulo }}</h3>
+        <p class="noticia-data">{% if noticia.data_iso %}<time datetime="{{ noticia.data_iso }}">{{ noticia.data }}</time>{% else %}{{ noticia.data }}{% endif %} · Agência Brasil</p>
+        {% if compacto %}
+        <p class="card-text">{{ noticia.resumo|truncate(160, true, '…') }}</p>
+        <a href="/Telas/noticias.html#{{ noticia.id }}">Ler destaque</a>
+        {% else %}
+        <p class="card-text noticia-resumo">{{ noticia.resumo }}</p>
+        <details class="noticia-completa">
+            <summary><span class="texto-abrir">Ler notícia completa</span><span class="texto-fechar">Fechar notícia</span><span class="sr-only">: {{ noticia.titulo }}</span></summary>
+            <div class="noticia-conteudo">
+                <p class="noticia-autoria">{{ noticia.autor }} · Fonte: Agência Brasil</p>
+                {% for bloco in noticia.blocos %}
+                {% if bloco.tipo == 'h3' %}<h4>{{ bloco.texto }}</h4>{% else %}<p>{{ bloco.texto }}</p>{% endif %}
+                {% endfor %}
+                <a href="{{ noticia.link }}" target="_blank" rel="noopener noreferrer">Publicação original na Agência Brasil (nova aba)</a>
+            </div>
+        </details>
+        {% endif %}
+    </div>
+</article>
+{% else %}<p>Nenhuma notícia de futebol feminino disponível neste feed no momento.</p>{% endfor %}

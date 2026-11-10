@@ -1,0 +1,18 @@
+<div data-painel-noticias{% if compacto %} data-compacto="1"{% endif %}>
+    {% if not compacto %}
+    <form class="filtros-noticias" role="search" aria-label="Buscar notícias">
+        <div><label for="busca-noticias">Buscar notícias</label><input id="busca-noticias" type="search" name="busca" placeholder="Título ou resumo" autocomplete="off"></div>
+        <div><label for="assunto-noticias">Assunto</label><select id="assunto-noticias" name="assunto">
+            <option value="">Todos os assuntos</option><option value="selecoes">Seleções</option><option value="clubes">Clubes e competições</option><option value="base">Categorias de base</option><option value="premiacoes">Premiações</option>
+        </select></div>
+        <button type="reset" class="botao-upload">Limpar filtros</button>
+    </form>
+    <p>Busca por título ou resumo nas matérias disponíveis no feed. Os assuntos são identificados automaticamente.</p>
+    <p data-contagem-noticias role="status" aria-live="polite"></p>
+    {% endif %}
+    <p data-status-noticias role="status" aria-live="polite">Carregando notícias…</p>
+    <button type="button" class="botao-upload" data-atualizar-noticias>Atualizar notícias</button>
+    <div class="noticias-grade" data-lista-noticias aria-busy="true"></div>
+    <p data-sem-resultados hidden>Nenhuma notícia corresponde à busca. Tente outro termo ou limpe os filtros.</p>
+</div>
+<noscript><p>Ative o JavaScript para carregar as notícias ou <a href="https://agenciabrasil.ebc.com.br/esportes">leia na Agência Brasil</a>.</p></noscript>

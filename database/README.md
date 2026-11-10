@@ -27,7 +27,7 @@ As tabelas declaram utf8mb4, utf8mb4_unicode_ci e InnoDB explicitamente, inclusi
 Configure `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` e `DB_NAME` no `.env` da raiz. Para verificar a estrutura, sem modificar dados:
 
 ```powershell
-.\venv\Scripts\python.exe -m back_end.models.banco
+.\venv\Scripts\python.exe -m backend.models.banco
 ```
 
-O módulo de conexão atende ao diagnóstico, à sincronização da API-Football e à leitura da página de jogos. Os uploads ainda não gravam no MySQL. Os arquivos de imagem ficam em `back_end/uploads`, não em colunas binárias.
+O módulo de conexão atende ao diagnóstico, à sincronização da API-Football e à leitura da página de jogos. Os uploads ainda não gravam no MySQL. Os arquivos de imagem ficam em `backend/uploads`, não em colunas binárias.

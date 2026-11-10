@@ -1,15 +1,15 @@
 from pathlib import Path
 from uuid import uuid4
 
-# Permite executar este arquivo diretamente ou com python -m back_end.app.
+# Permite executar este arquivo diretamente ou com python -m backend.app.
 if __name__ == "__main__" and __package__ is None:
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from flask import Flask, abort, jsonify, render_template, request, send_from_directory
 from mysql.connector import Error as ErroBanco
-from back_end.jogos import agrupar_jogos, listar_jogos
-from back_end.feed_noticias import cache_noticias, identificar_noticia
+from backend.jogos import agrupar_jogos, listar_jogos
+from backend.feed_noticias import cache_noticias, identificar_noticia
 
 PASTA_ATUAL = Path(__file__).resolve().parent
 PASTA_FRONTEND = PASTA_ATUAL.parent / "frontend"

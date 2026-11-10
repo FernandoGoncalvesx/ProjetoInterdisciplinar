@@ -1,4 +1,4 @@
-"""API-Football para MySQL. Execute com python -m back_end.jogos --help."""
+"""API-Football para MySQL. Execute com python -m backend.jogos --help."""
 
 import argparse
 import json
@@ -13,7 +13,7 @@ from urllib.request import Request, urlopen
 import mysql.connector
 from dotenv import load_dotenv
 
-from back_end.models.banco import PASTA_PROJETO, conectar_banco
+from backend.models.banco import PASTA_PROJETO, conectar_banco
 
 FUSO = timezone(timedelta(hours=-3))
 COLUNAS = {

@@ -57,7 +57,7 @@ def verificar_banco():
                 print("A coluna foto_perfil ainda não existe na tabela usuarios.")
 
 
-# Executado por python -m back_end.models.banco; importar o módulo não abre a conexão.
+# Executado por python -m backend.models.banco; importar o módulo não abre a conexão.
 if __name__ == "__main__":
     try:
         verificar_banco()

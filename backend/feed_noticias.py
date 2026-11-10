@@ -12,8 +12,8 @@ from threading import Lock, Thread
 from time import time
 from urllib.request import Request, urlopen
 from xml.etree import ElementTree as ET
-from back_end.jogos import FUSO
-from back_end.noticias import FEED_URL, filtrar_futebol
+from backend.jogos import FUSO
+from backend.noticias import FEED_URL, filtrar_futebol
 
 CACHE = Path(__file__).resolve().parent / 'cache' / 'noticias-teste.json'
 

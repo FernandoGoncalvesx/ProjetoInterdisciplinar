@@ -9,7 +9,7 @@ Na raiz do projeto, no PowerShell, crie o ambiente somente se ainda não existir
 ```powershell
 python -m venv venv
 .\venv\Scripts\python.exe -m pip install -r requirements.txt
-.\venv\Scripts\waitress-serve.exe --host=127.0.0.1 --port=8081 back_end.app:app
+.\venv\Scripts\waitress-serve.exe --host=127.0.0.1 --port=8081 backend.app:app
 ```
 
 Abra http://127.0.0.1:8081. Não abra os HTMLs diretamente: agora eles são templates renderizados pelo Flask. As URLs existentes, incluindo `/index.html` e `/Telas/historia.html`, continuam disponíveis.
@@ -17,7 +17,7 @@ Abra http://127.0.0.1:8081. Não abra os HTMLs diretamente: agora eles são temp
 Para desenvolvimento local também é possível usar:
 
 ```powershell
-.\venv\Scripts\python.exe -m back_end.app
+.\venv\Scripts\python.exe -m backend.app
 ```
 
 Nesse caso, abra http://127.0.0.1:5000. O modo de depuração fica desativado. Apache e túnel são opcionais; consulte [INICIAR_SERVIDOR.md](INICIAR_SERVIDOR.md).
@@ -26,10 +26,10 @@ Nesse caso, abra http://127.0.0.1:5000. O modo de depuração fica desativado. A
 
 | Caminho | Responsabilidade |
 | --- | --- |
-| `back_end/app.py` | Rotas das páginas, arquivos públicos e upload |
-| `back_end/feed_noticias.py` | Atualização e cache do RSS |
-| `back_end/models/banco.py` | Conexão compartilhada e diagnóstico do MySQL |
-| `back_end/uploads/` | Arquivos recebidos, ignorados pelo Git |
+| `backend/app.py` | Rotas das páginas, arquivos públicos e upload |
+| `backend/feed_noticias.py` | Atualização e cache do RSS |
+| `backend/models/banco.py` | Conexão compartilhada e diagnóstico do MySQL |
+| `backend/uploads/` | Arquivos recebidos, ignorados pelo Git |
 | `frontend/templates/paginas/` | Conteúdo específico das páginas |
 | `frontend/css/` | Estilos compartilhados em `base.css` e identidade visual em `tema.css` |
 | `frontend/js/portal.js` | Menu, notícias e upload |
@@ -42,7 +42,7 @@ Nesse caso, abra http://127.0.0.1:5000. O modo de depuração fica desativado. A
 - Navegação entre início, notícias, elenco, próximos jogos, história e envio de fotos.
 - Menu acessível e responsivo, com botão identificado no celular e ano atualizado.
 - Notícias de exemplo: o diálogo usa o mesmo título e texto do card, sem duplicação no JavaScript.
-- Upload de até 10 imagens PNG, JPEG, GIF ou WebP, de até 5 MB cada, para `back_end/uploads`.
+- Upload de até 10 imagens PNG, JPEG, GIF ou WebP, de até 5 MB cada, para `backend/uploads`.
 
 A API recebe `POST /api/upload`, com campo multipart `fotos`. Valida quantidade, tamanho e assinatura do formato antes de gravar. Gera nomes UUID para evitar sobrescritas e remove arquivos do lote caso ocorra falha de gravação. A verificação de assinatura não decodifica a imagem inteira nem substitui moderação. Uploads não têm rota pública de download.
 
@@ -65,14 +65,14 @@ DB_NAME=projeto_interdisciplinar
 Execute `database/schema.sql` no MySQL e verifique a conexão:
 
 ```powershell
-.\venv\Scripts\python.exe -m back_end.models.banco
+.\venv\Scripts\python.exe -m backend.models.banco
 ```
 
 A senha não deve ser versionada. O script SQL cria estruturas ausentes; alterações de colunas existentes precisam de migração própria. Faça backup antes de migrar estruturas.
 
 A página de jogos lê o MySQL e recebe partidas importadas da API-Football. Consulte [como configurar e sincronizar](database/API_FOOTBALL.md). Cadastro/login e vínculo das fotos aos usuários continuam pendentes.
 
-A página de notícias consulta o RSS de Esportes da Agência Brasil e filtra apenas futebol feminino (clubes, seleções e categorias de base) por título e categorias. Links relacionados no corpo não participam da classificação. A lista de termos fica em `back_end/noticias.py` e pode precisar de ajustes conforme a classificação editorial da fonte. Falhas de conexão exibem uma mensagem na página, sem notícias de demonstração.
+A página de notícias consulta o RSS de Esportes da Agência Brasil e filtra apenas futebol feminino (clubes, seleções e categorias de base) por título e categorias. Links relacionados no corpo não participam da classificação. A lista de termos fica em `backend/noticias.py` e pode precisar de ajustes conforme a classificação editorial da fonte. Falhas de conexão exibem uma mensagem na página, sem notícias de demonstração.
 
 ## Verificação
 
@@ -84,4 +84,4 @@ Os testes usam uma pasta temporária para imagens e simulam a conexão do diagn�
 
 Veja o guia de edição do [frontend](frontend/README.md). O formulário de fotos fica em `/Telas/fotos.html`.
 
-Integração de partidas: `back_end/jogos.py`. O comando `python -m back_end.jogos --help` mostra como localizar equipes, preparar o banco e sincronizar.
+Integração de partidas: `backend/jogos.py`. O comando `python -m backend.jogos --help` mostra como localizar equipes, preparar o banco e sincronizar.

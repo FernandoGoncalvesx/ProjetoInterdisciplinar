@@ -11,8 +11,8 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-/back_end/uploads/*
-!/back_end/uploads/.gitkeep
+/backend/uploads/*
+!/backend/uploads/.gitkeep
 
 /tests/*
-back_end/cache/
+backend/cache/

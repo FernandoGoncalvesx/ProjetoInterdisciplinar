@@ -32,7 +32,7 @@ Edite o HTML correspondente em `templates/paginas/`. Cada página herda `base.ht
 
 - Estrutura HTML, CSS e scripts carregados: `templates/base.html`.
 - Cabeçalho e aparência do menu: `templates/componentes/menu.html`.
-- Links, títulos e URLs das páginas: `PAGINAS` em `back_end/app.py`.
+- Links, títulos e URLs das páginas: `PAGINAS` em `backend/app.py`.
 - Rodapé: `templates/componentes/rodape.html`.
 - Aparência: `css/base.css` e `css/tema.css`.
 - Menu móvel e upload: `js/portal.js`.
@@ -44,18 +44,18 @@ CSS e JavaScript permanecem em arquivos compartilhados. Separe arquivos específ
 Na raiz do projeto:
 
 ```powershell
-.\venv\Scripts\python.exe -m back_end.app
+.\venv\Scripts\python.exe -m backend.app
 ```
 
 Abra http://127.0.0.1:5000. Os HTMLs precisam ser renderizados pelo Flask. As URLs existentes continuam funcionando. Os templates não são publicados como arquivos.
 
-Notícias de futebol feminino vêm do RSS da Agência Brasil e podem ser lidas na própria página. Jogos vêm do MySQL. Fotos enviadas ficam em `back_end/uploads/`.
+Notícias de futebol feminino vêm do RSS da Agência Brasil e podem ser lidas na própria página. Jogos vêm do MySQL. Fotos enviadas ficam em `backend/uploads/`.
 
 ## Melhorias incorporadas
 
 A interface inclui menu móvel compacto, notícias com datas e consulta em segundo plano, histórico expansível e envio de fotos com prévias e seleção acumulada.
 
-Acesse http://127.0.0.1:8081/. A interface consulta `/api/noticias`, que usa o cache em `back_end/cache/noticias-teste.json`.
+Acesse http://127.0.0.1:8081/. A interface consulta `/api/noticias`, que usa o cache em `backend/cache/noticias-teste.json`.
 
 O rodapé principal tem Ajuda, Suporte, Privacidade e Versão 1.0.0. Os botões abrem informações em janelas acessíveis, fechadas pelo botão ou pela tecla Escape. Suporte apresenta orientações de solução de problemas; não há canal de contato configurado.
 

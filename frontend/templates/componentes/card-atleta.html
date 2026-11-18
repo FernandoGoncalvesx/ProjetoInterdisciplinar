@@ -1,0 +1,7 @@
+<article class="card atleta-card">
+{% if atleta.imagem_url %}<img src="{{ atleta.imagem_url }}" alt="" width="80" height="80" loading="lazy">{% else %}
+<div class="atleta-avatar" aria-hidden="true">{{ atleta.nome[:1] }}</div>{% endif %}
+<div class="atleta-conteudo"><h3>{{ atleta.nome }}</h3>
+{% if atleta.clube %}<p>{{ atleta.clube }}</p>{% endif %}
+{% if atleta.posicao %}<p>{{ atleta.posicao }}</p>{% endif %}</div>
+</article>

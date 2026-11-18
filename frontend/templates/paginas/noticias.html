@@ -1,9 +1,13 @@
 {% extends "base.html" %}
-{% set descricao = "Comunicados sobre a Seleção Brasileira Feminina." %}
+{% set descricao = "Publicações sobre a Seleção Brasileira Feminina." %}
 {% block conteudo %}
-<section class="secao container" aria-labelledby="secao-titulo">
-    <div class="secao-cabecalho"><h2 id="secao-titulo">Comunicados oficiais</h2></div>
-    <p>Consulte convocações, jogos e outras atualizações no site da CBF.</p>
-    <a class="link-secao" href="https://www.cbf.com.br/selecao-brasileira/noticias/selecao-feminina-principal">Acompanhar notícias na CBF</a>
-</section>
-{% endblock %}
+<section class="secao container" aria-labelledby="noticias-titulo">
+<div class="secao-cabecalho"><h2 id="noticias-titulo">Notícias</h2></div>
+{% if banco_indisponivel %}<p role="status">Não foi possível carregar as notícias. Tente novamente em instantes.</p>
+{% else %}{% for noticia in noticias %}
+<article class="card noticia-publicada"><h3>{{ noticia.titulo }}</h3><p>Por {{ noticia.autor }}</p>
+{% if noticia.imagem_url %}<img src="{{ noticia.imagem_url }}" alt="" loading="lazy">{% endif %}
+<details><summary>Ler notícia: {{ noticia.titulo }}</summary><div class="texto-noticia">{{ noticia.texto }}</div></details></article>
+{% else %}<p>Nenhuma notícia publicada no momento.</p>{% endfor %}{% endif %}
+<a class="link-secao" href="https://www.cbf.com.br/selecao-brasileira/noticias/selecao-feminina-principal">Acompanhar notícias na CBF</a>
+</section>{% endblock %}

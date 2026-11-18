@@ -133,3 +133,9 @@ main:has(.secao-fotos) .pagina-hero { padding-block: 28px; }
 .formulario-login #alternar-senha[aria-pressed="true"] { font-weight: bold; }
 .formulario-login :focus-visible { outline: 3px solid var(--verde-escuro); outline-offset: 3px; }
 .formulario-login .botao:disabled { background: #dde4df; color: #48574e; cursor: not-allowed; }
+
+.noticia-publicada { margin-bottom: 24px; padding: 24px; }
+.noticia-publicada img { max-width: 100%; height: auto; }
+.texto-noticia { white-space: pre-wrap; max-width: 68ch; line-height: 1.7; }
+.noticia-publicada summary { cursor: pointer; padding-block: 12px; }
+.atleta-card img { object-fit: cover; }

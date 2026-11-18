@@ -8,27 +8,18 @@ from werkzeug.security import generate_password_hash
 from backend.models.banco import conectar_banco
 
 
-def migrar(cursor):
-    cursor.execute("SHOW COLUMNS FROM usuarios")
-    colunas = {linha[0] for linha in cursor.fetchall()}
-    if "nome_usuario" in colunas and "email" not in colunas:
-        return "A tabela já usa nome_usuario."
-    if "email" not in colunas or "nome_usuario" in colunas:
-        raise ValueError("Estrutura de usuarios inesperada. Confira as colunas antes de migrar.")
-    cursor.execute("ALTER TABLE usuarios RENAME COLUMN email TO nome_usuario")
-    return "Tabela atualizada. Os identificadores e as senhas existentes foram preservados."
+from database.migracoes.contas import migrar
 
 
 def criar(cursor):
-    nome = input("Nome de exibição: ").strip()
     usuario = input("Nome de usuário: ").strip()
-    if not (1 <= len(nome) <= 100 and 1 <= len(usuario) <= 254):
-        raise ValueError("Informe o nome (até 100 caracteres) e o usuário (até 254).")
+    if not (1 <= len(usuario) <= 254):
+        raise ValueError("Informe um usuário de até 254 caracteres.")
     senha = getpass("Senha: ")
     if not (1 <= len(senha) <= 1024) or senha != getpass("Confirme a senha: "):
         raise ValueError("Confira a senha e a confirmação.")
     cursor.execute("INSERT INTO usuarios (nome, nome_usuario, senha_hash) VALUES (%s, %s, %s)",
-                   (nome, usuario, generate_password_hash(senha)))
+                   ("", usuario, generate_password_hash(senha)))
     return "Conta criada."
 
 

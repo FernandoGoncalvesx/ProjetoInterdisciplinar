@@ -20,6 +20,9 @@ CREATE TABLE IF NOT EXISTS usuarios (
 CREATE TABLE IF NOT EXISTS jogadoras (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
+    posicao VARCHAR(80) NULL,
+    clube VARCHAR(150) NULL,
+    imagem_url VARCHAR(500) NULL,
     -- Campo Jogadoras_vel do desenho: significado e unidade ainda a definir.
     vel VARCHAR(45) NULL,
     gols INT UNSIGNED NOT NULL DEFAULT 0,

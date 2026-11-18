@@ -15,7 +15,7 @@ class TestAutenticacao(unittest.TestCase):
         self.addCleanup(banco.stop)
         self.cursor = conexao.cursor.return_value.__enter__.return_value
         self.cursor.fetchone.return_value = {
-            "id": 7, "nome": "Ana", "senha_hash": generate_password_hash("minha senha")
+            "id": 7, "nome_usuario": "ana.silva", "senha_hash": generate_password_hash("minha senha")
         }
         self.conta = "/Telas/login_page.html"
 
@@ -68,3 +68,19 @@ class TestAutenticacao(unittest.TestCase):
         with self.assertRaises(ValueError):
             migrar(cursor)
         cursor.execute.assert_called_once_with("SHOW COLUMNS FROM usuarios")
+
+class TestConteudo(unittest.TestCase):
+    def test_elenco_e_noticias_renderizam_dados_escapados(self):
+        cliente = app.test_client()
+        with patch("backend.app.listar_jogadoras", return_value=[
+            {"nome": "Atleta teste", "posicao": "Atacante", "clube": "Clube teste", "imagem_url": None}
+        ]):
+            resposta = cliente.get("/Telas/elenco.html")
+            self.assertEqual(resposta.status_code, 200)
+            self.assertIn("Atleta teste", resposta.get_data(as_text=True))
+        with patch("backend.app.listar_noticias", return_value=[
+            {"id": 1, "titulo": "Publicação teste", "autor": "Equipe", "imagem_url": None, "texto": "<script>alert(1)</script>"}
+        ]):
+            resposta = cliente.get("/Telas/noticias.html")
+            self.assertEqual(resposta.status_code, 200)
+            self.assertIn("&lt;script&gt;", resposta.get_data(as_text=True))

@@ -4,18 +4,28 @@
 
 {% block conteudo %}
 <div class="container secao">
+        {% for mensagem in get_flashed_messages() %}
+        <p role="alert">{{ mensagem }}</p>
+        {% endfor %}
     {% if session.usuario_id %}
     <form class="card formulario-login" method="post" action="{{ url_for('autenticacao.sair') }}">
         <p>Sessão iniciada como <strong>{{ session.nome }}</strong>.</p>
         <input type="hidden" name="csrf" value="{{ token_formulario() }}">
         <button class="botao" type="submit">Sair da conta</button>
     </form>
+    <form class="card formulario-login" method="post" action="/api/conta/usuario">
+        <h2>Alterar nome de usuário</h2>
+        <input type="hidden" name="csrf" value="{{ token_formulario() }}">
+        <label for="novo-usuario">Novo nome de usuário</label>
+        <input id="novo-usuario" name="nome_usuario" maxlength="254" autocomplete="username" required>
+        <label for="senha-atual">Senha atual</label>
+        <input id="senha-atual" name="senha" type="password" maxlength="1024" autocomplete="current-password" required>
+        <button class="botao" type="submit">Salvar usuário</button>
+    </form>
     {% else %}
     <form class="card formulario-login" method="post" action="/api/login" aria-label="Entrar na conta">
         <input type="hidden" name="csrf" value="{{ token_formulario() }}">
-        {% for mensagem in get_flashed_messages() %}
-        <p role="alert">{{ mensagem }}</p>
-        {% endfor %}
+
         <label for="nome_usuario">Nome de usuário</label>
         <input type="text" id="nome_usuario" name="nome_usuario" maxlength="254" autocapitalize="none" spellcheck="false" autocomplete="username" required>
         <label for="senha">Senha</label>
@@ -23,6 +33,19 @@
         <button type="button" id="alternar-senha" aria-controls="senha" aria-pressed="false" hidden>Mostrar senha</button>
         <button class="botao" type="submit">Entrar</button>
     </form>
+<details class="card formulario-login">
+    <summary>Criar conta</summary>
+    <form class="formulario-login" method="post" action="/api/cadastro">
+        <input type="hidden" name="csrf" value="{{ token_formulario() }}">
+        <label for="cadastro-usuario">Nome de usuário</label>
+        <input id="cadastro-usuario" name="nome_usuario" maxlength="254" autocapitalize="none" spellcheck="false" autocomplete="username" required>
+        <label for="cadastro-senha">Senha</label>
+        <input id="cadastro-senha" name="senha" type="password" maxlength="1024" autocomplete="new-password" required>
+        <label for="cadastro-confirmacao">Confirme a senha</label>
+        <input id="cadastro-confirmacao" name="confirmacao" type="password" maxlength="1024" autocomplete="new-password" required>
+        <button class="botao" type="submit">Criar conta</button>
+    </form>
+</details>
 <script src="/js/login.js" defer></script>
     {% endif %}
 </div>

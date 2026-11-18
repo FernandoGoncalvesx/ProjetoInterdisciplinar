@@ -13,6 +13,7 @@ from flask import Flask, abort, jsonify, render_template, request, send_from_dir
 from mysql.connector import Error as ErroBanco
 from backend.jogos import agrupar_jogos, listar_jogos
 from backend.autenticacao import autenticacao
+from backend.conteudo import listar_jogadoras, listar_noticias
 from dotenv import load_dotenv
 
 PASTA_ATUAL = Path(__file__).resolve().parent
@@ -44,6 +45,13 @@ def pagina(path="index.html"):
     if path in PAGINAS:
         template = "inicio" if path == "index.html" else Path(path).stem
         contexto = {}
+        if template in {"elenco", "noticias"}:
+            chave, consulta = ("jogadoras", listar_jogadoras) if template == "elenco" else ("noticias", listar_noticias)
+            try:
+                contexto[chave] = consulta()
+            except (ErroBanco, ValueError):
+                contexto.update({chave: [], "banco_indisponivel": True})
+                app.logger.warning("Conteúdo indisponível. Confira o banco e as migrações.")
         if template == "historia":
             with (PASTA_ATUAL / "dados" / "historia.json").open(encoding="utf-8") as arquivo:
                 contexto["historia"] = json.load(arquivo)

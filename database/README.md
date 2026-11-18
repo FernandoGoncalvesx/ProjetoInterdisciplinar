@@ -34,7 +34,7 @@ O módulo de conexão atende ao diagnóstico e à leitura da página de jogos. C
 
 ## Contas de acesso
 
-O login usa `nome_usuario` único e senha. `nome` é o nome de exibição.
+O login usa `nome_usuario` único e senha. A coluna legada `nome` é mantida por compatibilidade com bancos existentes; novos cadastros gravam nela uma string vazia. A interface usa apenas `nome_usuario`.
 Em bancos criados antes dessa alteração, execute na raiz do projeto:
 
 ```powershell
@@ -51,3 +51,23 @@ Para substituir o identificador de uma conta existente, execute
 Para cadastrar uma conta, execute `python -m backend.contas criar`.
 Esses comandos usam a conexão configurada no `.env`. As senhas cadastradas são
 armazenadas como hashes compatíveis com o login.
+
+## Atualização do conteúdo do portal
+
+Na raiz do projeto, execute `python -m database.migrar`.
+O comando pressupõe as tabelas do schema já criadas. Ele acrescenta posição,
+clube e imagem às jogadoras e importa uma única vez as 26 atletas do HTML
+anterior. Contas e registros existentes são preservados. Atletas com nome já
+cadastrado são mantidas sem sobrescrever seus dados. A tabela `migracoes`
+registra a importação. Alterações de estrutura do MySQL podem persistir mesmo
+se a etapa de importação falhar; o comando permite retomar a atualização.
+
+O lote é uma referência histórica do antigo elenco, não uma convocação atual.
+Sua proveniência está em `migracoes/referencia-elenco.html`.
+Elenco e notícias agora leem o MySQL. A página de notícias mostra os registros
+de `noticias` em ordem de ID, com texto escapado e leitura expansível.
+O cadastro editorial de notícias e atletas ainda é feito no banco.
+
+Os modelos e prompts de cards ficam em `cards/`. Imagens efetivamente usadas
+pelo portal ficam em `frontend/assets/`; `imagem_url` guarda o caminho público.
+A História continua em `backend/dados/historia.json`.

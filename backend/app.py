@@ -14,6 +14,8 @@ from mysql.connector import Error as ErroBanco
 from backend.jogos import agrupar_jogos, listar_jogos
 from backend.autenticacao import autenticacao
 from backend.conteudo import listar_jogadoras, listar_noticias
+from backend.controllers.fotos_controller import fotos
+from backend.controllers.cards_controller import cards
 from dotenv import load_dotenv
 
 PASTA_ATUAL = Path(__file__).resolve().parent
@@ -36,6 +38,9 @@ load_dotenv(PASTA_ATUAL.parent / ".env")
 app.config.update(SECRET_KEY=os.getenv("FLASK_SECRET_KEY") or secrets.token_hex(32),
                   SESSION_COOKIE_SAMESITE="Lax")
 app.register_blueprint(autenticacao)
+app.config["PAGINAS"] = PAGINAS
+app.register_blueprint(fotos)
+app.register_blueprint(cards)
 app.config["MAX_CONTENT_LENGTH"] = MAX_ARQUIVOS * MAX_BYTES + 1024 * 1024
 
 

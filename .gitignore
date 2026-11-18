@@ -16,3 +16,7 @@ Thumbs.db
 
 /tests/*
 !/tests/test_autenticacao.py
+!/tests/test_cards.py
+/backend/cache_modelos/
+/.venv-cards/
+!/tests/test_sistema.py

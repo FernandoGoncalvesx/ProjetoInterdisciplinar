@@ -1,0 +1,14 @@
+.criador-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem;align-items:start}
+.painel-card{padding:1.5rem;min-width:0}
+.painel-card label{display:block;margin-top:1rem;font-weight:600}
+.painel-card input:not([type=range]),.painel-card select{width:100%;box-sizing:border-box;padding:.7rem}
+.painel-card input[type=range]{width:100%}
+.painel-card button{padding:.75rem 1.1rem;margin-top:1rem;cursor:pointer}
+.painel-card button:disabled{opacity:.55;cursor:default}
+#foto-original{max-width:100%;max-height:300px;margin-top:1rem;object-fit:contain}
+#foto-original[hidden]{display:none}
+#previa-card{display:block;width:100%;max-width:420px;height:auto;margin:1.5rem auto;touch-action:none;cursor:grab}
+#ajustes-card{margin-top:1rem;padding:1rem;border:1px solid #aaa}
+#foto-status.erro{color:#a32222}
+@media(max-width:760px){.criador-card{grid-template-columns:1fr}}
+

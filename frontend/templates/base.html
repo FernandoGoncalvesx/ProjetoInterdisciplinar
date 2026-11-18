@@ -19,7 +19,7 @@
         {% if pagina != 'index.html' %}
         <section class="hero pagina-hero">
             <div class="container">
-                <h1>{{ paginas[pagina] }}</h1>
+                <h1>{% block titulo_pagina %}{{ paginas[pagina] }}{% endblock %}</h1>
                 <p>{{ descricao }}</p>
             </div>
         </section>

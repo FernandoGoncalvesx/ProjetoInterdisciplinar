@@ -1,6 +1,6 @@
 # Portal da Seleção Feminina Brasileira
 
-Portal em Flask com seis páginas, notícias de futebol feminino e envio de fotos. As páginas herdam `base.html`, com menu e rodapé compartilhados em componentes. Jinja2 é usado para os dados dinâmicos de notícias e jogos. CSS e JavaScript são compartilhados; não há etapa de build nem dependência de Bootstrap.
+Portal em Flask com seis páginas, agenda de jogos e envio de fotos. As páginas herdam `base.html`, com menu e rodapé compartilhados em componentes. Jinja2 exibe os dados dos jogos. CSS e JavaScript são compartilhados; não há etapa de build nem dependência de Bootstrap.
 
 ## Preparação e execução
 
@@ -27,12 +27,12 @@ Nesse caso, abra http://127.0.0.1:5000. O modo de depuração fica desativado. A
 | Caminho | Responsabilidade |
 | --- | --- |
 | `backend/app.py` | Rotas das páginas, arquivos públicos e upload |
-| `backend/feed_noticias.py` | Atualização e cache do RSS |
+| `backend/jogos.py` | Consulta e organização da agenda e do histórico |
 | `backend/models/banco.py` | Conexão compartilhada e diagnóstico do MySQL |
 | `backend/uploads/` | Arquivos recebidos, ignorados pelo Git |
 | `frontend/templates/paginas/` | Conteúdo específico das páginas |
 | `frontend/css/` | Estilos compartilhados em `base.css` e identidade visual em `tema.css` |
-| `frontend/js/portal.js` | Menu, notícias e upload |
+| `frontend/js/portal.js` | Menu, rodapé e upload |
 | `frontend/assets/` | Logo e ícone do portal |
 | `database/schema.sql` | Criação das sete tabelas, sem registros |
 | `tests/test_sistema.py` | Verificação de páginas, links, upload e diagnóstico |
@@ -41,7 +41,7 @@ Nesse caso, abra http://127.0.0.1:5000. O modo de depuração fica desativado. A
 
 - Navegação entre início, notícias, elenco, próximos jogos, história e envio de fotos.
 - Menu acessível e responsivo, com botão identificado no celular e ano atualizado.
-- Notícias de exemplo: o diálogo usa o mesmo título e texto do card, sem duplicação no JavaScript.
+- A página Notícias indica onde consultar os comunicados oficiais da CBF.
 - Upload de até 10 imagens PNG, JPEG, GIF ou WebP, de até 5 MB cada, para `backend/uploads`.
 
 A API recebe `POST /api/upload`, com campo multipart `fotos`. Valida quantidade, tamanho e assinatura do formato antes de gravar. Gera nomes UUID para evitar sobrescritas e remove arquivos do lote caso ocorra falha de gravação. A verificação de assinatura não decodifica a imagem inteira nem substitui moderação. Uploads não têm rota pública de download.
@@ -70,9 +70,7 @@ Execute `database/schema.sql` no MySQL e verifique a conexão:
 
 A senha não deve ser versionada. O script SQL cria estruturas ausentes; alterações de colunas existentes precisam de migração própria. Faça backup antes de migrar estruturas.
 
-A página de jogos lê o MySQL e recebe partidas importadas da API-Football. Consulte [como configurar e sincronizar](database/API_FOOTBALL.md). Cadastro/login e vínculo das fotos aos usuários continuam pendentes.
-
-A página de notícias consulta o RSS de Esportes da Agência Brasil e filtra apenas futebol feminino (clubes, seleções e categorias de base) por título e categorias. Links relacionados no corpo não participam da classificação. A lista de termos fica em `backend/noticias.py` e pode precisar de ajustes conforme a classificação editorial da fonte. Falhas de conexão exibem uma mensagem na página, sem notícias de demonstração.
+A página de jogos lê as partidas cadastradas no MySQL. Para acrescentar campos da agenda a um banco antigo, execute `python -m backend.jogos preparar-banco`. Cadastro/login e vínculo das fotos aos usuários continuam pendentes.
 
 ## Verificação
 
@@ -83,5 +81,3 @@ A página de notícias consulta o RSS de Esportes da Agência Brasil e filtra ap
 Os testes usam uma pasta temporária para imagens e simulam a conexão do diagnóstico, sem alterar o MySQL nem os uploads reais.
 
 Veja o guia de edição do [frontend](frontend/README.md). O formulário de fotos fica em `/Telas/fotos.html`.
-
-Integração de partidas: `backend/jogos.py`. O comando `python -m backend.jogos --help` mostra como localizar equipes, preparar o banco e sincronizar.

@@ -1,56 +1,29 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico?v=2">
-    <link rel="icon" type="image/png" sizes="48x48" href="../assets/favicon.png?v=2">
-    <meta name="description" content="Notícias, elenco, jogos e história da Seleção Feminina Brasileira.">
-    <title> Seleção Feminina Brasileira</title>
-    <link rel="stylesheet" href="../css/styles.css">
-    <!-- defer executa o script depois que os elementos da página foram interpretados. -->
-    <script src="../js/styles.js" defer></script>
-</head>
-<body>
-    <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
-    <header class="cabecalho">
-        <div class="container barra-navegacao">
-            <a class="marca" href="../index.html" aria-label="Seleção Feminina Brasileira — início">
-                <img class="marca-logo" src="../assets/logo.webp" alt="" width="44" height="48">
-                <span>Seleção Feminina Brasileira</span>
-            </a>
-            <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu-principal">
-                <span class="sr-only">Abrir menu</span><span></span><span></span><span></span>
-            </button>
-            <nav id="menu-principal" class="menu" aria-label="Navegação principal">
-                <a href="../index.html">Início</a>
-                <a href="noticias.html">Notícias</a>
-                <a href="elenco.html">Elenco</a>
-                <a href="proximos_jogos.html">Próximos jogos</a>
-                <a href="historia.html">História</a>
-            </nav>
-        </div>
-    </header>
-    <main id="conteudo" tabindex="-1">
-        <section class="secao container" aria-labelledby="login-titulo">
-            <h1 id="login-titulo">Entrar</h1>
-            <form id="login-form" action="/api/login" method="post">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" autocomplete="username" required>
-                <br><br>
-                <label for="senha">Senha:</label>
-                <input type="password" id="senha" name="senha" autocomplete="current-password" required>
-                <br><br>
-                <button type="submit">Entrar</button>
-                <p id="login-status" role="status" aria-live="polite"></p>
-            </form>
-        </section>
-    </main>
-    <footer class="rodape">
-        <div class="container rodape-conteudo">
-            <p><strong>Seleção Feminina Brasileira</strong></p>
-            <p><span data-ano>2026</span> — Projeto Interdisciplinar</p>
-        </div>
-    </footer>
-</body>
-</html>
+{% extends "base.html" %}
+{% set descricao = "Acesso à conta do portal da Seleção Feminina Brasileira." %}
+{% block titulo_pagina %}{{ "Minha conta" if session.usuario_id else "Entrar" }}{% endblock %}
+
+{% block conteudo %}
+<div class="container secao">
+    {% if session.usuario_id %}
+    <form class="card formulario-login" method="post" action="{{ url_for('autenticacao.sair') }}">
+        <p>Sessão iniciada como <strong>{{ session.nome }}</strong>.</p>
+        <input type="hidden" name="csrf" value="{{ token_formulario() }}">
+        <button class="botao" type="submit">Sair da conta</button>
+    </form>
+    {% else %}
+    <form class="card formulario-login" method="post" action="/api/login" aria-label="Entrar na conta">
+        <input type="hidden" name="csrf" value="{{ token_formulario() }}">
+        {% for mensagem in get_flashed_messages() %}
+        <p role="alert">{{ mensagem }}</p>
+        {% endfor %}
+        <label for="nome_usuario">Nome de usuário</label>
+        <input type="text" id="nome_usuario" name="nome_usuario" maxlength="254" autocapitalize="none" spellcheck="false" autocomplete="username" required>
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" autocomplete="current-password" required>
+        <button type="button" id="alternar-senha" aria-controls="senha" aria-pressed="false" hidden>Mostrar senha</button>
+        <button class="botao" type="submit">Entrar</button>
+    </form>
+<script src="/js/login.js" defer></script>
+    {% endif %}
+</div>
+{% endblock %}

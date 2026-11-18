@@ -4,11 +4,11 @@ CREATE DATABASE IF NOT EXISTS projeto_interdisciplinar
 
 USE projeto_interdisciplinar;
 
--- Cadastro e autenticação ainda não foram ligados a esta tabela pela aplicação.
+-- Contas de acesso ao portal.
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    email VARCHAR(254) NOT NULL UNIQUE,
+    nome_usuario VARCHAR(254) NOT NULL UNIQUE,
     -- Reservado ao hash produzido pelo backend, nunca à senha original.
     senha_hash VARCHAR(255) NOT NULL,
     -- Apenas caminho ou URL da imagem, não os bytes do arquivo.
@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS jogadoras (
 
 CREATE TABLE IF NOT EXISTS proximos_jogos (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    api_fixture_id BIGINT UNSIGNED NULL UNIQUE,
     time_oponente VARCHAR(100) NOT NULL,
     mandante VARCHAR(100) NULL,
     visitante VARCHAR(100) NULL,

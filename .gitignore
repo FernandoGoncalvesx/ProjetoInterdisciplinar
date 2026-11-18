@@ -15,4 +15,4 @@ Thumbs.db
 !/backend/uploads/.gitkeep
 
 /tests/*
-backend/cache/
+!/tests/test_autenticacao.py

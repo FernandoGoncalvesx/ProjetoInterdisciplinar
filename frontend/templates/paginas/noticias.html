@@ -1,12 +1,9 @@
-{# LAYOUT COMPARTILHADO #}
 {% extends "base.html" %}
-{% set descricao = "Notícias de futebol feminino da Agência Brasil." %}
-{# INÍCIO DO CONTEÚDO DA PÁGINA #}
+{% set descricao = "Comunicados sobre a Seleção Brasileira Feminina." %}
 {% block conteudo %}
 <section class="secao container" aria-labelledby="secao-titulo">
-    <div class="secao-cabecalho"><h2 id="secao-titulo">Últimas notícias de futebol feminino</h2></div>
-    <p>Fonte: Agência Brasil · Clubes, seleções e categorias de base. Horários de Brasília.</p>
-    {% include "componentes/painel-noticias.html" %}
+    <div class="secao-cabecalho"><h2 id="secao-titulo">Comunicados oficiais</h2></div>
+    <p>Consulte convocações, jogos e outras atualizações no site da CBF.</p>
+    <a class="link-secao" href="https://www.cbf.com.br/selecao-brasileira/noticias/selecao-feminina-principal">Acompanhar notícias na CBF</a>
 </section>
 {% endblock %}
-{# FIM DO CONTEÚDO DA PÁGINA #}

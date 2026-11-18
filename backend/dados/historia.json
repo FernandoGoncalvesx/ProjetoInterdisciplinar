@@ -1,0 +1,72 @@
+{
+    "titulo": "História da Seleção Brasileira Feminina",
+    "introducao": "A trajetória da Seleção Brasileira Feminina de Futebol é marcada por muita luta, superação de preconceitos e talentos inesquecíveis que levaram o nome do Brasil ao topo do mundo. O que começou na clandestinidade tornou-se um símbolo de resistência e glória.",
+    "fatos_historicos": [
+        {
+            "periodo": "1941 - 1979",
+            "marco": "A Proibição",
+            "descricao": "Durante quase quatro décadas, o futebol feminino foi proibido por lei no Brasil (Decreto-Lei 3.199). As mulheres jogavam na clandestinidade, enfrentando forte repressão da sociedade e do Estado."
+        },
+        {
+            "periodo": "Anos 1980",
+            "marco": "A Formação da Primeira Seleção",
+            "descricao": "Com a revogação da lei em 1979, o esporte começou a se organizar. A primeira seleção oficial foi formada em 1988 para um torneio experimental na China, onde o Brasil surpreendeu e conquistou o terceiro lugar."
+        },
+        {
+            "periodo": "Anos 2000",
+            "marco": "A Era de Ouro",
+            "descricao": "O período de maior destaque global, eternizado por atletas como Marta, Cristiane e Formiga. Com um futebol encantador, o Brasil conquistou duas medalhas de prata olímpicas (Atenas 2004 e Pequim 2008) e o vice-campeonato mundial na Copa do Mundo de 2007."
+        },
+        {
+            "periodo": "Atualidade",
+            "marco": "Profissionalização e Renovação",
+            "descricao": "Hoje, a seleção luta pela equidade de gênero e melhores condições estruturais. É um período focado em consolidar ligas nacionais e revelar novas gerações de talentos para manter viva a tradição vitoriosa."
+        }
+    ],
+    "titulos_conquistas": [
+        "8x Campeã da Copa América Feminina (1991, 1995, 1998, 2003, 2010, 2014, 2018, 2022)",
+        "3x Ouro em Jogos Pan-Americanos (Santo Domingo 2003, Rio 2007, Toronto 2015)",
+        "Vice-Campeã da Copa do Mundo FIFA (2007)",
+        "2x Medalha de Prata nos Jogos Olímpicos (Atenas 2004, Pequim 2008)",
+        "Medalha de Prata nos Jogos Olímpicos (Paris 2024)"
+    ],
+    "icones_do_esporte": [
+        {
+            "nome": "Marta Vieira da Silva",
+            "posicao": "Atacante",
+            "destaque": "Camisa 10 inesquecível, eleita 6 vezes a melhor jogadora do mundo pela FIFA. É a maior artilheira da história das Copas do Mundo."
+        },
+        {
+            "nome": "Miraildes Maciel Mota (Formiga)",
+            "posicao": "Meio-campista",
+            "destaque": "Símbolo de raça. Única atleta no mundo a participar de 7 Copas do Mundo e 7 edições dos Jogos Olímpicos."
+        },
+        {
+            "nome": "Cristiane Rozeira",
+            "posicao": "Atacante",
+            "destaque": "Maior artilheira da história do futebol em Jogos Olímpicos, somando as categorias masculina e feminina."
+        }
+    ],
+    "fontes": [
+        {
+            "referencia": "BRASIL. Decreto-Lei nº 3.199, de 14 de abril de 1941. Estabelece as bases de organização dos desportos em todo o país. Presidência da República.",
+            "url": "http://www.planalto.gov.br/ccivil_03/decreto-lei/1937-1946/del3199.htm"
+        },
+        {
+            "referencia": "CONFEDERAÇÃO BRASILEIRA DE FUTEBOL (CBF). Acervo Histórico da Seleção Brasileira Feminina.",
+            "url": "https://www.cbf.com.br/selecao-brasileira/selecao-feminina"
+        },
+        {
+            "referencia": "MUSEU DO FUTEBOL. Projeto Visibilidade para o Futebol Feminino.",
+            "url": "https://museudofutebol.org.br/projetos/visibilidade-para-o-futebol-feminino/"
+        },
+        {
+            "referencia": "FÉDÉRATION INTERNATIONALE DE FOOTBALL ASSOCIATION (FIFA). Registos Oficiais e Premiações.",
+            "url": "https://www.fifa.com/pt"
+        },
+        {
+            "referencia": "COMITÉ OLÍMPICO INTERNACIONAL (COI). Estatísticas e medalhas olímpicas oficiais.",
+            "url": "https://olympics.com/pt/esportes/futebol/"
+        }
+    ]
+}

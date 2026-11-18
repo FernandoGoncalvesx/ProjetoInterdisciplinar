@@ -53,6 +53,8 @@ def verificar_banco():
             cursor.execute("SHOW COLUMNS FROM usuarios")
             colunas = [linha[0] for linha in cursor.fetchall()]
             print("Colunas de usuarios: " + ", ".join(colunas))
+            if "nome_usuario" not in colunas or "email" in colunas:
+                raise ValueError("Migração de contas pendente. Execute python -m backend.contas migrar.")
             if "foto_perfil" not in colunas:
                 print("A coluna foto_perfil ainda não existe na tabela usuarios.")
 

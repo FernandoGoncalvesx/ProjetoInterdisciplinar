@@ -12,7 +12,7 @@ O script preserva os registros e cria tabelas ausentes; não migra colunas de ta
 
 | Tabela | Conteúdo |
 | --- | --- |
-| usuarios | Identificação, e-mail único, hash de senha e caminho da foto |
+| usuarios | Identificação, nome de usuário único, hash de senha e caminho da foto |
 | jogadoras | Nome, camisa e estatísticas |
 | noticias | Título, autoria, texto e endereço da imagem |
 | proximos_jogos | Adversário, local, data e ingresso |
@@ -22,7 +22,7 @@ O script preserva os registros e cria tabelas ausentes; não migra colunas de ta
 
 As três tabelas de relacionamento evitam listas e registros duplicados. Foram mantidas para preservar o modelo e eventuais registros existentes. `vel` permanece por compatibilidade; seu significado ainda precisa ser definido pela equipe.
 
-As tabelas declaram utf8mb4, utf8mb4_unicode_ci e InnoDB explicitamente, inclusive quando criadas em um banco existente com outros padrões. A cláusula repetida ON UPDATE RESTRICT foi removida porque já é o padrão do MySQL. Índices e chaves estrangeiras foram preservados. A integração da API-Football acrescentou campos de placar e identificação na tabela de jogos, preservando os dados. Veja [o guia da API](API_FOOTBALL.md).
+As tabelas usam utf8mb4, utf8mb4_unicode_ci e InnoDB. Para acrescentar os campos da agenda a uma tabela antiga, execute `python -m backend.jogos preparar-banco`.
 
 Configure `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` e `DB_NAME` no `.env` da raiz. Para verificar a estrutura, sem modificar dados:
 
@@ -30,4 +30,24 @@ Configure `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` e `DB_NAME` no `.env` d
 .\venv\Scripts\python.exe -m backend.models.banco
 ```
 
-O módulo de conexão atende ao diagnóstico, à sincronização da API-Football e à leitura da página de jogos. Os uploads ainda não gravam no MySQL. Os arquivos de imagem ficam em `backend/uploads`, não em colunas binárias.
+O módulo de conexão atende ao diagnóstico e à leitura da página de jogos. Cadastre as partidas em `proximos_jogos`. Os arquivos de imagem ficam em `backend/uploads`.
+
+## Contas de acesso
+
+O login usa `nome_usuario` único e senha. `nome` é o nome de exibição.
+Em bancos criados antes dessa alteração, execute na raiz do projeto:
+
+```powershell
+.\venv\Scripts\python.exe -m backend.contas migrar
+.\venv\Scripts\python.exe -m backend.models.banco
+```
+
+A migração renomeia a coluna antiga e conserva os identificadores, hashes, IDs e
+demais dados das contas. Pode ser executada novamente. O schema de instalações
+novas já contém `nome_usuario`.
+
+Para substituir o identificador de uma conta existente, execute
+`python -m backend.contas renomear` e informe o identificador atual e o novo.
+Para cadastrar uma conta, execute `python -m backend.contas criar`.
+Esses comandos usam a conexão configurada no `.env`. As senhas cadastradas são
+armazenadas como hashes compatíveis com o login.

@@ -9,7 +9,7 @@
         </button>
         <nav id="menu-principal" class="menu" aria-label="Navegação principal">
             {% for caminho, titulo in paginas.items() %}
-            <a href="/{{ caminho }}"{% if pagina == caminho %} class="ativo" aria-current="page"{% endif %}>{{ titulo }}</a>
+            <a href="/{{ caminho }}"{% if pagina == caminho %} class="ativo" aria-current="page"{% endif %}>{{ "Minha conta" if caminho == "Telas/login_page.html" and session.usuario_id else titulo }}</a>
             {% endfor %}
         </nav>
     </div>

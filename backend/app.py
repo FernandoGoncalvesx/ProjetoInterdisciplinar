@@ -1,3 +1,6 @@
+import json
+import os
+import secrets
 from pathlib import Path
 from uuid import uuid4
 
@@ -9,7 +12,8 @@ if __name__ == "__main__" and __package__ is None:
 from flask import Flask, abort, jsonify, render_template, request, send_from_directory
 from mysql.connector import Error as ErroBanco
 from backend.jogos import agrupar_jogos, listar_jogos
-from backend.feed_noticias import cache_noticias, identificar_noticia
+from backend.autenticacao import autenticacao
+from dotenv import load_dotenv
 
 PASTA_ATUAL = Path(__file__).resolve().parent
 PASTA_FRONTEND = PASTA_ATUAL.parent / "frontend"
@@ -23,9 +27,14 @@ PAGINAS = {
     "Telas/proximos_jogos.html": "Próximos jogos",
     "Telas/historia.html": "História",
     "Telas/fotos.html": "Enviar fotos",
+    "Telas/login_page.html": "Entrar",
 }
 
 app = Flask(__name__, template_folder=str(PASTA_FRONTEND / "templates"), static_folder=None)
+load_dotenv(PASTA_ATUAL.parent / ".env")
+app.config.update(SECRET_KEY=os.getenv("FLASK_SECRET_KEY") or secrets.token_hex(32),
+                  SESSION_COOKIE_SAMESITE="Lax")
+app.register_blueprint(autenticacao)
 app.config["MAX_CONTENT_LENGTH"] = MAX_ARQUIVOS * MAX_BYTES + 1024 * 1024
 
 
@@ -35,6 +44,9 @@ def pagina(path="index.html"):
     if path in PAGINAS:
         template = "inicio" if path == "index.html" else Path(path).stem
         contexto = {}
+        if template == "historia":
+            with (PASTA_ATUAL / "dados" / "historia.json").open(encoding="utf-8") as arquivo:
+                contexto["historia"] = json.load(arquivo)
         if template in {"proximos_jogos", "inicio"}:
             try:
                 contexto.update(agrupar_jogos(listar_jogos()))
@@ -46,16 +58,6 @@ def pagina(path="index.html"):
     if pasta in {"css", "js", "assets"} and arquivo:
         return send_from_directory(PASTA_FRONTEND / pasta, arquivo)
     abort(404)
-
-
-@app.get("/api/noticias")
-def noticias():
-    dados = cache_noticias.consultar(forcar=request.args.get("atualizar") == "1")
-    compacto = request.args.get("compacto") == "1"
-    itens = dados["noticias"][:1] if compacto else dados["noticias"]
-    itens = [identificar_noticia(n) for n in itens]
-    html = render_template("componentes/noticias.html", noticias=itens, compacto=compacto)
-    return jsonify(**dados, html=html)
 
 
 @app.errorhandler(413)

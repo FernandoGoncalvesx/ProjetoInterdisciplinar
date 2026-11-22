@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico?v=2">
+    <link rel="icon" type="image/png" sizes="48x48" href="../assets/favicon.png?v=2">
+    <meta name="description" content="Notícias, elenco, jogos e história da Seleção Feminina Brasileira.">
+    <title> Seleção Feminina Brasileira</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- defer executa o script depois que os elementos da página foram interpretados. -->
+    <script src="../js/styles.js" defer></script>
+    <style>
+        .grade-conta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; align-items: start; }
+        .formulario-login { display: grid; gap: 10px; max-width: 448px; width: 100%; margin-inline: auto; padding: 32px; }
+        .formulario-login input { width: 100%; min-height: 48px; padding: 10px; }
+        .formulario-cadastro { max-width: none; }
+        .cadastro-status { min-height: 24px; color: #a32222; }
+        @media (max-width: 760px) { .grade-conta { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <header class="cabecalho">
+        <div class="container barra-navegacao">
+            <a class="marca" href="../index.html" aria-label="Seleção Feminina Brasileira — início">
+                <img class="marca-logo" src="../assets/logo.webp" alt="" width="44" height="48">
+                <span>Seleção Feminina Brasileira</span>
+            </a>
+            <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu-principal">
+                <span class="sr-only">Abrir menu</span><span></span><span></span><span></span>
+            </button>
+            <nav id="menu-principal" class="menu" aria-label="Navegação principal">
+                <a href="../index.html">Início</a>
+                <a href="noticias.html">Notícias</a>
+                <a href="elenco.html">Elenco</a>
+                <a href="proximos_jogos.html">Próximos jogos</a>
+                <a href="historia.html">História</a>
+            </nav>
+        </div>
+    </header>
+    <main id="conteudo" tabindex="-1">
+        <section class="secao container" aria-label="Acesso e cadastro">
+            <div class="grade-conta">
+                <form id="login-form" class="card formulario-login" action="/api/login" method="post" aria-labelledby="login-titulo">
+                    <h2 id="login-titulo">Entrar</h2>
+                    <label for="usuario">Nome de usuário:</label>
+                    <input type="text" id="usuario" name="nome_usuario" maxlength="254" autocapitalize="none" spellcheck="false" autocomplete="username" required>
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" maxlength="1024" autocomplete="current-password" required>
+                    <button class="botao" type="submit">Entrar</button>
+                    <p id="login-status" role="status" aria-live="polite"></p>
+                </form>
+                <section class="card" aria-labelledby="cadastro-titulo">
+                    <form id="cadastro-form" class="formulario-login formulario-cadastro" action="/api/cadastro" method="post">
+                        <h2 id="cadastro-titulo">Criar conta</h2>
+                        <p>Preencha os dados abaixo para criar seu acesso.</p>
+                        <label for="cadastro-usuario">Nome de usuário:</label>
+                        <input type="text" id="cadastro-usuario" name="nome_usuario" maxlength="254" autocapitalize="none" spellcheck="false" autocomplete="username" required>
+                        <label for="cadastro-senha">Senha:</label>
+                        <input type="password" id="cadastro-senha" name="senha" maxlength="1024" autocomplete="new-password" required>
+                        <label for="cadastro-confirmacao">Confirme a senha:</label>
+                        <input type="password" id="cadastro-confirmacao" name="confirmacao" maxlength="1024" autocomplete="new-password" required>
+                        <p id="cadastro-status" class="cadastro-status" role="status" aria-live="polite"></p>
+                        <button class="botao" type="submit">Criar conta</button>
+                    </form>
+                </section>
+            </div>
+        </section>
+    </main>
+    <footer class="rodape">
+        <div class="container rodape-conteudo">
+            <p><strong>Seleção Feminina Brasileira</strong></p>
+            <p><span data-ano>2026</span> — Projeto Interdisciplinar</p>
+        </div>
+    </footer>
+    <script>
+        const cadastro = document.getElementById("cadastro-form");
+        const senha = document.getElementById("cadastro-senha");
+        const confirmacao = document.getElementById("cadastro-confirmacao");
+        const status = document.getElementById("cadastro-status");
+
+        if (cadastro && senha && confirmacao && status) {
+            cadastro.addEventListener("submit", (evento) => {
+                if (senha.value !== confirmacao.value) {
+                    evento.preventDefault();
+                    status.textContent = "As duas senhas precisam ser iguais.";
+                    confirmacao.focus();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

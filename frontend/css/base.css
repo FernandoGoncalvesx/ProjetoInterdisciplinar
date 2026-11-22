@@ -609,3 +609,10 @@ button:disabled { cursor: default; opacity: .55; }
     .marca { max-width: calc(100% - 112px); font-size: .9rem; gap: 8px; }
     .marca-logo { width: 32px; height: 38px; }
 }
+.input {
+    border: 1px solid #ece3a8;
+    border-radius: 4px;
+    margin-top: 25%;
+    margin-left: 50%;
+    margin-right: 50%;
+}

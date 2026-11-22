@@ -46,7 +46,29 @@
 
     if (dialogoNoticia && listaNoticias) {
 
+        async function crawlerNoticias() {
+            try {
+                await fetch('/api/crawler');
+            }
+            catch (erro) {
+                console.error('Erro ao acessar api crawler: ' + erro);
+            }
+        }
+
+        crawlerNoticias();
+
         let noticias = [];
+
+        function inserirTextoComQuebras(elemento, texto) {
+            elemento.replaceChildren();
+            (texto || '').split(/(<br\s*\/?>)/gi).forEach((parte) => {
+                if (/^<br\s*\/?>$/i.test(parte)) {
+                    elemento.appendChild(document.createElement('br'));
+                } else {
+                    elemento.appendChild(document.createTextNode(parte));
+                }
+            });
+        }
 
         // Busca todas as notícias na API Flask.
         async function carregarNoticias() {
@@ -90,10 +112,10 @@
                     const resumo = document.createElement('p');
                     resumo.className = 'card-text';
 
-                    resumo.textContent =
-                        noticia.texto.length > 160
-                            ? noticia.texto.substring(0, 160) + '...'
-                            : noticia.texto;
+                    const textoResumo = (noticia.texto || '').replace(/<br\s*\/?>/gi, ' ');
+                    resumo.textContent = textoResumo.length > 160
+                        ? textoResumo.substring(0, 160) + '...'
+                        : textoResumo;
 
                     const botao = document.createElement('button');
                     botao.type = 'button';
@@ -137,13 +159,15 @@
             document.getElementById('detalhes-titulo').textContent =
                 noticia.titulo;
 
-            document.getElementById('detalhes-texto').textContent =
-                noticia.texto;
+            inserirTextoComQuebras(
+                document.getElementById('detalhes-texto'),
+                noticia.texto
+            );
 
             const imagem = document.getElementById('img-noticia');
 
             if (noticia.imagem_url) {
-                imagem.src = noticia.imagem_url;
+                imagem.src = "../" + noticia.imagem_url;
                 imagem.hidden = false;
             } else {
                 imagem.removeAttribute('src');

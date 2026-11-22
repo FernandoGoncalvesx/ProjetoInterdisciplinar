@@ -126,13 +126,23 @@ main:has(.secao-fotos) .pagina-hero { padding-block: 28px; }
     .leitura-historia { grid-template-columns: minmax(0, 1fr); }
 }
 .formulario-login { display: grid; gap: .65rem; width: min(100%, 28rem); margin-inline: auto; padding: clamp(1.25rem, 4vw, 2.5rem); background: var(--superficie); }
+.grade-conta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 3vw, 32px); align-items: start; }
+.grade-conta > .card { width: 100%; }
+.formulario-cadastro { width: 100%; padding: 0; }
+.aviso-conta { width: min(100%, 58rem); margin: 0 auto 20px; padding: 14px 18px; border: 1px solid #e6d98a; border-radius: 10px; background: #fff8cf; }
+.cadastro-status { min-height: 1.5em; margin: 0; color: #a32222; }
 .formulario-login label { font-weight: 700; }
 .formulario-login input { min-width: 0; width: 100%; min-height: 48px; padding: .7rem; border: 1px solid #62796b; border-radius: 6px; font: inherit; }
 .formulario-login label:not(:first-child) { margin-top: .6rem; }
-.formulario-login #alternar-senha { justify-self: start; min-height: 44px; background: transparent; border: 0; text-decoration: underline; color: var(--verde-escuro); }
-.formulario-login #alternar-senha[aria-pressed="true"] { font-weight: bold; }
+.formulario-login #alternar-senha,
+.formulario-login #alternar-cadastro-senha { justify-self: start; min-height: 44px; background: transparent; border: 0; text-decoration: underline; color: var(--verde-escuro); }
+.formulario-login #alternar-senha[aria-pressed="true"],
+.formulario-login #alternar-cadastro-senha[aria-pressed="true"] { font-weight: bold; }
 .formulario-login :focus-visible { outline: 3px solid var(--verde-escuro); outline-offset: 3px; }
 .formulario-login .botao:disabled { background: #dde4df; color: #48574e; cursor: not-allowed; }
+@media (max-width: 760px) {
+    .grade-conta { grid-template-columns: 1fr; }
+}
 
 .noticia-publicada { margin-bottom: 24px; padding: 24px; }
 .noticia-publicada img { max-width: 100%; height: auto; }

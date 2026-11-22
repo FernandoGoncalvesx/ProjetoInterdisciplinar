@@ -1,0 +1,32 @@
+<footer class="rodape">
+    <div class="container rodape-conteudo">
+        <div>
+            <p><strong>Seleção Feminina Brasileira</strong></p>
+            <p><span data-ano>2026</span> — Projeto Interdisciplinar</p>
+        </div>
+        <nav class="rodape-links" aria-label="Informações e ajuda">
+            <button type="button" data-abrir-dialogo="ajuda" aria-haspopup="dialog">Ajuda</button>
+            <button type="button" data-abrir-dialogo="suporte" aria-haspopup="dialog">Suporte</button>
+            <button type="button" data-abrir-dialogo="privacidade" aria-haspopup="dialog">Privacidade</button>
+            <span class="rodape-versao">Versão 1.0.0</span>
+        </nav>
+    </div>
+</footer>
+{# INFORMAÇÕES DO RODAPÉ #}
+<dialog id="ajuda" class="dialogo-rodape" aria-labelledby="titulo-ajuda">
+    <div class="dialogo-cabecalho"><h2 id="titulo-ajuda">Ajuda</h2><button type="button" data-fechar-dialogo aria-label="Fechar ajuda">×</button></div>
+    <p>Use o menu para acessar notícias, elenco, jogos, história e envio de fotos.</p>
+    <p>Em Notícias, siga o link para consultar os comunicados oficiais da CBF.</p>
+    <p>Em Enviar fotos, escolha uma foto de até 5 MB, remova o fundo e ajuste a pessoa no card antes de baixar o PNG.</p>
+</dialog>
+<dialog id="suporte" class="dialogo-rodape" aria-labelledby="titulo-suporte">
+    <div class="dialogo-cabecalho"><h2 id="titulo-suporte">Suporte</h2><button type="button" data-fechar-dialogo aria-label="Fechar suporte">×</button></div>
+    <p>Se uma foto não for aceita, confira se é PNG, JPEG ou WebP, tem até 5 MB e pelo menos 300 pixels em cada dimensão.</p>
+    <p>Se o problema continuar, anote a página e a mensagem exibida para informar à equipe responsável pelo projeto.</p>
+</dialog>
+<dialog id="privacidade" class="dialogo-rodape" aria-labelledby="titulo-privacidade">
+    <div class="dialogo-cabecalho"><h2 id="titulo-privacidade">Privacidade</h2><button type="button" data-fechar-dialogo aria-label="Fechar privacidade">×</button></div>
+    <p>A foto é enviada ao servidor ao clicar em &quot;Remover fundo&quot;. O novo editor processa a imagem em memória e devolve o recorte ao navegador.</p>
+    <p>O criador de cards não salva suas fotos no servidor. Baixe o PNG para guardar seu resultado; recarregar a página descarta a edição. O endpoint antigo de upload ainda armazena arquivos quando utilizado diretamente.</p>
+    <p>Ao acessar o site da CBF, você encontra as informações de privacidade do próprio site.</p>
+</dialog>

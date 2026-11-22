@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% set descricao = historia.introducao %}
+{% block titulo_pagina %}{{ historia.titulo }}{% endblock %}
+{% block conteudo %}
+<div class="container secao leitura-historia">
+    <nav id="indice-historia" aria-label="Nesta página">
+        <h2>Nesta página</h2>
+        <ul>
+            <li><a href="#trajetoria">Linha do tempo</a></li>
+            <li><a href="#conquistas">Títulos e conquistas</a></li>
+            <li><a href="#atletas">Atletas históricas</a></li>
+            <li><a href="#fontes">Fontes</a></li>
+        </ul>
+    </nav>
+    <div class="capitulos-historia">
+        <section aria-labelledby="trajetoria">
+            <h2 id="trajetoria" tabindex="-1">Linha do tempo</h2>
+            {% for fato in historia.fatos_historicos %}
+            <details {% if loop.first %}open{% endif %}>
+                <summary><span>{{ fato.periodo }}</span> · {{ fato.marco }}</summary>
+                <p>{{ fato.descricao }}</p>
+            </details>
+            {% endfor %}
+        </section>
+        <section aria-labelledby="conquistas">
+            <h2 id="conquistas" tabindex="-1">Títulos e conquistas</h2>
+            <ul>{% for titulo in historia.titulos_conquistas %}<li>{{ titulo }}</li>{% endfor %}</ul>
+        </section>
+        <section aria-labelledby="atletas">
+            <h2 id="atletas" tabindex="-1">Atletas históricas</h2>
+            {% for atleta in historia.icones_do_esporte %}
+            <details>
+                <summary>{{ atleta.nome }} · {{ atleta.posicao }}</summary>
+                <p>{{ atleta.destaque }}</p>
+            </details>
+            {% endfor %}
+        </section>
+        <section aria-labelledby="fontes">
+            <h2 id="fontes" tabindex="-1">Fontes</h2>
+            <ul>{% for fonte in historia.fontes %}<li><a href="{{ fonte.url }}">{{ fonte.referencia }}</a></li>{% endfor %}</ul>
+        </section>
+        <a href="#indice-historia">Voltar ao índice</a>
+    </div>
+</div>
+{% endblock %}

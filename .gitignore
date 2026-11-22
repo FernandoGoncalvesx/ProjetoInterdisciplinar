@@ -11,5 +11,12 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-/back_end/uploads/*
-!/back_end/uploads/.gitkeep
+/backend/uploads/*
+!/backend/uploads/.gitkeep
+
+/tests/*
+!/tests/test_autenticacao.py
+!/tests/test_cards.py
+/backend/cache_modelos/
+/.venv-cards/
+!/tests/test_sistema.py

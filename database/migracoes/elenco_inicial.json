@@ -1,0 +1,132 @@
+[
+  {
+    "nome": "Lorena",
+    "clube": "Kansas City (EUA)",
+    "posicao": "Goleiras"
+  },
+  {
+    "nome": "Yanne",
+    "clube": "Bahia",
+    "posicao": "Goleiras"
+  },
+  {
+    "nome": "Thaís Lima",
+    "clube": "Benfica (Portugal)",
+    "posicao": "Goleiras"
+  },
+  {
+    "nome": "Carlinha",
+    "clube": "São Paulo",
+    "posicao": "Goleiras"
+  },
+  {
+    "nome": "Carol Gil",
+    "clube": "São Paulo",
+    "posicao": "Zagueiras"
+  },
+  {
+    "nome": "Isa Haas",
+    "clube": "América (México)",
+    "posicao": "Zagueiras"
+  },
+  {
+    "nome": "Tarciane",
+    "clube": "Lyon (França)",
+    "posicao": "Zagueiras"
+  },
+  {
+    "nome": "Mariza",
+    "clube": "Tigres (México)",
+    "posicao": "Zagueiras"
+  },
+  {
+    "nome": "Tayla",
+    "clube": "São Paulo",
+    "posicao": "Zagueiras"
+  },
+  {
+    "nome": "Isabela",
+    "clube": "Paris Saint-Germain (França)",
+    "posicao": "Laterais"
+  },
+  {
+    "nome": "Raissa Bahia",
+    "clube": "Palmeiras",
+    "posicao": "Laterais"
+  },
+  {
+    "nome": "Tamara Bolt",
+    "clube": "Washington Spirit (EUA)",
+    "posicao": "Laterais"
+  },
+  {
+    "nome": "Duda Sampaio",
+    "clube": "Corinthians",
+    "posicao": "Meio-campo"
+  },
+  {
+    "nome": "Jaqueline",
+    "clube": "Corinthians",
+    "posicao": "Meio-campo"
+  },
+  {
+    "nome": "Kaylane",
+    "clube": "Flamengo",
+    "posicao": "Meio-campo"
+  },
+  {
+    "nome": "Clarinha",
+    "clube": "Benfica (Portugal)",
+    "posicao": "Meio-campo"
+  },
+  {
+    "nome": "Kerolin",
+    "clube": "Barcelona (Espanha)",
+    "posicao": "Atacantes"
+  },
+  {
+    "nome": "Priscila",
+    "clube": "América (México)",
+    "posicao": "Atacantes"
+  },
+  {
+    "nome": "Gio Garbelini",
+    "clube": "Atlético de Madrid (Espanha)",
+    "posicao": "Atacantes"
+  },
+  {
+    "nome": "Bia Zaneratto",
+    "clube": "Palmeiras",
+    "posicao": "Atacantes"
+  },
+  {
+    "nome": "Tainá Maranhão",
+    "clube": "Palmeiras",
+    "posicao": "Atacantes"
+  },
+  {
+    "nome": "Geyse",
+    "clube": "América (México)",
+    "posicao": "Atacantes"
+  },
+  {
+    "nome": "Jhonson",
+    "clube": "Corinthians",
+    "posicao": "Atacantes"
+  },
+  {
+    "nome": "Maiara",
+    "clube": "Angel City (EUA)",
+    "posicao": "Atacantes"
+  },
+  {
+    "nome": "Marília",
+    "clube": "Cruzeiro",
+    "posicao": "Atacantes"
+  },
+  {
+    "nome": "Luany",
+    "clube": "Atlético de Madrid (Espanha)",
+    "posicao": "Atacantes"
+  }
+]

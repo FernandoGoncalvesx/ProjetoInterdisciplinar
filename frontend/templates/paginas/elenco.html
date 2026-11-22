@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% set descricao = "Conheça as atletas cadastradas no portal." %}
+{% block conteudo %}
+<section class="secao container" aria-labelledby="elenco-titulo">
+<div class="secao-cabecalho"><h2 id="elenco-titulo">Elenco</h2></div>
+{% if banco_indisponivel %}<p role="status">Não foi possível carregar o elenco. Tente novamente em instantes.</p>
+{% elif jogadoras %}<div class="elenco-grade">
+{% for atleta in jogadoras %}{% include "componentes/card-atleta.html" %}{% endfor %}
+</div>{% else %}<p>Nenhuma atleta cadastrada no momento.</p>{% endif %}
+</section>{% endblock %}

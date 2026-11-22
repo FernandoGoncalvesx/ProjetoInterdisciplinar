@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% set descricao = "Transforme sua foto em um card personalizado." %}
+{% block recursos_pagina %}
+<link rel="stylesheet" href="/css/editor-card.css">
+<script src="/js/editor-card.js" defer></script>
+<script src="/js/fotos.js" defer></script>
+{% endblock %}
+{% block conteudo %}
+<section class="container secao criador-card">
+    <div class="card painel-card">
+        <h2>1. Escolha sua foto</h2>
+        <p>Uma pessoa, com cabeça, braços e tronco até a cintura visíveis. Prefira boa iluminação e uma foto nítida.</p>
+        <form id="form-foto-card" action="/api/cards/processar" method="post" enctype="multipart/form-data">
+            <label for="foto-card">Foto (PNG, JPEG ou WebP, até 5 MB)</label>
+            <input id="foto-card" name="foto" type="file" accept="image/png,image/jpeg,image/webp" required>
+            <img id="foto-original" alt="Prévia da foto selecionada" hidden>
+            <button id="processar-foto" type="submit" disabled>Remover fundo</button>
+        </form>
+        <p id="foto-status" role="status" aria-live="polite"></p>
+        <ul id="foto-avisos"></ul>
+        <p>O enquadramento é manual. Confira o recorte antes de baixar.</p>
+        <noscript>Ative o JavaScript para criar seu card.</noscript>
+    </div>
+    <div class="card painel-card">
+        <h2>2. Personalize seu card</h2>
+        <label for="card-nome">Nome</label>
+        <input id="card-nome" maxlength="24" value="" placeholder="Seu nome">
+        <label for="card-posicao">Posição</label>
+        <select id="card-posicao"><option>ATA</option><option>MEI</option><option>ZAG</option><option>LAT</option><option>GOL</option></select>
+        {% include "componentes/previa-card.html" %}
+        <fieldset id="ajustes-card" disabled>
+            <legend>Enquadramento da pessoa</legend>
+            <label for="card-zoom">Tamanho</label>
+            <input id="card-zoom" type="range" min="0.5" max="3" step="0.01" value="1">
+            <label for="card-x">Posição horizontal</label>
+            <input id="card-x" type="range" min="-500" max="500" value="0">
+            <label for="card-y">Posição vertical</label>
+            <input id="card-y" type="range" min="-900" max="900" value="0">
+            <button id="card-reiniciar" type="button">Centralizar pessoa</button>
+        </fieldset>
+        <button id="card-baixar" type="button" disabled>Baixar card em PNG</button>
+        <p id="editor-status" role="status" aria-live="polite">Envie uma foto para começar.</p>
+    </div>
+</section>
+<script id="modelo-card" type="application/json">{{ modelo | tojson }}</script>
+{% endblock %}
+

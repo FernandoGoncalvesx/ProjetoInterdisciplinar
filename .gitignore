@@ -20,3 +20,8 @@ Thumbs.db
 /backend/cache_modelos/
 /.venv-cards/
 !/tests/test_sistema.py
+!/tests/test_noticias.py
+/frontend/assets/noticias/
+
+!/tests/test_jogos.py
+!/tests/test_melhorias_ihc.py

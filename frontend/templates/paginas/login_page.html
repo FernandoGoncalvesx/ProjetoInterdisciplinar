@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% set descricao = "Acesso à conta do portal da Seleção Feminina Brasileira." %}
 {% block titulo_pagina %}{{ "Minha conta" if session.usuario_id else "Entrar" }}{% endblock %}
+{% block recursos_pagina %}
+    {% if not session.usuario_id %}<script src="/js/login.js" defer></script>{% endif %}
+{% endblock %}
 
 {% block conteudo %}
 <div class="container secao">
@@ -54,7 +57,6 @@
             </form>
         </section>
     </div>
-    <script src="/js/login.js" defer></script>
     {% endif %}
 </div>
 {% endblock %}

@@ -7,6 +7,8 @@ from unittest.mock import patch
 
 from backend import app as servidor
 from backend.models import banco
+from backend.controllers import elenco_controller, noticias_controller, jogos_controller
+from backend.services import armazenamento_fotos
 
 
 class Links(HTMLParser):
@@ -23,16 +25,16 @@ class Links(HTMLParser):
 class SistemaTest(unittest.TestCase):
     def setUp(self):
         self.client = servidor.app.test_client()
-        for funcao in ["listar_jogadoras", "listar_noticias"]:
-            consulta_conteudo = patch.object(servidor, funcao, return_value=[])
+        for modulo, funcao in [(elenco_controller, "listar_jogadoras"), (noticias_controller, "listar_noticias")]:
+            consulta_conteudo = patch.object(modulo, funcao, return_value=[])
             consulta_conteudo.start()
             self.addCleanup(consulta_conteudo.stop)
-        consulta = patch.object(servidor, "listar_jogos", return_value=[])
+        consulta = patch.object(jogos_controller, "listar_jogos", return_value=[])
         consulta.start()
         self.addCleanup(consulta.stop)
         self.pasta = tempfile.TemporaryDirectory()
         self.addCleanup(self.pasta.cleanup)
-        self.patch = patch.object(servidor, "PASTA_UPLOADS", Path(self.pasta.name))
+        self.patch = patch.object(armazenamento_fotos, "PASTA_UPLOADS", Path(self.pasta.name))
         self.patch.start()
         self.addCleanup(self.patch.stop)
 
@@ -88,7 +90,7 @@ class SistemaTest(unittest.TestCase):
         self.assertEqual(self.enviar((io.BytesIO(b""), "vazia.png")).status_code, 400)
         arquivos = [(io.BytesIO(b"GIF89aconteudo"), f"{n}.gif") for n in range(11)]
         self.assertEqual(self.enviar(arquivos).status_code, 400)
-        with patch.object(servidor, "MAX_BYTES", 10):
+        with patch.object(armazenamento_fotos, "MAX_BYTES", 10):
             self.assertEqual(self.enviar((io.BytesIO(b"\x89PNG\r\n\x1a\nexcesso"), "grande.png")).status_code, 400)
 
     def test_falha_de_gravacao_limpa_lote(self):

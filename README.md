@@ -1,6 +1,6 @@
 # Portal da Seleção Feminina Brasileira
 
-Portal em Flask com seis páginas, agenda de jogos e envio de fotos. As páginas herdam `base.html`, com menu e rodapé compartilhados em componentes. Jinja2 exibe os dados dos jogos. CSS e JavaScript são compartilhados; não há etapa de build nem dependência de Bootstrap.
+Portal em Flask organizado em MVC, com autenticação, notícias, elenco, agenda, história e editor de cards. As páginas herdam `base.html`, com menu e rodapé compartilhados em componentes. Jinja2 exibe os dados dos jogos. CSS e JavaScript são compartilhados; não há etapa de build nem dependência de Bootstrap.
 
 ## Preparação e execução
 
@@ -26,22 +26,27 @@ Nesse caso, abra http://127.0.0.1:5000. O modo de depuração fica desativado. A
 
 | Caminho | Responsabilidade |
 | --- | --- |
-| `backend/app.py` | Rotas das páginas, arquivos públicos e upload |
-| `backend/jogos.py` | Consulta e organização da agenda e do histórico |
+| `backend/app.py` | Configuração do Flask, registro de controllers e arquivos públicos |
+| `backend/controllers/` | Rotas por funcionalidade, validação HTTP e respostas HTML/JSON |
+| `backend/models/` | Dados e consultas ao banco, sem dependência de Flask |
+| `backend/services/` | Coleta Playwright, uploads e processamento de imagens |
 | `backend/models/banco.py` | Conexão compartilhada e diagnóstico do MySQL |
 | `backend/uploads/` | Arquivos recebidos, ignorados pelo Git |
 | `frontend/templates/paginas/` | Conteúdo específico das páginas |
 | `frontend/css/` | Estilos compartilhados em `base.css` e identidade visual em `tema.css` |
-| `frontend/js/portal.js` | Menu, rodapé e upload |
+| `frontend/js/` | Menu, rodapé e interação específica de cada página |
 | `frontend/assets/` | Logo e ícone do portal |
 | `database/schema.sql` | Criação das sete tabelas, sem registros |
 | `tests/test_sistema.py` | Verificação de páginas, links, upload e diagnóstico |
+
+O mapa de arquivos e as regras de cada camada estão em [ARQUITETURA.md](ARQUITETURA.md).
 
 ## O que está funcionando
 
 - Navegação entre início, notícias, elenco, próximos jogos, história e envio de fotos.
 - Menu acessível e responsivo, com botão identificado no celular e ano atualizado.
-- A página Notícias indica onde consultar os comunicados oficiais da CBF.
+- Notícias consultadas no MySQL, com coleta da CBF e leitura em modal.
+- Login, cadastro, logout e alteração de usuário com sessão e proteção CSRF.
 - Upload de até 10 imagens PNG, JPEG, GIF ou WebP, de até 5 MB cada, para `backend/uploads`.
 
 A API recebe `POST /api/upload`, com campo multipart `fotos`. Valida quantidade, tamanho e assinatura do formato antes de gravar. Gera nomes UUID para evitar sobrescritas e remove arquivos do lote caso ocorra falha de gravação. A verificação de assinatura não decodifica a imagem inteira nem substitui moderação. Uploads não têm rota pública de download.
@@ -70,9 +75,26 @@ Execute `database/schema.sql` no MySQL e verifique a conexão:
 
 A senha não deve ser versionada. O script SQL cria estruturas ausentes; alterações de colunas existentes precisam de migração própria. Faça backup antes de migrar estruturas.
 
-A página de jogos lê as partidas cadastradas no MySQL. Para acrescentar campos da agenda a um banco antigo, execute `python -m backend.jogos preparar-banco`. Cadastro/login e vínculo das fotos aos usuários continuam pendentes.
+A página de jogos lê as partidas cadastradas no MySQL. Para acrescentar campos da agenda a um banco antigo, execute `python -m backend.jogos preparar-banco`. Login e cadastro estão implementados; o upload legado não vincula fotos a usuários.
 
-## Verificação
+## Atualização das notícias
+
+As notícias são lidas do MySQL em `/Telas/noticias.html` e `/api/noticias`.
+O coletor da CBF usa a estrutura atual e salva imagens em `frontend/assets/noticias/`.
+Com o banco configurado, execute na raiz:
+
+```powershell
+.\venv\Scripts\python.exe -m playwright install chromium
+.\venv\Scripts\python.exe -m backend.services.coleta_noticias
+```
+
+Instale antes as dependências de `requirements.txt`. Ao abrir a página, o JavaScript mostra as notícias salvas, chama `/api/crawler`
+e consulta a lista novamente após a coleta. O comando acima também permite coleta manual.
+A apresentação usa os templates compartilhados, com leitura em diálogo e alternativa
+sem JavaScript. Os antigos `back_end/Servidor.py` e `front_end/js/script.js` foram
+substituídos pela aplicação `backend.app` e pelos scripts em `frontend/js/`.
+
+## Testes
 
 ```powershell
 .\venv\Scripts\python.exe -m unittest discover -s tests -v

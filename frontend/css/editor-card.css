@@ -11,4 +11,22 @@
 #ajustes-card{margin-top:1rem;padding:1rem;border:1px solid #aaa}
 #foto-status.erro{color:#a32222}
 @media(max-width:760px){.criador-card{grid-template-columns:1fr}}
+.escolha-modelos{border:0;padding:0;margin:1.5rem 0}
+.escolha-modelos legend{font-weight:700;margin-bottom:.75rem}
+.grade-modelos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem}
+.painel-card .opcao-modelo{position:relative;display:grid;justify-items:center;gap:.25rem;margin:0;padding:.5rem;border:2px solid #d8d8d0;border-radius:8px;cursor:pointer}
+.opcao-modelo img{display:block;width:100%;max-width:74px;height:auto}
+.painel-card .opcao-modelo input{width:auto;padding:0;accent-color:#00693c}
+.opcao-modelo:has(input:checked){border-color:#00693c;background:#e8f5ec;box-shadow:inset 0 0 0 1px #00693c}
+.opcao-modelo:focus-within{outline:3px solid #194fac;outline-offset:3px}
+.sorteio-card{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #ccc}
+.atributos-card{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
+.atributos-card div{padding:.6rem .25rem;text-align:center;background:#f0f2ed;border-radius:4px}
+.atributos-card dt{font-size:.85rem}
+.atributos-card dd{margin:0;font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;color:#163a2b}
+#card-girar{background:#00693c;color:white;border:0;border-radius:6px;font-weight:700;min-height:44px}
+#sorteio-status{min-height:1.5em}
 
+
+.atributos-card label{margin-top:0}
+.atributos-card input{text-align:center;min-width:0}

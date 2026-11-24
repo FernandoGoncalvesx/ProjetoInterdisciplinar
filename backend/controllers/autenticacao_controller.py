@@ -1,10 +1,10 @@
 import secrets
 
-from flask import Blueprint, flash, redirect, request, session, url_for
+from flask import Blueprint, flash, redirect, request, session, url_for, render_template
 from mysql.connector import Error as ErroBanco, IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from backend.models.banco import conectar_banco
+from backend.models.usuario import buscar_por_nome, criar_usuario, alterar_nome
 
 autenticacao = Blueprint("autenticacao", __name__)
 HASH_AUSENTE = generate_password_hash(secrets.token_urlsafe(32))
@@ -19,6 +19,8 @@ def token_formulario():
 
 @autenticacao.before_request
 def validar_formulario():
+    if request.method in {"GET", "HEAD", "OPTIONS"}:
+        return
     recebido = request.form.get("csrf", "")
     esperado = session.get("csrf")
     if not esperado or not secrets.compare_digest(recebido.encode(), esperado.encode()):
@@ -27,7 +29,7 @@ def validar_formulario():
 
 
 def pagina_conta():
-    return redirect(url_for("pagina", path="Telas/login_page.html"), code=303)
+    return redirect(url_for("autenticacao.pagina"), code=303)
 
 
 @autenticacao.post("/api/login")
@@ -39,9 +41,7 @@ def entrar():
         return pagina_conta()
 
     try:
-        with conectar_banco() as banco, banco.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT id, nome_usuario, senha_hash FROM usuarios WHERE nome_usuario = %s", (nome_usuario,))
-            usuario = cursor.fetchone()
+        usuario = buscar_por_nome(nome_usuario)
     except (ErroBanco, ValueError):
         flash("Não foi possível acessar as contas agora. Tente novamente em instantes.")
         return pagina_conta()
@@ -56,7 +56,7 @@ def entrar():
 
     session.clear()
     session.update(usuario_id=usuario["id"], nome=usuario["nome_usuario"])
-    return redirect(url_for("pagina", path="index.html"), code=303)
+    return redirect(url_for("inicio.pagina"), code=303)
 
 
 @autenticacao.post("/api/logout")
@@ -74,10 +74,7 @@ def cadastrar():
         flash("Preencha os campos e confira a confirmação da senha.")
         return pagina_conta()
     try:
-        with conectar_banco() as banco, banco.cursor() as cursor:
-            cursor.execute("INSERT INTO usuarios (nome, nome_usuario, senha_hash) VALUES (%s, %s, %s)",
-                           ("", usuario, generate_password_hash(senha)))
-            banco.commit()
+        criar_usuario(usuario, senha)
     except IntegrityError:
         flash("Esse nome de usuário já está em uso.")
         return pagina_conta()
@@ -99,15 +96,9 @@ def alterar_usuario():
         flash("Informe o novo usuário e sua senha atual.")
         return pagina_conta()
     try:
-        with conectar_banco() as banco, banco.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT senha_hash FROM usuarios WHERE id = %s", (session["usuario_id"],))
-            conta = cursor.fetchone()
-            if not conta or not check_password_hash(conta["senha_hash"], senha):
-                flash("Confira sua senha atual.")
-                return pagina_conta()
-            cursor.execute("UPDATE usuarios SET nome_usuario = %s WHERE id = %s",
-                           (usuario, session["usuario_id"]))
-            banco.commit()
+        if not alterar_nome(session["usuario_id"], usuario, senha):
+            flash("Confira sua senha atual.")
+            return pagina_conta()
     except IntegrityError:
         flash("Esse nome de usuário já está em uso.")
         return pagina_conta()
@@ -117,3 +108,8 @@ def alterar_usuario():
     session["nome"] = usuario
     flash("Nome de usuário atualizado.")
     return pagina_conta()
+
+
+@autenticacao.get("/Telas/login_page.html")
+def pagina():
+    return render_template("paginas/login_page.html", pagina="Telas/login_page.html")

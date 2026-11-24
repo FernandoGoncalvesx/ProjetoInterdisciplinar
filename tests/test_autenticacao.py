@@ -2,7 +2,7 @@ import re
 import unittest
 from unittest.mock import MagicMock, patch
 
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from backend.app import app
 from backend.contas import migrar
 
@@ -10,9 +10,10 @@ from backend.contas import migrar
 class TestAutenticacao(unittest.TestCase):
     def setUp(self):
         self.cliente = app.test_client()
-        banco = patch("backend.autenticacao.conectar_banco")
+        banco = patch("backend.models.usuario.conectar_banco")
         conexao = banco.start().return_value.__enter__.return_value
         self.addCleanup(banco.stop)
+        self.conexao = conexao
         self.cursor = conexao.cursor.return_value.__enter__.return_value
         self.cursor.fetchone.return_value = {
             "id": 7, "nome_usuario": "ana.silva", "senha_hash": generate_password_hash("minha senha")
@@ -25,7 +26,7 @@ class TestAutenticacao(unittest.TestCase):
         return self.cliente.post(rota, data=dict(csrf=token, **dados), follow_redirects=True)
 
     def test_entrar_e_sair(self):
-        with patch("backend.app.listar_jogos", return_value=[]):
+        with patch("backend.controllers.jogos_controller.listar_jogos", return_value=[]):
             pagina = self.enviar("/api/login", nome_usuario=" ana.silva ", senha="minha senha")
         self.assertEqual(pagina.request.path, "/index.html")
         self.assertEqual(pagina.status_code, 200)
@@ -51,6 +52,30 @@ class TestAutenticacao(unittest.TestCase):
         self.assertIn("O formulário expirou", resposta.get_data(as_text=True))
         self.cursor.execute.assert_not_called()
 
+    def test_cadastro_persiste_hash_e_confere_confirmacao(self):
+        pagina = self.enviar("/api/cadastro", nome_usuario="nova", senha="segredo", confirmacao="outra")
+        self.assertIn("confira a confirmação", pagina.get_data(as_text=True))
+        self.cursor.execute.assert_not_called()
+        pagina = self.enviar("/api/cadastro", nome_usuario="nova", senha="segredo", confirmacao="segredo")
+        self.assertIn("Conta criada", pagina.get_data(as_text=True))
+        parametros = self.cursor.execute.call_args.args[1]
+        self.assertEqual(parametros[:2], ("", "nova"))
+        self.assertTrue(check_password_hash(parametros[2], "segredo"))
+        self.conexao.commit.assert_called_once()
+
+    def test_alteracao_usuario_exige_senha_e_atualiza_sessao(self):
+        with self.cliente.session_transaction() as sessao:
+            sessao.update(usuario_id=7, nome="ana.silva")
+        pagina = self.enviar("/api/conta/usuario", nome_usuario="ana.nova", senha="incorreta")
+        self.assertIn("Confira sua senha atual", pagina.get_data(as_text=True))
+        self.conexao.commit.assert_not_called()
+        pagina = self.enviar("/api/conta/usuario", nome_usuario="ana.nova", senha="minha senha")
+        self.assertIn("Nome de usuário atualizado", pagina.get_data(as_text=True))
+        self.assertEqual(self.cursor.execute.call_args.args[1], ("ana.nova", 7))
+        self.conexao.commit.assert_called_once()
+        with self.cliente.session_transaction() as sessao:
+            self.assertEqual(sessao["nome"], "ana.nova")
+
     def test_migracao_preserva_registros_e_pode_ser_repetida(self):
         cursor = MagicMock()
         cursor.fetchall.return_value = [("id",), ("email",), ("senha_hash",)]
@@ -72,13 +97,13 @@ class TestAutenticacao(unittest.TestCase):
 class TestConteudo(unittest.TestCase):
     def test_elenco_e_noticias_renderizam_dados_escapados(self):
         cliente = app.test_client()
-        with patch("backend.app.listar_jogadoras", return_value=[
+        with patch("backend.controllers.elenco_controller.listar_jogadoras", return_value=[
             {"nome": "Atleta teste", "posicao": "Atacante", "clube": "Clube teste", "imagem_url": None}
         ]):
             resposta = cliente.get("/Telas/elenco.html")
             self.assertEqual(resposta.status_code, 200)
             self.assertIn("Atleta teste", resposta.get_data(as_text=True))
-        with patch("backend.app.listar_noticias", return_value=[
+        with patch("backend.controllers.noticias_controller.listar_noticias", return_value=[
             {"id": 1, "titulo": "Publicação teste", "autor": "Equipe", "imagem_url": None, "texto": "<script>alert(1)</script>"}
         ]):
             resposta = cliente.get("/Telas/noticias.html")

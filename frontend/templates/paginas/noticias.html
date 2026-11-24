@@ -1,13 +1,24 @@
 {% extends "base.html" %}
 {% set descricao = "Publicações sobre a Seleção Brasileira Feminina." %}
+{% block recursos_pagina %}<link rel="stylesheet" href="/css/noticias.css"><script src="/js/noticias.js" defer></script>{% endblock %}
 {% block conteudo %}
 <section class="secao container" aria-labelledby="noticias-titulo">
 <div class="secao-cabecalho"><h2 id="noticias-titulo">Notícias</h2></div>
+<p id="noticias-status" role="status"></p>
+<div id="lista-noticias">
 {% if banco_indisponivel %}<p role="status">Não foi possível carregar as notícias. Tente novamente em instantes.</p>
 {% else %}{% for noticia in noticias %}
 <article class="card noticia-publicada"><h3>{{ noticia.titulo }}</h3><p>Por {{ noticia.autor }}</p>
 {% if noticia.imagem_url %}<img src="{{ noticia.imagem_url }}" alt="" loading="lazy">{% endif %}
-<details><summary>Ler notícia: {{ noticia.titulo }}</summary><div class="texto-noticia">{{ noticia.texto }}</div></details></article>
+<details><summary>Ler notícia: {{ noticia.titulo }}</summary><div class="texto-noticia">{{ noticia.texto | texto_noticia }}</div></details></article>
 {% else %}<p>Nenhuma notícia publicada no momento.</p>{% endfor %}{% endif %}
+</div>
 <a class="link-secao" href="https://www.cbf.com.br/selecao-brasileira/noticias/selecao-feminina-principal">Acompanhar notícias na CBF</a>
+<dialog id="detalhes-noticia" class="news-dialog" aria-labelledby="detalhes-titulo">
+<div class="card">
+<div class="dialogo-cabecalho"><h2 id="detalhes-titulo"></h2><button type="button" class="btn-close" aria-label="Fechar notícia">Fechar</button></div>
+<img id="img-noticia" class="card-img-top" alt="" hidden>
+<div id="detalhes-texto" class="texto-noticia"></div>
+</div>
+</dialog>
 </section>{% endblock %}

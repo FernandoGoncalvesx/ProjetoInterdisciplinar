@@ -1,8 +1,9 @@
-"""API de processamento de uma foto, sem armazenamento de imagens."""
+"""Rotas de processamento de cards e upload legado de fotos."""
 import base64
 from flask import Blueprint, current_app, jsonify, request
 from backend.models.foto import MAX_BYTES, FotoInvalida, RecorteIndisponivel
 from backend.services.validacao_imagem import validar_imagem
+from backend.services.armazenamento_fotos import salvar_uploads
 from backend.services.recorte_pessoa import recortar_pessoa
 
 fotos = Blueprint("fotos", __name__)
@@ -32,3 +33,15 @@ def processar():
         current_app.logger.exception("Falha no processamento da foto")
         return jsonify(mensagem="Não foi possível processar a foto. Tente novamente."), 500
 
+
+@fotos.post("/api/upload")
+def upload_fotos():
+    arquivos = [arquivo for arquivo in request.files.getlist("fotos") if arquivo.filename]
+    try:
+        nomes = salvar_uploads(arquivos)
+    except FotoInvalida as erro:
+        return jsonify(mensagem=str(erro)), 400
+    except OSError:
+        current_app.logger.exception("Falha ao salvar fotos")
+        return jsonify(mensagem="Não foi possível salvar as fotos. Tente novamente."), 500
+    return jsonify(mensagem="Fotos enviadas com sucesso!", arquivos=nomes)

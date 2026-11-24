@@ -32,7 +32,9 @@ Edite o HTML correspondente em `templates/paginas/`. Cada página herda `base.ht
 
 - Estrutura HTML, CSS e scripts carregados: `templates/base.html`.
 - Cabeçalho e aparência do menu: `templates/componentes/menu.html`.
-- Links, títulos e URLs das páginas: `PAGINAS` em `backend/app.py`.
+- Links e títulos do menu: `PAGINAS` em `backend/app.py`.
+- Rotas e dados das páginas: controller correspondente em `backend/controllers/`.
+- Consultas ao banco: `backend/models/`; coleta e processamento: `backend/services/`.
 - Rodapé: `templates/componentes/rodape.html`.
 - Aparência: `css/base.css` e `css/tema.css`.
 - Menu móvel e upload: `js/portal.js`.

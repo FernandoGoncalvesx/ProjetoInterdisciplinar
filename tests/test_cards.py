@@ -7,6 +7,7 @@ from werkzeug.datastructures import MultiDict
 from backend.app import app
 from backend.models.foto import Foto, FotoInvalida, RecorteIndisponivel
 from backend.services.validacao_imagem import validar_imagem
+from backend.models.card import MODELOS
 
 
 class CardsHTTPTest(unittest.TestCase):
@@ -30,6 +31,18 @@ class CardsHTTPTest(unittest.TestCase):
         self.assertEqual(self.client.post("/api/cards/processar").status_code, 400)
         data = MultiDict([("foto", (io.BytesIO(b"a"), "a.jpg")), ("foto", (io.BytesIO(b"b"), "b.jpg"))])
         self.assertEqual(self.client.post("/api/cards/processar", data=data).status_code, 400)
+
+    def test_seis_modelos_e_sorteio_disponiveis(self):
+        html = self.client.get("/cards").get_data(as_text=True)
+        self.assertEqual(html.count('name="card-modelo"'), 6)
+        self.assertEqual(html.count('data-atributo='), 6)
+        self.assertIn('id="card-girar"', html)
+        for modelo in MODELOS:
+            with self.client.get(f'/assets/cards/modelos/{modelo["id"]}.png') as resposta:
+                self.assertEqual(resposta.status_code, 200)
+                self.assertEqual(resposta.mimetype, "image/png")
+        for nome in ("inexistente", "prompt-cards", "../prompt-cards"):
+            self.assertEqual(self.client.get(f"/assets/cards/modelos/{nome}.png").status_code, 404)
 
     def test_limite_requisicao(self):
         self.assertEqual(self.enviar(b"x" * (6 * 1024 * 1024)).status_code, 413)

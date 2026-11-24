@@ -2,7 +2,7 @@
 {% set descricao = "Transforme sua foto em um card personalizado." %}
 {% block recursos_pagina %}
 <link rel="stylesheet" href="/css/editor-card.css">
-<script src="/js/editor-card.js" defer></script>
+<script src="/js/editor-card.js?v=10" defer></script>
 <script src="/js/fotos.js" defer></script>
 {% endblock %}
 {% block conteudo %}
@@ -23,10 +23,36 @@
     </div>
     <div class="card painel-card">
         <h2>2. Personalize seu card</h2>
+        <fieldset class="escolha-modelos">
+            <legend>Escolha o modelo</legend>
+            <div class="grade-modelos">
+            {% for item in modelos %}
+                <label class="opcao-modelo">
+                    <input type="radio" name="card-modelo" value="{{ item.id }}" {% if loop.first %}checked{% endif %}>
+                    <img src="/assets/cards/modelos/{{ item.id }}.png?v=10" alt="" width="74" height="124">
+                    <span>{{ item.nome }}</span>
+                </label>
+            {% endfor %}
+            </div>
+        </fieldset>
         <label for="card-nome">Nome</label>
         <input id="card-nome" maxlength="24" value="" placeholder="Seu nome">
         <label for="card-posicao">Posição</label>
-        <select id="card-posicao"><option>ATA</option><option>MEI</option><option>ZAG</option><option>LAT</option><option>GOL</option></select>
+        <input id="card-posicao" maxlength="3" value="ATA" list="posicoes-card">
+        <datalist id="posicoes-card"><option value="ATA"><option value="MEI"><option value="ZAG"><option value="LAT"><option value="GOL"></datalist>
+        <label for="card-geral">Nota geral (1 a 99)</label>
+        <input id="card-geral" type="number" min="1" max="99" step="1" placeholder="Automática">
+        <div class="sorteio-card">
+            <h3>Atributos do card</h3>
+            <p>Edite as seis notas de 1 a 99 ou sorteie valores. Deixe a nota geral vazia para usar a média dos seis atributos.</p>
+            <dl class="atributos-card">
+            {% for sigla, descricao in atributos.items() %}
+                <div><dt><label for="atributo-{{ sigla }}"><abbr title="{{ descricao }}">{{ sigla }}</abbr></label></dt><dd><input id="atributo-{{ sigla }}" data-atributo="{{ sigla }}" type="number" min="1" max="99" step="1" placeholder="--" aria-label="{{ descricao }}"></dd></div>
+            {% endfor %}
+            </dl>
+            <button id="card-girar" type="button">Girar atributos</button>
+            <p id="sorteio-status" role="status" aria-live="polite">Você pode girar quantas vezes quiser.</p>
+        </div>
         {% include "componentes/previa-card.html" %}
         <fieldset id="ajustes-card" disabled>
             <legend>Enquadramento da pessoa</legend>
@@ -43,5 +69,6 @@
     </div>
 </section>
 <script id="modelo-card" type="application/json">{{ modelo | tojson }}</script>
+<script id="modelos-card" type="application/json">{{ modelos | tojson }}</script>
 {% endblock %}
 

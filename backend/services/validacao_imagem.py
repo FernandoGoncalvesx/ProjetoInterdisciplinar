@@ -1,4 +1,3 @@
-"""Decodificação, orientação e avaliação inicial de qualidade."""
 from io import BytesIO
 from backend.models.foto import Foto, FotoInvalida, MAX_BYTES, MAX_PIXELS
 

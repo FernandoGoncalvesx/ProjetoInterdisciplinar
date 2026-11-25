@@ -1,12 +1,18 @@
-"""Rotas de processamento de cards e upload legado de fotos."""
 import base64
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, current_app, jsonify, request, session, url_for
 from backend.models.foto import MAX_BYTES, FotoInvalida, RecorteIndisponivel
 from backend.services.validacao_imagem import validar_imagem
 from backend.services.armazenamento_fotos import salvar_uploads
 from backend.services.recorte_pessoa import recortar_pessoa
 
 fotos = Blueprint("fotos", __name__)
+
+@fotos.before_request
+def exigir_login():
+    if not session.get("usuario_id"):
+        session["retornar_cards"] = True
+        return jsonify(mensagem="Sua sessão expirou ou você não está conectado. Entre para enviar fotos.",
+                       login_url=url_for("autenticacao.pagina")), 401
 
 @fotos.post("/api/cards/processar")
 def processar():

@@ -2,7 +2,7 @@ import base64
 import importlib.util
 import io
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 from werkzeug.datastructures import MultiDict
 from backend.app import app
 from backend.models.foto import Foto, FotoInvalida, RecorteIndisponivel
@@ -13,9 +13,35 @@ from backend.models.card import MODELOS
 class CardsHTTPTest(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
+        with self.client.session_transaction() as sessao:
+            sessao.update(usuario_id=7, nome="ana.silva")
 
     def enviar(self, dados=b"foto"):
         return self.client.post("/api/cards/processar", data={"foto": (io.BytesIO(dados), "foto.jpg")})
+
+    def test_visitante_ve_aviso_mas_nao_editor_nem_envia_fotos(self):
+        visitante = app.test_client()
+        for rota in ("/cards", "/Telas/fotos.html"):
+            resposta = visitante.get(rota)
+            self.assertEqual(resposta.status_code, 200)
+            html = resposta.get_data(as_text=True)
+            self.assertIn('id="aviso-login-card"', html)
+            self.assertIn('id="fechar-aviso-login"', html)
+            self.assertIn('Clique aqui para entrar ou criar conta', html)
+            self.assertNotIn('id="form-foto-card"', html)
+            self.assertNotIn('/js/editor-card.js', html)
+        with patch("backend.controllers.fotos_controller.recortar_pessoa") as recortar, patch("backend.controllers.fotos_controller.salvar_uploads") as salvar:
+            for rota in ("/api/cards/processar", "/api/upload"):
+                self.assertEqual(visitante.post(rota).status_code, 401)
+            recortar.assert_not_called()
+            salvar.assert_not_called()
+
+    def test_nome_da_sessao_e_fixo_e_escapado(self):
+        with self.client.session_transaction() as sessao:
+            sessao["nome"] = "Ana <teste>"
+        html = self.client.get("/cards?nome=Outra").get_data(as_text=True)
+        self.assertIn('<strong id="card-nome">Ana &lt;teste&gt;</strong>', html)
+        self.assertNotIn('<input id="card-nome"', html)
 
     def test_editor_e_recursos(self):
         for url in ("/cards", "/Telas/fotos.html"):
@@ -34,9 +60,11 @@ class CardsHTTPTest(unittest.TestCase):
 
     def test_seis_modelos_e_sorteio_disponiveis(self):
         html = self.client.get("/cards").get_data(as_text=True)
-        self.assertEqual(html.count('name="card-modelo"'), 6)
+        self.assertEqual(html.count('data-modelo-id='), 6)
         self.assertEqual(html.count('data-atributo='), 6)
         self.assertIn('id="card-girar"', html)
+        self.assertIn('id="modelo-anterior"', html)
+        self.assertIn('id="modelo-proximo"', html)
         for modelo in MODELOS:
             with self.client.get(f'/assets/cards/modelos/{modelo["id"]}.png') as resposta:
                 self.assertEqual(resposta.status_code, 200)
@@ -95,15 +123,19 @@ class ValidacaoTest(unittest.TestCase):
         from backend.services import recorte_pessoa as servico
         imagem = Image.new("RGBA", (400, 600), (0, 0, 0, 0))
         imagem.paste((255, 0, 0, 255), (100, 50, 300, 550))
-        modulo = SimpleNamespace(new_session=lambda *a, **k: object(), remove=lambda *a, **k: imagem)
-        with patch.dict("sys.modules", {"rembg": modulo}), patch.object(servico, "_sessao", None):
+        modulo = SimpleNamespace(new_session=MagicMock(return_value=object()), remove=MagicMock(return_value=imagem))
+        with patch.dict("sys.modules", {"rembg": modulo}), patch.object(servico, "_sessao", None), patch.dict("os.environ", {"REMBG_MODEL": "birefnet-portrait"}):
             png = servico.recortar_pessoa(imagem)
+            modulo.new_session.assert_called_once_with("birefnet-portrait", providers=["CPUExecutionProvider"])
+            self.assertTrue(modulo.remove.call_args.kwargs["decontaminate"])
             resultado = Image.open(io.BytesIO(png))
-            self.assertEqual(resultado.size, (200, 500))
+            self.assertEqual(resultado.size, (212, 512))
             self.assertEqual(resultado.mode, "RGBA")
             imagem.paste((0, 0, 0, 0), (0, 0, 400, 600))
             with self.assertRaises(FotoInvalida):
                 servico.recortar_pessoa(imagem)
+            modulo.new_session.assert_called_once()
+            self.assertFalse(servico._trava.locked())
 
 
 if __name__ == "__main__":

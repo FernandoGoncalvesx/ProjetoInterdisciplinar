@@ -1,32 +1,242 @@
-.criador-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem;align-items:start}
-.painel-card{padding:1.5rem;min-width:0}
-.painel-card label{display:block;margin-top:1rem;font-weight:600}
-.painel-card input:not([type=range]),.painel-card select{width:100%;box-sizing:border-box;padding:.7rem}
-.painel-card input[type=range]{width:100%}
-.painel-card button{padding:.75rem 1.1rem;margin-top:1rem;cursor:pointer}
-.painel-card button:disabled{opacity:.55;cursor:default}
-#foto-original{max-width:100%;max-height:300px;margin-top:1rem;object-fit:contain}
-#foto-original[hidden]{display:none}
-#previa-card{display:block;width:100%;max-width:420px;height:auto;margin:1.5rem auto;touch-action:none;cursor:grab}
-#ajustes-card{margin-top:1rem;padding:1rem;border:1px solid #aaa}
-#foto-status.erro{color:#a32222}
-@media(max-width:760px){.criador-card{grid-template-columns:1fr}}
-.escolha-modelos{border:0;padding:0;margin:1.5rem 0}
-.escolha-modelos legend{font-weight:700;margin-bottom:.75rem}
-.grade-modelos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem}
-.painel-card .opcao-modelo{position:relative;display:grid;justify-items:center;gap:.25rem;margin:0;padding:.5rem;border:2px solid #d8d8d0;border-radius:8px;cursor:pointer}
-.opcao-modelo img{display:block;width:100%;max-width:74px;height:auto}
-.painel-card .opcao-modelo input{width:auto;padding:0;accent-color:#00693c}
-.opcao-modelo:has(input:checked){border-color:#00693c;background:#e8f5ec;box-shadow:inset 0 0 0 1px #00693c}
-.opcao-modelo:focus-within{outline:3px solid #194fac;outline-offset:3px}
-.sorteio-card{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #ccc}
-.atributos-card{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
-.atributos-card div{padding:.6rem .25rem;text-align:center;background:#f0f2ed;border-radius:4px}
-.atributos-card dt{font-size:.85rem}
-.atributos-card dd{margin:0;font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;color:#163a2b}
-#card-girar{background:#00693c;color:white;border:0;border-radius:6px;font-weight:700;min-height:44px}
-#sorteio-status{min-height:1.5em}
+/* ===== Layout Geral do Criador de Card ===== */
+.criador-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
 
+.painel-card {
+  padding: 1.5rem;
+  min-width: 0;
+}
 
-.atributos-card label{margin-top:0}
-.atributos-card input{text-align:center;min-width:0}
+.painel-card label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.painel-card input:not([type="range"]),
+.painel-card select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: .7rem;
+}
+
+.painel-card input[type="range"] {
+  width: 100%;
+}
+
+.painel-card button {
+  padding: .75rem 1.1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.painel-card button:disabled {
+  opacity: .55;
+  cursor: default;
+}
+
+@media (max-width: 760px) {
+  .criador-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Prévia e Ajustes de Foto ===== */
+#foto-original {
+  max-width: 100%;
+  max-height: 300px;
+  margin-top: 1rem;
+  object-fit: contain;
+}
+
+#foto-original[hidden] {
+  display: none;
+}
+
+#previa-card {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin: 1.5rem auto;
+  touch-action: none;
+  cursor: grab;
+}
+
+#ajustes-card {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #aaa;
+}
+
+#foto-status.erro {
+  color: #a32222;
+}
+
+/* ══ Card swap (Bencho — MIT License) ═════════════════════
+   A stack in depth; each card's slot arrives as --t.
+   Cards are the slab, a title row and a photo with a concentric
+   corner. No shadows: depth is the stack and a hairline edge */
+.escolha-modelos {
+  margin: 1.5rem 0;
+}
+
+.titulo-modelos {
+  font-weight: 700;
+  margin-bottom: .75rem;
+}
+
+.csw {
+  /* Tokens locais mapeados para a paleta do :root */
+  --fill-slab: var(--superficie, #fffef8);
+  --fill-on: var(--texto, #10291a);
+
+  position: relative;
+  width: 100%;
+  height: 410px;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.csw-stage {
+  position: absolute;
+  left: 10px;
+  bottom: 16px;
+  width: 195px;
+  height: 328px;
+  /* flat, so paint order is the z-index: a card sent back goes behind
+     at once. The origin is the block's middle, where it was on .csw */
+  perspective: 1000px;
+  perspective-origin: 215px 150px;
+}
+
+/* a card is a photo in a thin slab frame, its corner concentric
+   with the photo's, and a solid label pill in the corner */
+.csw-card {
+  position: absolute;
+  inset: 0;
+  padding: 6px;
+  border-radius: 20px;
+  background: var(--fill-slab);
+  color: var(--fill-on);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--fill-on) 14%, transparent);
+  transform: var(--t);
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  backface-visibility: hidden;
+}
+
+.csw-card[data-front] {
+  cursor: grab;
+  touch-action: none;
+  box-shadow: 0 0 0 2px var(--verde, #00793a);
+}
+
+.csw-card[data-front]:active {
+  cursor: grabbing;
+}
+
+.csw-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 15px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .csw-card {
+    transition: none;
+  }
+}
+
+/* ===== Sorteio e Atributos ===== */
+.sorteio-card {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #ccc;
+}
+
+.atributos-card {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .5rem;
+}
+
+.atributos-card div {
+  padding: .6rem .25rem;
+  text-align: center;
+  background: #f0f2ed;
+  border-radius: 4px;
+}
+
+.atributos-card dt {
+  font-size: .85rem;
+}
+
+.atributos-card dd {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #163a2b;
+}
+
+.atributos-card label {
+  margin-top: 0;
+}
+
+.atributos-card input {
+  text-align: center;
+  min-width: 0;
+}
+.atributos-card input[readonly] {
+  background: transparent;
+  border: 0;
+  padding: .25rem 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #163a2b;
+  cursor: default;
+  pointer-events: none;
+  -moz-appearance: textfield;
+}
+
+.atributos-card input[readonly]::-webkit-outer-spin-button,
+.atributos-card input[readonly]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#card-girar {
+  background: var(--verde, #00793a);
+  color: white;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 700;
+  min-height: 44px;
+}
+
+.criador-card { grid-template-areas: "upload preview" "controls preview"; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.painel-upload { grid-area: upload; }
+.painel-controles { grid-area: controls; }
+.painel-previa { grid-area: preview; position: sticky; top: 110px; }
+.painel-previa #previa-card { max-width: 250px; margin-block: .75rem; }
+.navegacao-modelos, .ajuste-fino { display:flex; align-items:center; justify-content:space-between; gap:.75rem; }
+.ajuste-fino button { min-width:44px; min-height:44px; margin-top:0; }
+.ajuste-fino output { font-variant-numeric:tabular-nums; }
+.csw-stage { transform-origin:bottom left; }
+#foto-status, #editor-status { min-height:3.2em; }
+@media(max-width:1000px) {
+ .criador-card { grid-template-columns:minmax(0,1fr); grid-template-areas:"upload" "preview" "controls"; }
+ .painel-previa { position:static; }
+}
+@media(max-height:950px) { .painel-previa { position:static; } }
+
+#card-nome { overflow-wrap:anywhere; }

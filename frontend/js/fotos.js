@@ -41,10 +41,14 @@
         window.editorCard.limpar();
         avisos.replaceChildren();
         form.setAttribute('aria-busy', 'true');
-        mensagem('Processando a foto. Na primeira execução, a preparação pode demorar alguns minutos.');
+        document.getElementById('editor-status').textContent = 'Enviando a foto para remoção do fundo. Aguarde o recorte…';
+        mensagem('Enviando a foto para recorte. Na primeira execução, a preparação pode demorar alguns minutos.');
         try {
             const resposta = await fetch(form.action, {method: 'POST', body: dados});
+            mensagem('Resposta recebida. Preparando o recorte e o enquadramento…');
+            document.getElementById('editor-status').textContent = 'Preparando o recorte e o enquadramento…';
             const resultado = await resposta.json();
+            document.getElementById('foto-login').hidden = resposta.status !== 401;
             if (!resposta.ok) throw new Error(resultado.mensagem || 'Falha ao processar a foto.');
             await window.editorCard.carregar(resultado.recorte);
             for (const aviso of resultado.avisos || []) {
@@ -55,6 +59,7 @@
             mensagem('Recorte pronto. Ajuste a pessoa no card e confira os contornos.');
         } catch (erro) {
             mensagem(erro.message || 'Não foi possível conectar ao servidor.', true);
+            document.getElementById('editor-status').textContent = 'Não foi possível concluir. Confira o aviso junto à foto e tente novamente.';
         } finally {
             ocupado = false;
             input.disabled = botao.disabled = false;

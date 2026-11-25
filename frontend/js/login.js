@@ -33,14 +33,15 @@ if (cadastro && campoCadastroSenha && campoConfirmacao && statusCadastro) {
         if (campoCadastroSenha.value !== campoConfirmacao.value) {
             evento.preventDefault();
             statusCadastro.textContent = "As duas senhas precisam ser iguais.";
+            campoConfirmacao.setAttribute('aria-invalid', 'true');
             campoConfirmacao.focus();
         }
     });
 
-    campoConfirmacao.addEventListener("input", () => {
-        statusCadastro.textContent =
-            campoConfirmacao.value && campoCadastroSenha.value !== campoConfirmacao.value
-                ? "As duas senhas precisam ser iguais."
-                : "";
-    });
+    function validarConfirmacao() {
+        const invalido = Boolean(campoConfirmacao.value && campoCadastroSenha.value !== campoConfirmacao.value);
+        campoConfirmacao.setAttribute('aria-invalid', String(invalido));
+        statusCadastro.textContent = invalido ? 'As duas senhas precisam ser iguais.' : '';
+    }
+    [campoCadastroSenha, campoConfirmacao].forEach(campo => campo.addEventListener('input', validarConfirmacao));
 }

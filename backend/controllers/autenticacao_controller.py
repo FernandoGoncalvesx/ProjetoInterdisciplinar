@@ -54,9 +54,10 @@ def entrar():
         flash("Usuário ou senha incorretos.")
         return pagina_conta()
 
+    retornar_cards = session.get("retornar_cards", False)
     session.clear()
     session.update(usuario_id=usuario["id"], nome=usuario["nome_usuario"])
-    return redirect(url_for("inicio.pagina"), code=303)
+    return redirect(url_for("cards.editor" if retornar_cards else "inicio.pagina"), code=303)
 
 
 @autenticacao.post("/api/logout")

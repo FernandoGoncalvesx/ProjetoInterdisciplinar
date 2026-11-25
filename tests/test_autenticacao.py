@@ -46,6 +46,15 @@ class TestAutenticacao(unittest.TestCase):
                 with self.cliente.session_transaction() as sessao:
                     self.assertNotIn("usuario_id", sessao)
 
+    def test_login_retorna_ao_editor_mesmo_apos_erro(self):
+        self.cliente.get("/cards")
+        self.enviar("/api/login", nome_usuario="ana.silva", senha="errada")
+        resposta = self.enviar("/api/login", nome_usuario="ana.silva", senha="minha senha")
+        self.assertIn(resposta.request.path, ("/cards", "/Telas/fotos.html"))
+        self.assertIn('<strong id="card-nome">ana.silva</strong>', resposta.get_data(as_text=True))
+        with self.cliente.session_transaction() as sessao:
+            self.assertNotIn("retornar_cards", sessao)
+
     def test_sem_token(self):
         resposta = self.cliente.post("/api/login", follow_redirects=True)
         self.assertEqual(resposta.request.path, self.conta)

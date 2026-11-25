@@ -17,7 +17,7 @@
         }
 
 
-        let noticias = [];
+        let noticias = JSON.parse(document.getElementById('noticias-iniciais').textContent);
 
         function inserirTextoComQuebras(elemento, texto) {
             elemento.replaceChildren();
@@ -41,66 +41,62 @@
 
                 noticias = await resposta.json();
 
-                if (!resposta.ok) {
-                    throw new Error('Erro gerar JSON de notícias: ' + resposta.status);
-                }
-
-                if (noticias.length === 0) {
-                    listaNoticias.textContent = 'Nenhuma notícia publicada no momento.';
-                    return;
-                }
-
-                // Limpa o conteúdo inicial.
-                listaNoticias.replaceChildren();
-
-                // Cria um card para cada notícia recebida.
-                noticias.forEach((noticia) => {
-
-                    const coluna = document.createElement('div');
-                    coluna.className = 'col-12 col-md-6 col-lg-4';
-
-                    const card = document.createElement('article');
-                    card.className = 'card noticia-card';
-                    card.id = 'noticia-' + noticia.id;
-
-                    const corpo = document.createElement('div');
-                    corpo.className = 'card-body';
-
-                    const titulo = document.createElement('h3');
-                    titulo.className = 'card-title';
-                    titulo.textContent = noticia.titulo;
-
-                    const resumo = document.createElement('p');
-                    resumo.className = 'card-text';
-
-                    const textoResumo = (noticia.texto || '').replace(/<br\s*\/?>/gi, ' ');
-                    resumo.textContent = textoResumo.length > 160
-                        ? textoResumo.substring(0, 160) + '...'
-                        : textoResumo;
-
-                    const botao = document.createElement('button');
-                    botao.type = 'button';
-                    botao.className = 'btn btn-primary abrir-noticia';
-                    botao.textContent = 'Abrir notícia';
-                    botao.setAttribute(
-                        'aria-label',
-                        'Abrir notícia'
-                    );
-
-                    // Guarda o identificador da notícia no botão.
-                    botao.dataset.id = noticia.id;
-
-                    corpo.append(titulo, resumo, botao);
-                    card.appendChild(corpo);
-                    coluna.appendChild(card);
-
-                    listaNoticias.appendChild(coluna);
-                });
+                renderizarNoticias();
+                document.getElementById('noticias-status').textContent = 'Notícias atualizadas.';
 
             } catch (erro) {
                 console.error('Erro ao carregar notícias:', erro);
                 document.getElementById('noticias-status').textContent = 'Não foi possível carregar as notícias. Tente novamente.';
             }
+        }
+
+        function renderizarNoticias() {
+            if (noticias.length === 0) {
+                listaNoticias.textContent = 'Nenhuma notícia publicada no momento.';
+                return;
+            }
+
+            // Limpa o conteúdo inicial.
+            listaNoticias.replaceChildren();
+
+            // Cria um card para cada notícia recebida.
+            noticias.forEach((noticia) => {
+
+                const coluna = document.createElement('div');
+
+                const card = document.createElement('article');
+                card.className = 'card noticia-card';
+                card.id = 'noticia-' + noticia.id;
+
+                const corpo = document.createElement('div');
+                corpo.className = 'card-body';
+
+                const titulo = document.createElement('h3');
+                titulo.className = 'card-title';
+                titulo.textContent = noticia.titulo;
+
+                const resumo = document.createElement('p');
+                resumo.className = 'card-text';
+
+                const textoResumo = (noticia.texto || '').replace(/<br\s*\/?>/gi, ' ');
+                resumo.textContent = textoResumo.length > 160
+                    ? textoResumo.substring(0, 160) + '...'
+                    : textoResumo;
+
+                const botao = document.createElement('button');
+                botao.type = 'button';
+                botao.className = 'btn btn-primary abrir-noticia';
+                botao.textContent = 'Abrir notícia';
+
+                // Guarda o identificador da notícia no botão.
+                botao.dataset.id = noticia.id;
+
+                corpo.append(titulo, resumo, botao);
+                card.appendChild(corpo);
+                coluna.appendChild(card);
+
+                listaNoticias.appendChild(coluna);
+            });
         }
 
         // Abre o diálogo utilizando os dados da notícia selecionada.
@@ -152,8 +148,15 @@
             }
         });
 
-        // Inicia a consulta ao banco.
-        carregarNoticias().then(crawlerNoticias);
+        if (noticias.length) renderizarNoticias();
+        const atualizar = document.getElementById('atualizar-noticias');
+        atualizar.hidden = false;
+        atualizar.addEventListener('click', async () => {
+            atualizar.disabled = true;
+            document.getElementById('noticias-status').textContent = 'Atualizando notícias…';
+            try { await crawlerNoticias(); }
+            finally { atualizar.disabled = false; atualizar.focus({preventScroll:true}); }
+        });
     }
 
 })();

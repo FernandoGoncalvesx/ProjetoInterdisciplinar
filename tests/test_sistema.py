@@ -25,6 +25,8 @@ class Links(HTMLParser):
 class SistemaTest(unittest.TestCase):
     def setUp(self):
         self.client = servidor.app.test_client()
+        with self.client.session_transaction() as sessao:
+            sessao.update(usuario_id=7, nome="ana.silva")
         for modulo, funcao in [(elenco_controller, "listar_jogadoras"), (noticias_controller, "listar_noticias")]:
             consulta_conteudo = patch.object(modulo, funcao, return_value=[])
             consulta_conteudo.start()

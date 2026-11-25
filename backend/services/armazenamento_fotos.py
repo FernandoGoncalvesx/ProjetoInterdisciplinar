@@ -1,4 +1,3 @@
-"""Validação e gravação do upload legado, com limpeza em caso de falha."""
 from pathlib import Path
 from uuid import uuid4
 from backend.models.foto import MAX_ARQUIVOS, MAX_BYTES, FotoInvalida

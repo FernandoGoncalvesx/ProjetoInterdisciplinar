@@ -1,4 +1,3 @@
-"""Consultas das jogadoras."""
 from backend.models.banco import conectar_banco
 
 def listar_jogadoras():

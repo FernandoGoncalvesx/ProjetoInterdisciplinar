@@ -1,4 +1,3 @@
-"""Consulta e organização das partidas do portal."""
 from datetime import datetime, timedelta, timezone
 from backend.models.banco import conectar_banco
 
@@ -6,7 +5,6 @@ FUSO = timezone(timedelta(hours=-3))
 
 
 def listar_jogos():
-    """Lê somente o banco; nenhuma chamada externa ocorre ao abrir a página."""
     with conectar_banco() as conexao:
         with conexao.cursor(dictionary=True) as cursor:
             agora = datetime.now(FUSO).replace(tzinfo=None)

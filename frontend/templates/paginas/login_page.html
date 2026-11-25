@@ -30,6 +30,7 @@
     </div>
     {% else %}
     <div class="grade-conta">
+        <div class="acesso-login">
         <form id="login-form" class="card formulario-login" method="post" action="/api/login" aria-label="Entrar na conta">
             <h2>Entrar</h2>
             <input type="hidden" name="csrf" value="{{ token_formulario() }}">
@@ -40,6 +41,10 @@
             <button type="button" id="alternar-senha" aria-controls="senha" aria-pressed="false" hidden>Mostrar senha</button>
             <button class="botao" type="submit">Entrar</button>
         </form>
+        {% if session.retornar_cards %}
+        <p class="aviso-conta aviso-editor-login">Entre ou crie uma conta para enviar sua foto e personalizar seu card.</p>
+        {% endif %}
+        </div>
         <section class="card" aria-labelledby="cadastro-titulo">
             <form id="cadastro-form" class="formulario-login formulario-cadastro" method="post" action="/api/cadastro">
                 <h2 id="cadastro-titulo">Criar conta</h2>
@@ -50,9 +55,9 @@
                 <label for="cadastro-senha">Senha</label>
                 <input id="cadastro-senha" name="senha" type="password" minlength="1" maxlength="1024" autocomplete="new-password" required>
                 <label for="cadastro-confirmacao">Confirme a senha</label>
-                <input id="cadastro-confirmacao" name="confirmacao" type="password" maxlength="1024" autocomplete="new-password" required>
-                <button type="button" id="alternar-cadastro-senha" aria-controls="cadastro-senha cadastro-confirmacao" aria-pressed="false" hidden>Mostrar senhas</button>
+                <input id="cadastro-confirmacao" aria-describedby="cadastro-status" name="confirmacao" type="password" maxlength="1024" autocomplete="new-password" required>
                 <p id="cadastro-status" class="cadastro-status" role="status" aria-live="polite"></p>
+                <button type="button" id="alternar-cadastro-senha" aria-controls="cadastro-senha cadastro-confirmacao" aria-pressed="false" hidden>Mostrar senhas</button>
                 <button class="botao" type="submit">Criar conta</button>
             </form>
         </section>

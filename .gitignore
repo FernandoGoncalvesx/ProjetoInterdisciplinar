@@ -25,3 +25,4 @@ Thumbs.db
 
 !/tests/test_jogos.py
 !/tests/test_melhorias_ihc.py
+!/tests/enquadramento.test.mjs

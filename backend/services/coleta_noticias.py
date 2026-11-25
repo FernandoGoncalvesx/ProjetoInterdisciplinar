@@ -4,7 +4,7 @@ import logging
 import mimetypes
 from pathlib import Path
 
-from backend.models.noticia import salvar_se_nova
+from backend.models.noticia import noticia_existe, salvar_se_nova
 
 from playwright.sync_api import Error as PlaywrightError, sync_playwright
 
@@ -38,9 +38,8 @@ def _baixar_imagem(page, imagem_url):
 
     extensao = mimetypes.guess_extension(tipo_conteudo) or ".img"
     nome_arquivo = hashlib.sha256(imagem_url.encode("utf-8")).hexdigest()[:20] + extensao
-    pasta_assets = PASTA_IMAGENS
-    pasta_assets.mkdir(parents=True, exist_ok=True)
-    (pasta_assets / nome_arquivo).write_bytes(resposta.body())
+    PASTA_IMAGENS.mkdir(parents=True, exist_ok=True)
+    (PASTA_IMAGENS / nome_arquivo).write_bytes(resposta.body())
 
     return f"/assets/noticias/{nome_arquivo}"
 
@@ -71,6 +70,8 @@ def crawler_noticias ():
                 titulo = page.locator('h1').evaluate_all(
                             "(elementos) => [...new Set(elementos.map(a => a.textContent))]"
                         )[0].strip()
+                if noticia_existe(titulo):
+                    continue
 
                 page.wait_for_selector('div[class*="body-content-article"] > p:not(:has(img))', timeout=15000)
                 textos = page.locator('div[class*="body-content-article"] > p:not(:has(img))').evaluate_all(

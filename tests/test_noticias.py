@@ -1,3 +1,4 @@
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,6 +13,31 @@ from backend.models import noticia
 class NoticiasTest(unittest.TestCase):
     def setUp(self):
         self.client = servidor.app.test_client()
+
+    def test_consulta_existencia_por_titulo(self):
+        with patch.object(noticia, "conectar_banco") as conectar:
+            cursor = conectar.return_value.__enter__.return_value.cursor.return_value.__enter__.return_value
+            for resultado, esperado in ((None, False), ((1,), True)):
+                cursor.fetchone.return_value = resultado
+                self.assertEqual(noticia.noticia_existe("Título"), esperado)
+                self.assertEqual(cursor.execute.call_args.args[1], ("Título",))
+
+    def test_coleta_pula_noticia_existente_e_salva_nova(self):
+        with patch.object(coletor, "sync_playwright") as playwright, \
+                patch.object(coletor, "noticia_existe", side_effect=[True, False]), \
+                patch.object(coletor, "_baixar_imagem", return_value="/assets/noticias/nova.png") as baixar, \
+                patch.object(coletor, "salvar_se_nova") as salvar:
+            browser = playwright.return_value.__enter__.return_value.chromium.launch.return_value
+            page = browser.new_page.return_value
+            page.locator.return_value.evaluate_all.side_effect = [
+                ["/antiga", "/nova"], ["Antiga"], ["Nova"], ["Texto"], ["CBF"],
+            ]
+            page.locator.return_value.first.count.return_value = 1
+            page.locator.return_value.first.evaluate.return_value = "https://exemplo.test/nova.png"
+            coletor.crawler_noticias()
+            baixar.assert_called_once_with(page, "https://exemplo.test/nova.png")
+            salvar.assert_called_once_with("Nova", "CBF", "/assets/noticias/nova.png", "Texto")
+            browser.close.assert_called_once()
 
     def test_model_salva_noticia_sem_duplicar_titulo(self):
         with patch.object(noticia, "conectar_banco") as conectar:
@@ -68,6 +94,9 @@ class NoticiasTest(unittest.TestCase):
                 self.assertEqual(recurso.status_code, 200)
         self.assertIn('id="lista-noticias"', html)
         self.assertIn('id="detalhes-noticia"', html)
+        dados = html.split('<script id="noticias-iniciais" type="application/json">', 1)[1].split('</script>', 1)[0]
+        self.assertEqual(json.loads(dados), noticias)
+        self.assertNotIn('<script>', dados)
 
     def test_imagem_salva_na_pasta_servida_pelo_portal(self):
         page = MagicMock()

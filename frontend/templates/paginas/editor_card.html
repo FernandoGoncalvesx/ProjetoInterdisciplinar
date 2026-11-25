@@ -1,13 +1,27 @@
 {% extends "base.html" %}
 {% set descricao = "Transforme sua foto em um card personalizado." %}
 {% block recursos_pagina %}
-<link rel="stylesheet" href="/css/editor-card.css">
-<script src="/js/editor-card.js?v=10" defer></script>
+<link rel="stylesheet" href="/css/editor-card.css?v=5">
+{% if session.usuario_id %}
+<script src="/js/editor-card.js?v=16" defer></script>
 <script src="/js/fotos.js" defer></script>
+{% else %}<script src="/js/aviso-login.js" defer></script>{% endif %}
 {% endblock %}
 {% block conteudo %}
+{% if not session.usuario_id %}
+<section class="container secao">
+    <div id="aviso-login-card" class="card" aria-labelledby="aviso-login-titulo">
+        <div class="dialogo-cabecalho">
+            <h2 id="aviso-login-titulo">Crie seu card</h2>
+            <button id="fechar-aviso-login" type="button" aria-label="Fechar aviso de login" hidden>Fechar</button>
+        </div>
+        <p>Entre ou crie uma conta para enviar sua foto e personalizar seu card.</p>
+        <a class="botao" href="{{ url_for('autenticacao.pagina') }}">Clique aqui para entrar ou criar conta</a>
+    </div>
+</section>
+{% else %}
 <section class="container secao criador-card">
-    <div class="card painel-card">
+    <div class="card painel-card painel-upload">
         <h2>1. Escolha sua foto</h2>
         <p>Uma pessoa, com cabeça, braços e tronco até a cintura visíveis. Prefira boa iluminação e uma foto nítida.</p>
         <form id="form-foto-card" action="/api/cards/processar" method="post" enctype="multipart/form-data">
@@ -17,58 +31,83 @@
             <button id="processar-foto" type="submit" disabled>Remover fundo</button>
         </form>
         <p id="foto-status" role="status" aria-live="polite"></p>
+        <a id="foto-login" href="{{ url_for('autenticacao.pagina') }}" hidden>Entrar novamente para enviar a foto</a>
         <ul id="foto-avisos"></ul>
-        <p>O enquadramento é manual. Confira o recorte antes de baixar.</p>
+        <p>Após o recorte, tentaremos enquadrar a pessoa automaticamente. Você pode ajustar o resultado antes de baixar.</p>
         <noscript>Ative o JavaScript para criar seu card.</noscript>
     </div>
-    <div class="card painel-card">
-        <h2>2. Personalize seu card</h2>
-        <fieldset class="escolha-modelos">
-            <legend>Escolha o modelo</legend>
-            <div class="grade-modelos">
-            {% for item in modelos %}
-                <label class="opcao-modelo">
-                    <input type="radio" name="card-modelo" value="{{ item.id }}" {% if loop.first %}checked{% endif %}>
-                    <img src="/assets/cards/modelos/{{ item.id }}.png?v=10" alt="" width="74" height="124">
-                    <span>{{ item.nome }}</span>
-                </label>
-            {% endfor %}
-            </div>
-        </fieldset>
-        <label for="card-nome">Nome</label>
-        <input id="card-nome" maxlength="24" value="" placeholder="Seu nome">
-        <label for="card-posicao">Posição</label>
-        <input id="card-posicao" maxlength="3" value="ATA" list="posicoes-card">
-        <datalist id="posicoes-card"><option value="ATA"><option value="MEI"><option value="ZAG"><option value="LAT"><option value="GOL"></datalist>
-        <label for="card-geral">Nota geral (1 a 99)</label>
-        <input id="card-geral" type="number" min="1" max="99" step="1" placeholder="Automática">
-        <div class="sorteio-card">
-            <h3>Atributos do card</h3>
-            <p>Edite as seis notas de 1 a 99 ou sorteie valores. Deixe a nota geral vazia para usar a média dos seis atributos.</p>
-            <dl class="atributos-card">
-            {% for sigla, descricao in atributos.items() %}
-                <div><dt><label for="atributo-{{ sigla }}"><abbr title="{{ descricao }}">{{ sigla }}</abbr></label></dt><dd><input id="atributo-{{ sigla }}" data-atributo="{{ sigla }}" type="number" min="1" max="99" step="1" placeholder="--" aria-label="{{ descricao }}"></dd></div>
-            {% endfor %}
-            </dl>
-            <button id="card-girar" type="button">Girar atributos</button>
-            <p id="sorteio-status" role="status" aria-live="polite">Você pode girar quantas vezes quiser.</p>
-        </div>
+    <div class="card painel-card painel-previa">
+        <h2>Prévia e enquadramento</h2>
         {% include "componentes/previa-card.html" %}
         <fieldset id="ajustes-card" disabled>
             <legend>Enquadramento da pessoa</legend>
             <label for="card-zoom">Tamanho</label>
-            <input id="card-zoom" type="range" min="0.5" max="3" step="0.01" value="1">
+            <input id="card-zoom" type="range" min="0.01" max="20" step="0.01" value="1">
+            <div class="ajuste-fino"><button type="button" data-campo="card-zoom" data-passo="-.05" aria-label="Diminuir tamanho">−</button><output for="card-zoom" id="card-zoom-valor"></output><button type="button" data-campo="card-zoom" data-passo=".05" aria-label="Aumentar tamanho">+</button></div>
             <label for="card-x">Posição horizontal</label>
             <input id="card-x" type="range" min="-500" max="500" value="0">
+            <div class="ajuste-fino"><button type="button" data-campo="card-x" data-passo="-1" aria-label="Diminuir posição horizontal">−</button><output for="card-x" id="card-x-valor"></output><button type="button" data-campo="card-x" data-passo="1" aria-label="Aumentar posição horizontal">+</button></div>
             <label for="card-y">Posição vertical</label>
             <input id="card-y" type="range" min="-900" max="900" value="0">
-            <button id="card-reiniciar" type="button">Centralizar pessoa</button>
+            <div class="ajuste-fino"><button type="button" data-campo="card-y" data-passo="-1" aria-label="Diminuir posição vertical">−</button><output for="card-y" id="card-y-valor"></output><button type="button" data-campo="card-y" data-passo="1" aria-label="Aumentar posição vertical">+</button></div>
+            <button id="card-reiniciar" type="button">Restaurar enquadramento inicial</button>
         </fieldset>
         <button id="card-baixar" type="button" disabled>Baixar card em PNG</button>
         <p id="editor-status" role="status" aria-live="polite">Envie uma foto para começar.</p>
     </div>
+    <div class="card painel-card painel-controles">
+        <h2>2. Personalize seu card</h2>
+        <div class="escolha-modelos">
+            <p class="titulo-modelos">Escolha o modelo (clique ou arraste o card da frente)</p>
+            <div class="csw" id="card-swap" aria-label="Seletor de modelos de card">
+                <div class="csw-stage" id="csw-stage">
+                {% for item in modelos %}
+                    <div class="csw-card" data-modelo-id="{{ item.id }}" {% if loop.first %}data-front="true"{% endif %}>
+                        <img class="csw-photo" src="/assets/cards/modelos/{{ item.id }}.png?v=10" alt="{{ item.nome }}" draggable="false">
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="navegacao-modelos"><button id="modelo-anterior" type="button">Anterior</button><span id="modelo-atual" role="status"></span><button id="modelo-proximo" type="button">Próximo</button></div>
+        <p>Nome de usuário no card: <strong id="card-nome">{{ session.nome }}</strong></p>
+        <label for="card-posicao">Posição</label>
+        <select id="card-posicao">
+            <optgroup label="Goleiro e Defesa">
+                <option value="GOL">GOL — Goleiro</option>
+                <option value="ZAG">ZAG — Zagueiro</option>
+                <option value="LD">LD — Lateral Direito</option>
+                <option value="LE">LE — Lateral Esquerdo</option>
+                <option value="ADD">ADD — Ala Direito</option>
+                <option value="ADE">ADE — Ala Esquerdo</option>
+            </optgroup>
+            <optgroup label="Meio-Campo">
+                <option value="VOL">VOL — Volante</option>
+                <option value="MC">MC — Meia Central</option>
+                <option value="MEI">MEI — Meia Atacante / Armador</option>
+                <option value="MD">MD — Meia Direita</option>
+                <option value="ME">ME — Meia Esquerda</option>
+            </optgroup>
+            <optgroup label="Ataque">
+                <option value="PD">PD — Ponta Direita</option>
+                <option value="PE">PE — Ponta Esquerda</option>
+                <option value="SA">SA — Segundo Atacante</option>
+                <option value="ATA" selected>ATA — Atacante / Centroavante</option>
+            </optgroup>
+        </select>
+        <div class="sorteio-card">
+            <h3>Atributos do card</h3>
+            <dl class="atributos-card">
+            {% for sigla, descricao in atributos.items() %}
+                <div><dt><label for="atributo-{{ sigla }}"><abbr title="{{ descricao }}">{{ sigla }}</abbr></label></dt><dd><input id="atributo-{{ sigla }}" data-atributo="{{ sigla }}" type="number" min="1" max="99" step="1" placeholder="--" aria-label="{{ descricao }}" readonly></dd></div>
+            {% endfor %}
+            </dl>
+            <button id="card-girar" type="button">Girar atributos</button>
+        </div>
+
+    </div>
 </section>
 <script id="modelo-card" type="application/json">{{ modelo | tojson }}</script>
 <script id="modelos-card" type="application/json">{{ modelos | tojson }}</script>
+{% endif %}
 {% endblock %}
-

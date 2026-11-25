@@ -1,5 +1,3 @@
-"""Conexão MySQL compartilhada pelo diagnóstico e pela integração de jogos."""
-
 import os
 from pathlib import Path
 
@@ -12,7 +10,6 @@ PASTA_PROJETO = Path(__file__).resolve().parents[2]
 
 
 def conectar_banco():
-    """Abre uma conexão; quem chama deve fechá-la após o uso."""
     # Por padrão, variáveis já definidas no ambiente têm prioridade sobre o arquivo.
     load_dotenv(PASTA_PROJETO / ".env")
     senha = os.getenv("DB_PASSWORD")
@@ -32,7 +29,6 @@ def conectar_banco():
 
 
 def verificar_banco():
-    """Confirma as tabelas do portal e lista as colunas de usuarios."""
     # Os contextos fecham o cursor e a conexão, inclusive se ocorrer uma exceção.
     with conectar_banco() as conexao:
         with conexao.cursor() as cursor:

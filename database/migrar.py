@@ -1,4 +1,3 @@
-"""Atualiza a estrutura existente e importa o elenco da versão anterior."""
 import json
 from pathlib import Path
 from mysql.connector import Error

@@ -1,11 +1,10 @@
-"""Comando de preparação da tabela de jogos."""
 import argparse
 import mysql.connector
 from database.migracoes.jogos import preparar_banco
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description='Comando de preparação da tabela de jogos.')
     parser.add_argument("comando", choices=["preparar-banco"])
     parser.parse_args()
     try:

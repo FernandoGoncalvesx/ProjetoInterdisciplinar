@@ -4,6 +4,7 @@
 {% block conteudo %}
 <section class="secao container" aria-labelledby="noticias-titulo">
 <div class="secao-cabecalho"><h2 id="noticias-titulo">Notícias</h2></div>
+<button id="atualizar-noticias" type="button" class="botao" hidden>Atualizar notícias</button>
 <p id="noticias-status" role="status"></p>
 <div id="lista-noticias">
 {% if banco_indisponivel %}<p role="status">Não foi possível carregar as notícias. Tente novamente em instantes.</p>
@@ -21,4 +22,6 @@
 <div id="detalhes-texto" class="texto-noticia"></div>
 </div>
 </dialog>
-</section>{% endblock %}
+</section>
+<script id="noticias-iniciais" type="application/json">{{ noticias | tojson }}</script>
+{% endblock %}

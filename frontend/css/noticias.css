@@ -81,3 +81,7 @@
 .noticia-card .btn-primary { cursor: pointer; }
 .news-dialog .card-img-top { max-width: 100%; height: auto; }
 .news-dialog .btn-close { width: auto; padding-inline: 12px; }
+
+.noticia-card { display:flex; flex-direction:column; }
+.noticia-card .card-body { width:100%; }
+.noticia-card .btn-primary { margin-top:auto; }

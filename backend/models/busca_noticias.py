@@ -1,4 +1,3 @@
-"""Compatibilidade com o comando de coleta anterior; use backend.services.coleta_noticias."""
 from backend.models.noticia import listar_noticias as buscar_noticias
 
 

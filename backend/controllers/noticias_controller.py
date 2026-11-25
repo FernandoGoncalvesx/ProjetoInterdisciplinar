@@ -1,4 +1,3 @@
-"""Página, consulta e atualização das notícias."""
 import re
 from threading import Lock
 from flask import Blueprint, current_app, jsonify, render_template

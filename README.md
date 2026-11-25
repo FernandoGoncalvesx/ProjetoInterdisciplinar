@@ -14,6 +14,12 @@ python -m venv venv
 
 Abra http://127.0.0.1:8081. Não abra os HTMLs diretamente: agora eles são templates renderizados pelo Flask. As URLs existentes, incluindo `/index.html` e `/Telas/historia.html`, continuam disponíveis.
 
+O `requirements.txt` reúne as dependências do portal, da coleta de notícias e do
+editor de cards, incluindo Pillow e rembg com processamento em CPU. O ambiente
+local usa Python 3.14.7. O navegador da coleta é instalado separadamente com
+`.\venv\Scripts\python.exe -m playwright install chromium`. O modelo de remoção
+de fundo é baixado no primeiro recorte e reutilizado em `backend/cache_modelos/`.
+
 Para desenvolvimento local também é possível usar:
 
 ```powershell
@@ -88,7 +94,7 @@ Com o banco configurado, execute na raiz:
 .\venv\Scripts\python.exe -m backend.services.coleta_noticias
 ```
 
-Instale antes as dependências de `requirements.txt`. Ao abrir a página, o JavaScript mostra as notícias salvas, chama `/api/crawler`
+Instale antes as dependências de `requirements.txt`. Ao abrir a página, o JavaScript mostra as notícias salvas. O botão Atualizar notícias chama `/api/crawler`
 e consulta a lista novamente após a coleta. O comando acima também permite coleta manual.
 A apresentação usa os templates compartilhados, com leitura em diálogo e alternativa
 sem JavaScript. Os antigos `back_end/Servidor.py` e `front_end/js/script.js` foram
@@ -98,8 +104,10 @@ substituídos pela aplicação `backend.app` e pelos scripts em `frontend/js/`.
 
 ```powershell
 .\venv\Scripts\python.exe -m unittest discover -s tests -v
+node --test tests/enquadramento.test.mjs
 ```
 
 Os testes usam uma pasta temporária para imagens e simulam a conexão do diagnóstico, sem alterar o MySQL nem os uploads reais.
+Os testes de enquadramento usam o executor nativo do Node.js, sem pacotes npm.
 
 Veja o guia de edição do [frontend](frontend/README.md). O formulário de fotos fica em `/Telas/fotos.html`.

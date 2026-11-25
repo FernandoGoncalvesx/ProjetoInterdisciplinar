@@ -27,7 +27,7 @@ O projeto mantém Flask, Jinja2, MySQL e JavaScript. As URLs existentes são pre
 | Elenco | `elenco_controller.py` | `models/jogadora.py` | `elenco.html` |
 | Jogos | `jogos_controller.py` | `models/jogo.py` | `proximos_jogos.html` |
 | História | `historia_controller.py` | `models/historia.py` | `historia.html` |
-| Fotos e cards | `fotos_controller.py`, `cards_controller.py` | models e serviços de imagens | `fotos.html`, `editor_card.html` |
+| Fotos e cards | `fotos_controller.py`, `cards_controller.py` | models e serviços de imagens | `editor_card.html` |
 
 Os controllers estão em `backend/controllers/`, e as Views em
 `frontend/templates/paginas/`. O contexto da agenda usado por Início e Jogos
@@ -80,30 +80,31 @@ A rota /assets/cards/modelos/<id>.png permite somente os seis modelos cadastrado
 | Controllers | backend/controllers/fotos_controller.py, cards_controller.py | API e renderização do editor. |
 | Models | backend/models/foto.py, card.py | Dados, limites, erros e configuração do card; sem tabelas novas. |
 | Serviços | backend/services/validacao_imagem.py | Decodificação, orientação EXIF, limites e avisos de qualidade. |
-| Serviços | backend/services/recorte_pessoa.py | Segmentação local com rembg e u2net_human_seg. |
-| Views | frontend/templates/paginas/editor_card.html, fotos.html | Formulário e controles. |
+| Serviços | backend/services/recorte_pessoa.py | Segmentação local com rembg e BiRefNet Portrait. |
+| Views | frontend/templates/paginas/editor_card.html | Formulário e controles. |
 | Componente | frontend/templates/componentes/previa-card.html | Canvas da prévia. |
 | Interação | frontend/js/fotos.js, editor-card.js | Upload, ajustes por arrasto/controles e exportação PNG. |
 | Estilo | frontend/css/editor-card.css | Layout responsivo. |
 
 ## Instalação e execução
 
-Use Python 3.11 a 3.13 para as dependências de segmentação. O ambiente encontrado
-neste projeto usa Python 3.14; crie outro ambiente sem substituir o atual.
-Com Python 3.13 e o launcher instalados, execute na raiz:
+Todas as dependências estão em `requirements.txt`, incluindo Pillow e rembg com
+suporte a CPU. O ambiente local usa Python 3.14.7; os metadados do rembg instalado
+aceitam Python >=3.11,<4.0. Use o mesmo ambiente do portal e execute na raiz
+(crie `venv` somente se ainda não existir):
 
 ~~~powershell
-py -3.13 -m venv .venv-cards
-.\.venv-cards\Scripts\python.exe -m pip install -r requirements-imagens.txt
-.\.venv-cards\Scripts\python.exe -m waitress --host=127.0.0.1 --port=8081 backend.app:app
+python -m venv venv
+.\venv\Scripts\python.exe -m pip install -r requirements.txt
+.\venv\Scripts\python.exe -m waitress --host=127.0.0.1 --port=8081 backend.app:app
 ~~~
 
 Abra http://127.0.0.1:8081/Telas/fotos.html.
 O primeiro recorte baixa o modelo para backend/cache_modelos/ (ignorado pelo Git).
 É necessário acesso à internet para instalar dependências e baixar o modelo;
 as fotos são processadas localmente. A sessão é reutilizada após carregar o modelo.
-A instalação automática nesta sessão falhou por resolução de DNS do PyPI,
-portanto o processamento real ainda precisa ser validado no ambiente preparado.
+A verificação das dependências instaladas não substitui a validação de uma
+instalação do zero nem do processamento com o modelo real.
 
 ## Contrato da API
 
@@ -125,8 +126,8 @@ página; recarregar a página perde o trabalho. O download é feito pelo navegad
 
 A iluminação e nitidez são heurísticas globais iniciais, não notas de qualidade
 calibradas. Seus problemas geram avisos; fotos corrompidas ou pequenas são bloqueadas.
-Não há identificação facial, contagem automática de pessoas ou detecção da cintura.
-O usuário precisa enviar uma pessoa e ajustar manualmente o enquadramento.
+O MediaPipe Pose Landmarker estima pontos do rosto, ombros e quadril no navegador para sugerir o enquadramento. Não identifica quem é a pessoa. Se não houver uma pose única e confiável, mantém enquadramento básico e ajuste manual.
+O usuário precisa enviar uma pessoa e conferir o enquadramento sugerido.
 A segmentação pode errar cabelos, roupas e contornos: a prévia permite conferir,
 mas ainda não há borracha de correção.
 
@@ -144,10 +145,42 @@ portal.js. Autenticação, conteúdo e jogos seguem a organização MVC descrita
 ## Verificação
 
 ~~~powershell
-.\.venv-cards\Scripts\python.exe -m unittest discover -s tests -v
+.\venv\Scripts\python.exe -m unittest discover -s tests -v
 ~~~
 
 tests/test_cards.py cobre contrato HTTP, erros, validação de imagens e segmentação
 com modelo simulado. Casos de Pillow são pulados quando a biblioteca não está instalada.
 Esses testes não comprovam a qualidade visual do modelo real.
 
+
+## Recorte e enquadramento automático
+
+O modelo padrão é `birefnet-portrait`, com descontaminação das bordas e margem
+para preservar detalhes semitransparentes. O primeiro uso baixa o novo modelo.
+O arquivo tem aproximadamente 973 MB e o processamento em CPU pode ser demorado.
+Para comparar com o anterior, defina `REMBG_MODEL=u2net_human_seg` antes de iniciar
+o servidor; reinicie o processo após trocar essa variável. Compare as mesmas
+fotos e o tempo de resposta antes de escolher um modelo para produção.
+
+`frontend/js/pose-worker.js` usa MediaPipe Tasks Vision 0.10.32 e Pose Landmarker
+Lite em um Web Worker. A biblioteca/WASM vêm do jsDelivr e o modelo do Google
+Storage; essas etapas exigem internet, mas não enviam a imagem a esses serviços.
+A foto continua sendo enviada ao servidor do portal para remoção do fundo.
+Não há dependência Python adicional: o MediaPipe executa no navegador.
+
+`frontend/js/enquadramento.js` calcula escala e posição no PNG já recortado.
+Usa nariz, ombros e quadril quando confiáveis, ou estima o tronco quando o quadril
+não aparece. Mantém espaço superior e controles manuais. Ausência de detecção,
+múltiplas poses, falha de download ou tempo superior a 25 segundos resultam em
+enquadramento básico. O botão de restauração recupera o enquadramento inicial.
+
+## Acesso ao editor
+
+`/cards` e `/Telas/fotos.html` são públicas. Visitantes veem um aviso que pode
+ser fechado e um link para entrar ou cadastrar-se. O editor só é renderizado
+para usuários conectados. Após entrar, o usuário retorna ao editor.
+`/api/cards/processar` e o upload legado `/api/upload` retornam HTTP 401 sem sessão,
+antes de processar ou salvar fotos. O nome mostrado no card vem de `session.nome`
+e não possui campo editável. O PNG continua sendo montado no navegador; não é
+um documento autenticado pelo servidor. A interface oferece um link para entrar
+novamente se a sessão expirar durante o envio.

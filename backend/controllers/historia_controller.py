@@ -1,4 +1,3 @@
-"""Página da história da seleção."""
 from flask import Blueprint, render_template
 from backend.models.historia import carregar_historia
 

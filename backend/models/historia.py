@@ -1,4 +1,3 @@
-"""Leitura dos dados históricos do portal."""
 import json
 from pathlib import Path
 

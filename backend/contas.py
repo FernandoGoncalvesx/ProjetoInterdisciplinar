@@ -1,4 +1,3 @@
-"""Administração local das contas do portal."""
 import argparse
 from getpass import getpass
 
@@ -37,7 +36,7 @@ def renomear(cursor):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description='Administração local das contas do portal.')
     parser.add_argument("acao", choices=["migrar", "criar", "renomear"])
     acao = parser.parse_args().acao
     try:

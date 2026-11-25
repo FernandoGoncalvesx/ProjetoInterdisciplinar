@@ -1,4 +1,3 @@
-"""Persistência de contas, com senhas armazenadas apenas como hash."""
 from werkzeug.security import check_password_hash, generate_password_hash
 from backend.models.banco import conectar_banco
 

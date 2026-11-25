@@ -1,4 +1,3 @@
-"""Configuração do Flask e registro dos controllers MVC."""
 import os
 import secrets
 from pathlib import Path

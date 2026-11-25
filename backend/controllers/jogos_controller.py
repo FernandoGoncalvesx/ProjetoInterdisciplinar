@@ -1,4 +1,3 @@
-"""Página da agenda e contexto compartilhado com a página inicial."""
 from flask import Blueprint, current_app, render_template
 from mysql.connector import Error as ErroBanco
 from backend.models.jogo import agrupar_jogos, listar_jogos

@@ -1,4 +1,3 @@
-"""Página do elenco."""
 from flask import Blueprint, current_app, render_template
 from mysql.connector import Error as ErroBanco
 from backend.models.jogadora import listar_jogadoras

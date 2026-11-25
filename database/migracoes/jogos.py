@@ -1,4 +1,3 @@
-"""Migração aditiva dos campos da agenda."""
 from backend.models.banco import conectar_banco
 
 COLUNAS = {
@@ -14,7 +13,6 @@ COLUNAS = {
 
 
 def preparar_banco():
-    """Adiciona apenas campos ausentes; mantém IDs, registros e relacionamentos."""
     with conectar_banco() as conexao:
         with conexao.cursor() as cursor:
             cursor.execute("SHOW COLUMNS FROM proximos_jogos")
